@@ -1,0 +1,108 @@
+@mixin btn{
+    margin-top: 50px;
+    text-align: center;
+}
+@mixin img_Detail{
+    width: 500px;
+    height: 400px;
+}
+.management_page{
+    width: 100%;
+    margin-left: 3%;
+}
+.management_page_header{
+    text-align: left;
+    margin-bottom: 50px;
+
+}
+.management_page_header h1{
+    margin-bottom: 0px;
+    font-size: 48px;
+}
+.management_image{
+    width: 250px;
+    border-radius: 5px;
+    
+}
+.management_page_item:hover{
+    transform: scale(1.1); 
+    cursor: pointer; 
+    transition: transform 0.3s ease;
+}
+.management_text_img{
+    margin-left: 5%;
+    
+}
+.management_hall_img{
+    width: 40%;
+    margin-left: 5%;
+    @include img_Detail;
+    position: relative;
+}
+.management_hall_img img{
+    border-radius: 10px;
+    width: 100%;
+}
+.management_page_text, .management_hall_text{
+    margin-left: 5%;
+    margin-right: 10%;
+}
+.management_page_text h2{
+    font-size: 48px;
+    color: white;
+    margin-bottom: 3%;
+}
+.management_hall_text h2{
+    font-size: 32px;
+    color: #3B564D;
+    margin-bottom: 0%;
+    margin-top: 20%;
+}
+.management_hall_text{
+    text-align: left;
+    width: 35%;
+  
+}
+.management_hall_top{
+    text-align: left;
+    margin-bottom: 30px;
+    
+}
+.management_hall_text .button{
+    @include btn;
+}
+.management_server_text{
+    text-align: left;
+    margin-left: 10%;
+    margin-right: 5%;
+    width: 35%;
+}
+.management_server_text h2{
+    font-size: 32px;
+    color: #FFFFFF;
+    margin-bottom: 0%;
+}
+.management_server_img{
+    margin-right: 10%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    @include img_Detail;
+    position: relative;
+    
+}
+.management_server_img img{
+    border-radius: 10px;
+    width: 100%;
+    top: 0; 
+    left: 0; 
+    object-fit: cover; 
+    position: absolute;
+}
+.management_server_text .button{
+    @include btn;
+}
+.management_server_top{
+    margin-bottom: 30px;
+    margin-top: 30%;
+ 
+}
