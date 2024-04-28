@@ -1,0 +1,87 @@
+@use "../../scss/" as *;
+
+.table-form {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+
+  .none {
+    visibility: hidden;
+  }
+  .segment-container {
+    height: 100%;
+    width: 100%;
+
+    .ant-segmented {
+      color: $segment-color;
+      background-color: transparent;
+      font-weight: 700;
+
+      .ant-segmented-item {
+        margin: 10px;
+        border: 1.5px solid $segment-color;
+        &.ant-segmented-item-selected {
+          background-color: $segment-color;
+          color: $text-color;
+        }
+
+        &:hover:not(.ant-segmented-item-selected):not(
+            .ant-segmented-item-disabled
+          ) {
+          background-color: $segment-color2;
+          color: $text-color;
+        }
+
+        .custom-segment {
+          width: 80px;
+          height: 32px;
+          text-align: center;
+          align-items: center;
+
+          div {
+            height: 100%;
+            line-height: 32px;
+          }
+        }
+      }
+    }
+    .search-bar {
+      height: 60px;
+      line-height: 60px;
+      align-items: center;
+      display: flex;
+
+      .ant-input-affix-wrapper.ant-input-outlined {
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+      }
+      .ant-btn.ant-btn-default.ant-btn-icon-only.ant-input-search-button {
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+      }
+      .number-of-selected {
+        line-height: 32px;
+        margin: 0 20px;
+      }
+    }
+  }
+  .list-items {
+    width: 100%;
+  }
+  .btn-container {
+    margin: 20px 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .next-btn,
+    .prev-btn {
+      background-color: #5e7249;
+    }
+    .next-btn:hover,
+    .prev-btn:hover {
+      background-color: $primary-color;
+    }
+  }
+}

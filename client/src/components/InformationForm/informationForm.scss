@@ -1,0 +1,21 @@
+@use "../../scss/" as *;
+
+.information-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  #complex-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .prev-btn {
+    background-color: #5e7249;
+    right: calc(50% - 20px);
+  }
+  .next-btn {
+    background-color: #5e7249;
+    left: calc(40% - 5px);
+  }
+}
