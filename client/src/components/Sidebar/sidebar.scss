@@ -2,6 +2,7 @@
 
 #sidebar {
   width: 300px;
+  position: fixed;
   .ps-sidebar-root {
     height: 100vh;
     width: 100%;
@@ -11,7 +12,7 @@
     .ps-sidebar-container {
       background-color: transparent !important;
       .ps-menu-root {
-        color: $primary-color;
+        color: $text-color;
         position: absolute;
         right: 0;
         z-index: 9999;
@@ -25,7 +26,7 @@
         ul {
           padding: 0 5px;
           .ps-menuitem-root {
-            color: $primary-color;
+            color: $text-color;
             margin: 10px 0px;
             // font-weight: bold;
             font-size: 1.25rem;
@@ -33,13 +34,13 @@
             .ps-menu-button {
               .ps-menu-icon {
                 background-color: transparent;
-                color: $primary-color;
+                color: $text-color;
                 font-weight: 400;
                 border-radius: 3px;
                 font-size: 1.5rem;
               }
               .ps-menu-label {
-                color: $primary-color;
+                color: $text-color;
                 font-size: 1rem;
                 text-align: left;
               }
@@ -88,8 +89,18 @@
             }
           }
         }
+        .ps-submenu-content.ps-active.ps-open {
+          background-color: $sidebar-color1;
+          .ps-menu-icon,
+          .ps-menu-label,
+          .ps-submenu-expand-icon {
+            color: #fff !important;
+          }
+        }
         .ps-active {
-          background-color: $sidebar-item1;
+          > .ps-menu-button {
+            background-color: $sidebar-item1;
+          }
           border-radius: 10px;
           .ps-menu-icon,
           .ps-menu-label,

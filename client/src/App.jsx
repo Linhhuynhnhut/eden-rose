@@ -1,5 +1,5 @@
 import "./App.scss";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import RoutesConfig from "./routes/routes";
 import Sidebar from "./components/Sidebar/Sidebar";
 
@@ -8,7 +8,10 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Sidebar />
-        <RoutesConfig />
+        <div className="main">
+          <div className="virtual-sidebar"></div>
+          <RoutesConfig />
+        </div>
       </BrowserRouter>
     </div>
   );

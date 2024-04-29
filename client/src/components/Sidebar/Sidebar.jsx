@@ -10,7 +10,11 @@ import { Link, useLocation } from "react-router-dom";
 import { TbHome } from "react-icons/tb";
 import { GiCryptEntrance, GiGlassCelebration } from "react-icons/gi";
 import { FaRegListAlt } from "react-icons/fa";
-import { MdOutlineMenuBook, MdOutlinePayment } from "react-icons/md";
+import {
+  MdOutlineMenuBook,
+  MdOutlinePayment,
+  MdOutlineAddToPhotos,
+} from "react-icons/md";
 import { BsCameraReels } from "react-icons/bs";
 import { BiCog } from "react-icons/bi";
 
@@ -50,6 +54,10 @@ const sidebarNav = [
     display: "Management",
     path: "/management",
   },
+  {
+    display: "New Wedding",
+    path: "/management/new-Wedding",
+  },
 ];
 
 const Sidebar = () => {
@@ -84,7 +92,7 @@ const Sidebar = () => {
               label="Management"
               defaultOpen={pathname.startsWith("/management")}
               component={<Link to={sidebarNav[7].path}></Link>}
-              // active={pathname === sidebarNav[7].path}
+              active={pathname === sidebarNav[7].path}
             >
               <MenuItem
                 active={pathname === sidebarNav[2].path}
@@ -92,6 +100,13 @@ const Sidebar = () => {
                 component={<Link to={sidebarNav[2].path}></Link>}
               >
                 Weddings
+              </MenuItem>
+              <MenuItem
+                active={pathname === sidebarNav[8].path}
+                icon={<MdOutlineAddToPhotos />}
+                component={<Link to={sidebarNav[8].path}></Link>}
+              >
+                New Wedding
               </MenuItem>
               <MenuItem
                 active={pathname === sidebarNav[3].path}
