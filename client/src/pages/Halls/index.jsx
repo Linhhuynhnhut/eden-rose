@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import TableHall from "../../components/Table/TableHall";
 import HallForm from "../../components/FormHall/HallForm";
+import Header from "../../components/Header/Header";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Flex, Tooltip, Modal } from "antd";
 import "./halls.scss";
 // import img_Header from '../../assets/img_header.png';
-import img_Header from './header.png';
+import img_Header from "./header.png";
 
 const Halls = () => {
   const data = [
@@ -53,10 +54,12 @@ const Halls = () => {
   };
   return (
     <div className="hall_page">
-      <div className="hall_page_header">
+      {/* <div className="hall_page_header">
         <h1>Hall Management</h1>
         <img src={img_Header} />
-      </div>
+      </div> */}
+      <Header title="Hall Management" />
+
       <div className="btn_new_hall">
         <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
           New Hall
