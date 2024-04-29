@@ -1,0 +1,39 @@
+.hall_page{
+    width: 1200px;
+    .hall_page_header{
+        text-align: left;
+        margin-left: 25px;
+        h1{
+            margin-bottom: 0px;
+            font-size: 48px;
+            color: #3B564D;
+        }
+    }
+    .btn_new_hall{
+        display: flex;
+        justify-content: right;
+        margin-right: 70px;
+        margin-bottom: 10px;
+        button{
+            background-color: #5E7249;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+        }
+        :where(.css-dev-only-do-not-override-1qfezbu).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover{
+            background-color: #5E7249;
+            opacity: 0.9;
+        }
+        
+    }
+
+    .table_hall{
+        display: flex;
+        justify-content: center;
+        .ant-table-wrapper {
+            width: 1000px;
+        }
+        .input:active {
+            color: #5E7249;
+        }
+      
+    }
+}
