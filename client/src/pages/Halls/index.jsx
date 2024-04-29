@@ -3,17 +3,15 @@ import TableHall from "../../components/Table/TableHall";
 import HallForm from "../../components/FormHall/HallForm";
 import Header from "../../components/Header/Header";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Flex, Tooltip, Modal } from "antd";
+import { Button, Modal } from "antd";
 import "./halls.scss";
-// import img_Header from '../../assets/img_header.png';
-import img_Header from "./header.png";
 
 const Halls = () => {
   const data = [
     {
       key: "1",
       name: "John Brown",
-      type: "Main Dish",
+      type: "Luxury Hall",
       tables: 32,
       price: 10000000,
     },
@@ -54,10 +52,6 @@ const Halls = () => {
   };
   return (
     <div className="hall_page">
-      {/* <div className="hall_page_header">
-        <h1>Hall Management</h1>
-        <img src={img_Header} />
-      </div> */}
       <Header title="Hall Management" />
 
       <div className="btn_new_hall">
