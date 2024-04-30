@@ -14,21 +14,21 @@
         }
     }
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-btn-primary {
+.ant-btn-primary {
     background: #5E7249;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+.ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
     background: #5E7249;
     opacity: 0.8;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
     color: #5E7249;
     border-color: #5E7249;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-inner, :where(.css-dev-only-do-not-override-1qfezbu).ant-checkbox:not(.ant-checkbox-disabled):hover .ant-checkbox-inner {
+.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-inner, .ant-checkbox:not(.ant-checkbox-disabled):hover .ant-checkbox-inner {
     border-color: #5E7249;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select:not(.ant-upload-disabled):hover, :where(.css-dev-only-do-not-override-1qfezbu).ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload.ant-upload-select:not(.ant-upload-disabled):hover {
+.ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select:not(.ant-upload-disabled):hover, .ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload.ant-upload-select:not(.ant-upload-disabled):hover {
     border-color: #5E7249;
 }

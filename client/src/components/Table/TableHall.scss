@@ -8,7 +8,7 @@
         border-color: #bc4147;
         
     }
-    :where(.css-dev-only-do-not-override-1qfezbu).ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+    .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
         background-color: #bc4147;
         color: #ffffff;
         border-color: #bc4147;
@@ -16,17 +16,17 @@
     }
 }
 
-:where(.css-dev-only-do-not-override-1qfezbu).ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected >.ant-table-cell {
+.ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected >.ant-table-cell {
     background: #E1E6DD;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-checkbox-checked .ant-checkbox-inner {
+.ant-checkbox-checked .ant-checkbox-inner {
     background-color: #3B564D;
     border-color: #3B564D;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-checkbox-indeterminate .ant-checkbox-inner:after {
+.ant-checkbox-indeterminate .ant-checkbox-inner:after {
     background-color: #3B564D;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-checked:not(.ant-checkbox-disabled) .ant-checkbox-inner {
+.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-checked:not(.ant-checkbox-disabled) .ant-checkbox-inner {
     background-color: #3B564D;
     opacity: 0.8;
 }
@@ -38,20 +38,20 @@
     opacity: 0.8;
     cursor: pointer;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-table-wrapper .ant-table-thead >tr>th, :where(.css-dev-only-do-not-override-1qfezbu).ant-table-wrapper .ant-table-thead >tr>td {
+.ant-table-wrapper .ant-table-thead >tr>th, .ant-table-wrapper .ant-table-thead >tr>td {
     background: #517669;
     color: #ffffff;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:hover {
+.ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:hover {
     background: #517669;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-table-wrapper .ant-table-column-sorter {
+.ant-table-wrapper .ant-table-column-sorter {
     color: #ffffff;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-table-wrapper .ant-table-filter-trigger {
+.ant-table-wrapper .ant-table-filter-trigger {
     color: #ffffff;
 }
-:where(.css-dev-only-do-not-override-1qfezbu).ant-table-wrapper .ant-table-thead th.ant-table-column-sort {
+.ant-table-wrapper .ant-table-thead th.ant-table-column-sort {
     opacity: 0.9;
     background: #517669;
 }
