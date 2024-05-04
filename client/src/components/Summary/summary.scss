@@ -1,0 +1,36 @@
+@use "../../scss/" as *;
+
+.summary {
+  .list-items {
+    margin: 10px 0;
+    .name-list {
+      text-align: left;
+      height: 45px;
+      color: $primary-color;
+      background-color: $header-color;
+      font-size: 24px;
+      font-weight: 600;
+      font-family: sans-serif;
+      line-height: 45px;
+      padding-left: 20px;
+      border-radius: 4px;
+      margin: 0 20px;
+    }
+    .img-table-item {
+      width: 100px;
+      height: 100px;
+    }
+  }
+  .btn-container {
+    .prev-btn {
+      background-color: #5e7249;
+      right: calc(50% - 50px);
+      margin-bottom: 10px;
+    }
+    .next-btn {
+      background-color: #5e7249;
+      left: calc(50% - 60px);
+      margin-bottom: 10px;
+    }
+  }
+}

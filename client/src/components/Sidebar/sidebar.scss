@@ -1,0 +1,123 @@
+@use "../../scss/" as *;
+
+#sidebar {
+  width: 300px;
+  position: fixed;
+  .ps-sidebar-root {
+    height: 100vh;
+    width: 100%;
+    min-width: 100%;
+    background-color: $sidebar-color1;
+
+    .ps-sidebar-container {
+      background-color: transparent !important;
+      .ps-menu-root {
+        color: $text-color;
+        position: absolute;
+        right: 0;
+        z-index: 9999;
+        line-height: 20px;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 22px;
+        top: 55px;
+        left: 0;
+        cursor: pointer;
+        ul {
+          padding: 0 5px;
+          .ps-menuitem-root {
+            color: $text-color;
+            margin: 10px 0px;
+            // font-weight: bold;
+            font-size: 1.25rem;
+            line-height: 30px;
+            .ps-menu-button {
+              .ps-menu-icon {
+                background-color: transparent;
+                color: $text-color;
+                font-weight: 400;
+                border-radius: 3px;
+                font-size: 1.5rem;
+              }
+              .ps-menu-label {
+                color: $text-color;
+                font-size: 1rem;
+                text-align: left;
+              }
+              .ps-submenu-expand-icon {
+                display: flex;
+              }
+            }
+            .ps-menu-button:hover {
+              background-color: $sidebar-item1;
+              border-radius: 10px;
+              .ps-menu-icon,
+              .ps-menu-label,
+              .ps-submenu-expand-icon {
+                color: $sidebar-color1;
+              }
+            }
+            .ps-submenu-content {
+              background-color: $sidebar-color1;
+            }
+          }
+          .sidebar-header {
+            background-color: $sidebar-color1;
+            height: 130px;
+            .ps-menu-button:hover {
+              background-color: transparent !important;
+              border-radius: 10px;
+              .ps-menu-icon,
+              .ps-menu-label,
+              .ps-submenu-expand-icon {
+                color: #fff;
+              }
+            }
+            .logotext {
+              p {
+                font-size: 20px;
+                padding: 0 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                img {
+                  width: 100px;
+                  height: 110px;
+                }
+              }
+            }
+          }
+        }
+        .ps-submenu-content.ps-active.ps-open {
+          background-color: $sidebar-color1;
+          .ps-menu-icon,
+          .ps-menu-label,
+          .ps-submenu-expand-icon {
+            color: #fff !important;
+          }
+        }
+        .ps-active {
+          > .ps-menu-button {
+            background-color: $sidebar-item1;
+          }
+          border-radius: 10px;
+          .ps-menu-icon,
+          .ps-menu-label,
+          .ps-submenu-expand-icon {
+            color: $sidebar-color1 !important;
+          }
+        }
+      }
+    }
+  }
+
+  .logo {
+    padding: 20px;
+  }
+}
+@media only screen and (max-width: 720px) {
+  html {
+    overflow: hidden;
+  }
+}

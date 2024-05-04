@@ -1,0 +1,91 @@
+@use "../../scss/" as *;
+
+.card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f49b33;
+  justify-content: space-between;
+
+  .card-img {
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    display: flex;
+    img {
+      max-width: 200px;
+      border-radius: 10px;
+    }
+  }
+
+  .card-detail {
+    padding: 20px;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .card-name,
+    .card-price {
+      padding: 10px;
+      color: #5e5e5e;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .card-status {
+      padding: 10px;
+      color: #f49b33;
+      text-transform: capitalize;
+    }
+
+    .counter {
+      display: flex;
+      padding: 10px;
+      align-items: center;
+
+      .increase,
+      .decrease {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #5e7249;
+        font-size: 26px;
+        font-weight: 700;
+        span {
+          margin-bottom: 5px;
+        }
+
+        &:disabled {
+          background-color: #5e5e5e;
+        }
+      }
+
+      .amount {
+        width: 40px;
+        height: 20px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #5e5e5e;
+      }
+    }
+  }
+
+  .selected-btn,
+  .selected-btn.ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+    background-color: $selected-color;
+    width: 75px;
+  }
+
+  .unselected-btn,
+  .unselected-btn.ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+    background-color: $unselected-color;
+    width: 75px;
+  }
+
+  .unselected-btn:disabled {
+    background-color: #8d8e8d;
+  }
+}
