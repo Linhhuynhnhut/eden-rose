@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Table } from 'antd';
 
-
 const years = [
   { text: '2021', value: '2021' },
   { text: '2022', value: '2022' },
@@ -16,9 +15,16 @@ const months = [
   'September', 'October', 'November', 'December'
 ];
 
-const getMonthValues = (year) => months.map((month, index) => ({
-  text: month, value: `${year}-${String(index + 1).padStart(2, '0')}`
-}));
+
+// const getMonthMenu = (year) => (
+//   <Menu>
+//     {months.map((month, index) => (
+//       <Menu.Item key={`${year}-${index + 1}`}>
+//         {month}
+//       </Menu.Item>
+//     ))}
+//   </Menu>
+// );
 const columns = [
   {
     title: 'No.', // Column title for serial numbers
@@ -31,9 +37,9 @@ const columns = [
     filters: years.map(year => ({
       text: year.text,
       value: year.value,
-      children: months.map(month => ({
-        text: month.text,
-        value: `${year.value}-${month.value}`,
+      children: months.map((month, index) => ({
+        text: month,
+        value: `${year.value}-${String(index + 1).padStart(2, '0')}`,
       })),
     })),
     onFilter: (value, record) => {
@@ -44,7 +50,6 @@ const columns = [
     filterSearch: true,
     width: '20%',
   },
-
   {
     title: 'Number',
     dataIndex: 'number',
@@ -186,5 +191,18 @@ const data = [
 const onChange = (pagination, filters, sorter, extra) => {
   console.log('params', pagination, filters, sorter, extra);
 };
-const TableRevenue = () => <Table columns={columns} dataSource={data} onChange={onChange} />;
+const TableRevenue = () => ( <Table
+  columns={columns}
+  expandable={{
+    expandedRowRender: (record) => (
+      <div className="item_extension">
+            <p style={{ margin: 0, }} >{record.Date}</p>
+
+      </div>
+  
+    ),
+    rowExpandable: (record) => record.name !== 'Not Expandable',
+  }}
+  dataSource={data}
+ onChange={onChange} />);
 export default TableRevenue;
