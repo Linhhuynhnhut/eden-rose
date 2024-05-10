@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import TableHall from "../../components/Table/TableHall";
+import TableHall from "../../components/TableHall/TableHall";
 import HallForm from "../../components/FormHall/HallForm";
 import Header from "../../components/Header/Header";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
+import image1 from "../../assets/halls/hall1.jpg"
 import "./halls.scss";
 
 const Halls = () => {
@@ -14,6 +15,7 @@ const Halls = () => {
       type: "Luxury Hall",
       tables: 32,
       price: 10000000,
+      imageUrl: image1,
     },
     {
       key: "2",
@@ -21,6 +23,7 @@ const Halls = () => {
       type: "Luxury Hall",
       tables: 42,
       price: 10000000,
+      imageUrl: image1,
     },
     {
       key: "3",
@@ -28,6 +31,7 @@ const Halls = () => {
       type: "Basic Hall",
       tables: 32,
       price: 20000000,
+      imageUrl: image1,
     },
     {
       key: "4",
@@ -35,6 +39,7 @@ const Halls = () => {
       type: "Premium Hall",
       tables: 32,
       price: 40000000,
+      imageUrl: image1,
     },
   ];
   const [isModalOpen, setIsModalOpen] = useState(false);

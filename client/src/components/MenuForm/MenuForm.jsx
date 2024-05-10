@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import "./HallForm.scss"
+import "./MenuForm.scss"
 import {
   Form,
   Input,
@@ -15,22 +15,37 @@ const normFile = (e: any) => {
   return e?.fileList;
 };
 
-const hallTypes = [
+const dishTypes = [
   {
     id: 1,
-    name: "Basic Hall"
+    name: "Main Dish"
   },
   {
     id: 2,
-    name: "Premium Hall"
+    name: "Dessert"
   },
   {
     id: 3,
-    name: "Luxury Hall"
+    name: "Appetizer"
+  },
+  {
+    id: 4,
+    name: "Beverage"
   },
 ]
 
-const HallForm = () => {
+const status = [
+  {
+    id: 1,
+    name: "Available"
+  },
+  {
+    id: 2,
+    name: "Unavailable"
+  }
+]
+
+const MenuForm = () => {
   return (
     <>
       
@@ -43,16 +58,20 @@ const HallForm = () => {
         <Form.Item label="Name" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item label="Masimum Tables" rules={[{ required: true }]}>
+        <Form.Item label="Price" rules={[{ required: true }]}>
           <Input />
-        </Form.Item>
-        <Form.Item label="Minimum Price">
-          <Input disabled/>
         </Form.Item>
         <Form.Item label="Type" rules={[{ required: true }]}>
           <Select>
-            {hallTypes.map((hall, index) => (
+            {dishTypes.map((hall, index) => (
               <Select.Option key={hall.id} value={hall.name}>{hall.name}</Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item label="Status" rules={[{ required: true }]}>
+          <Select>
+            {status.map((status, index) => (
+              <Select.Option key={status.id} value={status.name}>{status.name}</Select.Option>
             ))}
           </Select>
         </Form.Item>
@@ -74,4 +93,4 @@ const HallForm = () => {
   );
 };
 
-export default HallForm;
+export default MenuForm;

@@ -4,12 +4,12 @@ import { Button, Input, Space, Table } from "antd";
 import Highlighter from "react-highlight-words";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-import HallForm from "../../components/FormHall/HallForm";
+import MenuForm from "../MenuForm/MenuForm";
 import { Modal } from "antd";
 
-import "./TableHall.scss";
+import "./MenuTable.scss";
 
-const TableHall = ({ data }) => {
+const MenuTable = ({ data }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -167,6 +167,12 @@ const TableHall = ({ data }) => {
       key: "name",
       width: "30%",
       ...getColumnSearchProps("name"),
+      render: (text, record) => (
+        <Space>
+          <img src={record.imageUrl} alt={text} className ="image_in_table"  />
+          {text}
+        </Space>
+      ),
     },
     {
       title: "Type",
@@ -175,40 +181,28 @@ const TableHall = ({ data }) => {
       width: "20%",
       filters: [
         {
-          text: "Luxury Hall",
-          value: "Luxury Hall",
+          text: "Main Dish",
+          value: "Main Dish",
         },
         {
-          text: "Premium Hall",
-          value: "Premium Hall",
+          text: "Dessert",
+          value: "Dessert",
         },
         {
-          text: "High Hall",
-          value: "High Hall",
+          text: "Appetizer",
+          value: "Appetizer",
         },
         {
-          text: "Standard Hall",
-          value: "Standard Hall",
-        },
-        {
-          text: "Basic Hall",
-          value: "Basic Hall",
-        },
+          text: "Beverage",
+          value: "Beverage",
+        }
       ],
       filterMode: "tree",
       // filterSearch: true,
       onFilter: (value, record) => record.type.startsWith(value),
     },
     {
-      title: "Maximum Tables",
-      dataIndex: "tables",
-      key: "tables",
-      width: "20%",
-      sorter: (a, b) => a.tables - b.tables,
-      sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: "Minimum Price",
+      title: "Price",
       dataIndex: "price",
       key: "price",
       width: "20%",
@@ -216,10 +210,29 @@ const TableHall = ({ data }) => {
       sortDirections: ["descend", "ascend"],
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      width: "20%",
+      filters: [
+        {
+          text: "Available",
+          value: "Available",
+        },
+        {
+          text: "Unavailable",
+          value: "Unavailable",
+        },
+      ],
+      filterMode: "tree",
+      // filterSearch: true,
+      onFilter: (value, record) => record.status.startsWith(value),
+    },
+    {
       title: "Action",
       // dataIndex: 'address',
       key: "action",
-      width: "20%",
+      width: "10%",
       render: (_, record) => (
         <Space>
           <MdDeleteForever onClick={() => handleDelete(record.key)} />
@@ -247,16 +260,16 @@ const TableHall = ({ data }) => {
       </div>
       <div>
         <Modal
-          title="Update Hall"
+          title="Update Dish"
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
           okText="Save"
         >
-          <HallForm />
+          <MenuForm />
         </Modal>
       </div>
     </>
   );
 };
-export default TableHall;
+export default MenuTable;
