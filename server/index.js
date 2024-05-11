@@ -2,37 +2,42 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import http from "http";
-import pool from "./src/config/dbConfig.js"
+import sequelize from "./src/config/dbConfig.js";
 import "dotenv/config";
-
+import routes from "./src/routes/index.js";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// app.use("/api/v1", routes);
+app.use("/api/v1", routes); 
 
 const port = process.env.PORT || 5000;
 
 const server = http.createServer(app);
 
-pool.getConnection((err, connection) => {
-    if (err) {
-      console.error('Error connecting to database:', err);
-      return;
-    }
-    console.log('Connected to MySQL database!');
-    connection.release();
-});
+sequelize.authenticate()
+    .then(() => {
+        console.log('Connected to the database!');
+    })
+    .catch(err => {
+        console.error('Unable to connect to the database:', err);
+    });
 
+
+sequelize.sync({ force: true, logging: console.log }).then(() => {
+  console.log("Database synchronized");
+}).catch((error) => {
+  console.error("Error synchronizing the database: ", error);
+});
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
 server.listen(port, () => {
-    console.log('Server is running');
+    console.log(`Server is running on port ${port}`);
 });
