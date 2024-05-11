@@ -1,0 +1,64 @@
+.delete_button_wrapper{
+    margin-bottom: 7px;
+    .delete_button{
+        margin-right: 5px;
+        background-color: #bc4147;
+        color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+        border-color: #bc4147;
+        
+    }
+    .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+        background-color: #bc4147;
+        color: #ffffff;
+        border-color: #bc4147;
+        opacity: 0.8;
+    }
+}
+
+.ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected >.ant-table-cell {
+    background: #E1E6DD;
+}
+.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #3B564D;
+    border-color: #3B564D;
+}
+.ant-checkbox-indeterminate .ant-checkbox-inner:after {
+    background-color: #3B564D;
+}
+.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-checked:not(.ant-checkbox-disabled) .ant-checkbox-inner {
+    background-color: #3B564D;
+    opacity: 0.8;
+}
+.ant-space-item{
+    color: #4F4F4F;
+    font-size: 18px;
+}
+.ant-space-item:hover{
+    opacity: 0.8;
+    cursor: pointer;
+}
+.ant-table-wrapper .ant-table-thead >tr>th, .ant-table-wrapper .ant-table-thead >tr>td {
+    background: #517669;
+    color: #ffffff;
+}
+.ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:hover {
+    background: #517669;
+}
+.ant-table-wrapper .ant-table-column-sorter {
+    color: #ffffff;
+}
+.ant-table-wrapper .ant-table-filter-trigger {
+    color: #ffffff;
+}
+.ant-table-wrapper .ant-table-thead th.ant-table-column-sort {
+    opacity: 0.9;
+    background: #517669;
+}
+
+.image_in_table{
+    height: 50px;
+    width: 50px;
+    border-radius: 5px;
+
+}

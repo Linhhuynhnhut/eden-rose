@@ -1,0 +1,70 @@
+@use "../../scss/" as *;
+
+.payment {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  .search-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    .ant-typography {
+      margin: 5px;
+    }
+    .search-standards {
+      display: flex;
+
+      .date-of-wedding,
+      .shift,
+      .hall {
+        min-width: 150px;
+        margin: 10px 20px;
+      }
+    }
+  }
+
+  .payment-detail {
+    margin: 20px;
+
+    .payment-item {
+      width: 100%;
+    }
+
+    .amount-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: $third-color;
+      border: 20px solid #fff;
+      height: 75px;
+      line-height: 35px;
+      .ant-typography {
+        margin: 0;
+        color: $primary-color;
+        font-weight: 700;
+      }
+    }
+  }
+  .ant-input,
+  .ant-input-number-disabled {
+    color: black !important;
+  }
+  .ant-table-wrapper {
+    .ant-spin-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      .ant-table {
+        width: 80%;
+      }
+    }
+    .img-table-item {
+      width: 100px;
+      height: 100px;
+    }
+  }
+}
