@@ -1,0 +1,183 @@
+@use "../../scss/" as *;
+
+.home {
+  color: white;
+}
+
+.Homepage {
+  width: 100%;
+  margin-left: 3%;
+  color: #3B564D;
+}
+
+.Homepage_header {
+  text-align: left;
+  margin-bottom: 50px;
+}
+
+.Homepage_header h1 {
+  margin-bottom: 0px;
+  font-size: 48px;
+
+}
+
+.Homepage_wellcome {
+  display: flex;
+  width: 60%;
+  background-color: #BDC6B5;
+  height: 200px;
+  margin-right: 3%;
+  margin-top: 2%;
+  border-radius: 10px;
+}
+
+.Homepage_wellcome img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-20%, -80%);
+}
+
+.Homepage_wellcome_text {
+  width: 50%;
+  text-align: left;
+  margin-left: 10%;
+}
+
+.Homepage_wellcome_text h2 {
+  font-size: 35px;
+  margin-top: 50px;
+  margin-bottom: 10px;
+}
+
+.Homepage_wellcome_text p {
+  font-size: 22px;
+}
+
+.Homepage_Calendar {
+  width: 30%;
+  margin-right: 10%;
+  margin-top: -5%;
+}
+
+.span-line {
+  content: "";
+  width: 250px;
+  height: 6px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.RevenueChart_div {
+  background-color: #A3AB94;
+  height: 420px;
+  margin-right: 5%;
+  margin-top: 3%;
+  padding: 10px;
+  padding-top: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.RevenueChart_top {
+  width: 80%;
+  margin-left: 10%;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+
+}
+
+.RevenueChart_top h2 {
+  margin-top: 0px;
+  font-size: 24px;
+  color: white;
+  margin-left: 0px;
+}
+
+.RevenueChart_center {
+  width: 90%;
+  height: 300px;
+  margin: auto;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.RevenueChart_bot h2 {
+  margin-left: 10%;
+  color: white;
+}
+
+.Home_statistics {
+  background-color: #FBF1DD;
+  margin-right: 5%;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.Home_statistics_h1 {
+  font-size: 30px;
+  margin-top: 5%;
+  margin-left: 5%;
+}
+
+.Home_statistics_header {
+  display: flex;
+  width: 90%;
+  margin-left: 5%;
+  margin-top: 20px;
+  padding-top: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.Home_statistics_text {
+  flex: 50%;
+}
+
+.filterDate_div {
+  flex: 20%;
+  background-color: #E09132;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  border-radius: 5px;
+}
+
+.filerBanquet_div {
+  flex: 20%;
+  background-color: #E09132;
+  margin-left: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  border-radius: 5px;
+}
+
+@mixin filter {
+  margin-right: 15%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.filerBanquet_div p {
+  @include filter;
+}
+.filterDate_div p{
+  @include filter;
+}
+.TableRevenue{
+  width: 90%;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-top: 5px;
+
+}

@@ -10,6 +10,9 @@
   width: 100%;
   margin: 20px;
 }
+.management_page_item{
+  text-align: center;
+}
 .management_page_header .header {
   margin-bottom: 40px;
 }
@@ -91,4 +94,8 @@
 .management_server_top {
   margin-bottom: 30px;
   margin-top: 30%;
+}
+.management_image {
+  width: 250px;
+  border-radius: 5px;
 }

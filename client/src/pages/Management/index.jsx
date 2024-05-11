@@ -14,7 +14,7 @@ import img_Management_Text from "../../assets/img_Management_Text.png";
 import img_manamentpage_hall from "../../assets/img_manamentpage_hall.png";
 import img_management_Dish from "../../assets/img_management_Dish.png";
 import img_management_Service from "../../assets/img_management_Service.png";
-import CustomButton from "./button";
+import CustomButton from "../../components/Button/button";
 import styled from "styled-components";
 
 const AnimatedFlex = styled(Flex)`
@@ -96,7 +96,7 @@ const Management = () => {
 
       <Flex
         gap="middle"
-        style={{ backgroundColor: "#BDC6B5", marginLeft: "-4%" }}
+        style={{ backgroundColor: "#BDC6B5" }}
       >
         <div className="management_text_img">
           <img src={img_Management_Text} />
@@ -152,7 +152,6 @@ const Management = () => {
           gap="middle"
           style={{
             backgroundColor: "#BDC6B5",
-            marginLeft: "-4%",
             marginTop: "5%",
           }}
         >
@@ -218,7 +217,6 @@ const Management = () => {
           gap="middle"
           style={{
             backgroundColor: "#BDC6B5",
-            marginLeft: "-4%",
             marginTop: "5%",
           }}
         >
