@@ -1,3 +1,4 @@
+
 .delete_button_wrapper{
     margin-bottom: 7px;
     .delete_button{
@@ -32,7 +33,7 @@
 }
 .ant-space-item{
     color: #4F4F4F;
-    font-size: 18px;
+    font-size: 20px;
 }
 .ant-space-item:hover{
     opacity: 0.8;
@@ -55,3 +56,14 @@
     opacity: 0.9;
     background: #517669;
 }
+
+.image_name{
+    display: flex;
+    align-items: center;
+    .image_in_table{
+        height: 50px;
+        width: 50px;
+        border-radius: 5px;
+    }
+}
+
