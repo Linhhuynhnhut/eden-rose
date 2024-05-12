@@ -8,7 +8,7 @@ import {
   Upload,
 } from "antd";
 
-const normFile = (e: any) => {
+const normFile = (e) => {
   if (Array.isArray(e)) {
     return e;
   }

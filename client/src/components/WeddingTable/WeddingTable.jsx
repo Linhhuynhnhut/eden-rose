@@ -1,18 +1,17 @@
 import React, { useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table } from "antd";
+import { Button, Input, Space, Table, message, Popconfirm } from "antd";
 import Highlighter from "react-highlight-words";
-import { MdDeleteForever } from "react-icons/md";
+import { MdCancelPresentation } from "react-icons/md";
+import { MdPayment } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-import MenuForm from "../MenuForm/MenuForm";
-import { Modal } from "antd";
+import { Tooltip } from "antd";
 
-import "./MenuTable.scss";
+import "./WeddingTable.scss";
 
-const MenuTable = ({ data }) => {
+const WeddingTable = ({ data }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const searchInput = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tableData, setTableData] = useState(data);
@@ -21,13 +20,6 @@ const MenuTable = ({ data }) => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -37,26 +29,16 @@ const MenuTable = ({ data }) => {
     clearFilters();
     setSearchText("");
   };
-  const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const hasSelected = selectedRowKeys.length > 0;
-  const handleDelete = (id) => {
-    const newData = tableData.filter((item) => item.key !== id);
+
+  const handleCancelWedding = (id) => {
+    const newData = tableData.map((item) => {
+      if (item.key === id && item.status === "Unpaid") {
+        return { ...item, status: "Cancelled" };
+      }
+      return item;
+    });
     setTableData(newData);
-  };
-  const handleDeleteSelectedItems = (selectedKeys) => {
-    // Filter out the deleted records
-    const newData = tableData.filter((item) => !selectedKeys.includes(item.key));
-    // Update the state with the new data
-    setTableData(newData);
-    // Clear the selectedRowKeys state
-    setSelectedRowKeys([]);
+    message.success("You have successfully cancelled a wedding");
   };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
@@ -162,58 +144,38 @@ const MenuTable = ({ data }) => {
   });
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      width: "30%",
-      ...getColumnSearchProps("name"),
-      render: (text, record) => (
-        <Space>
-          <img src={record.imageUrl} alt={text} className ="image_in_table"  />
-          {text}
-        </Space>
-      ),
+      title: "Groom",
+      dataIndex: "groomName",
+      key: "groomName",
+      width: "20%",
+      ...getColumnSearchProps("groomName"),
     },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
+      title: "Bride",
+      dataIndex: "brideName",
+      key: "brideName",
       width: "20%",
-      filters: [
-        {
-          text: "Main Dish",
-          value: "Main Dish",
-        },
-        {
-          text: "Dessert",
-          value: "Dessert",
-        },
-        {
-          text: "Appetizer",
-          value: "Appetizer",
-        },
-        {
-          text: "Beverage",
-          value: "Beverage",
-        }
-      ],
-      filterMode: "tree",
-      // filterSearch: true,
-      onFilter: (value, record) => record.type.startsWith(value),
+      ...getColumnSearchProps("brideName"),
     },
     {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
+      width: "15%",
+      ...getColumnSearchProps("phone"),
+    },
+    {
+      title: "Hall",
+      dataIndex: "hall",
+      key: "hall",
       width: "20%",
-      sorter: (a, b) => a.price - b.price,
-      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("hall"),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: "20%",
+      width: "15%",
       filters: [
         {
           text: "Available",
@@ -232,11 +194,26 @@ const MenuTable = ({ data }) => {
       title: "Action",
       // dataIndex: 'address',
       key: "action",
-      width: "20%",
+      width: "10%",
       render: (_, record) => (
         <Space>
-          <MdDeleteForever onClick={() => handleDelete(record.key)} />
-          <FaEdit onClick={showModal} />
+          <Tooltip title="Edit">
+            <FaEdit onClick={showModal} />
+          </Tooltip>
+          <Tooltip title="Pay">
+            <MdPayment />
+          </Tooltip>
+          <Popconfirm
+            title="Cancel the wedding"
+            description="Are you sure to cancel this wedding?"
+            onConfirm={() => handleCancelWedding(record.key)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tooltip title="Cancel">
+              <MdCancelPresentation />
+            </Tooltip>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -245,31 +222,36 @@ const MenuTable = ({ data }) => {
   return (
     <>
       <div>
-        {hasSelected && (
-          <div className="delete_button_wrapper">
-            <Button className="delete_button" onClick={()=>handleDeleteSelectedItems(selectedRowKeys)}>Delete</Button>
-            <span>Selected {selectedRowKeys.length} items</span>
-          </div>
-        )}
-
         <Table
-          rowSelection={rowSelection}
           columns={columns}
           dataSource={tableData}
+          expandable={{
+            expandedRowRender: (record) => (
+              <div className="wedding_detail">
+                <div className="left_wedding_detail">
+                  <p>Wedding Date: {record.weddingDate}</p>
+                  <p>Booking Date: {record.bookingDate}</p>
+                </div>
+                <div className="left_wedding_detail">
+                  
+                  <p>Shift: {record.shift}</p>
+                  <p>Number of table: {record.tableNum}</p>
+                </div>
+                <div className="left_wedding_detail">
+                  <p>Deposit: {record.deposit}</p>
+                  <p>ServicesTotal: {record.servicesTotal}</p>
+                </div>
+                <div className="left_wedding_detail">
+                  <p>Foods Total: {record.foodsTotal}</p>
+                  <p>Bill Total: {record.billTotal}</p>
+                </div>
+              </div>
+            ),
+            rowExpandable: (record) => record.name !== "Not Expandable",
+          }}
         />
-      </div>
-      <div>
-        <Modal
-          title="Update Dish"
-          open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          okText="Save"
-        >
-          <MenuForm />
-        </Modal>
       </div>
     </>
   );
 };
-export default MenuTable;
+export default WeddingTable;

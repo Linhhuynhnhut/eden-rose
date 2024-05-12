@@ -1,11 +1,12 @@
 import React, { useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table } from "antd";
+import { Button, Input, Space, Table, Popconfirm, message } from "antd";
 import Highlighter from "react-highlight-words";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import HallForm from "../../components/FormHall/HallForm";
 import { Modal } from "antd";
+import { Tooltip } from "antd";
 
 import "./TableHall.scss";
 
@@ -17,6 +18,9 @@ const TableHall = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tableData, setTableData] = useState(data);
 
+  const cancel = (e) => {
+    console.log(e);
+  };
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -51,8 +55,10 @@ const TableHall = ({ data }) => {
     setTableData(newData);
   };
   const handleDeleteSelectedItems = (selectedKeys) => {
-    // Filter out the deleted records
-    const newData = tableData.filter((item) => !selectedKeys.includes(item.key));
+    message.success("You have deleted selected halls");
+    const newData = tableData.filter(
+      (item) => !selectedKeys.includes(item.key)
+    );
     // Update the state with the new data
     setTableData(newData);
     // Clear the selectedRowKeys state
@@ -168,10 +174,10 @@ const TableHall = ({ data }) => {
       width: "30%",
       ...getColumnSearchProps("name"),
       render: (text, record) => (
-        <Space>
+        <div className="image_name">
           <img src={record.imageUrl} alt={text} className="image_in_table" />
           {text}
-        </Space>
+        </div>
       ),
     },
     {
@@ -228,8 +234,21 @@ const TableHall = ({ data }) => {
       width: "10%",
       render: (_, record) => (
         <Space>
-          <MdDeleteForever onClick={() => handleDelete(record.key)} />
-          <FaEdit onClick={showModal} />
+          <Tooltip title="Edit">
+            <FaEdit onClick={showModal} />
+          </Tooltip>
+          <Popconfirm
+            title="Delete the hall"
+            description="Are you sure to delete this hall?"
+            onConfirm={() => handleDelete(record.key)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tooltip title="Delete">
+              <MdDeleteForever danger />
+            </Tooltip>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -240,7 +259,16 @@ const TableHall = ({ data }) => {
       <div>
         {hasSelected && (
           <div className="delete_button_wrapper">
-            <Button className="delete_button" onClick={()=>handleDeleteSelectedItems(selectedRowKeys)}>Delete</Button>
+            <Popconfirm
+              title="Delete the hall"
+              description="Are you sure to delete these halls?"
+              onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button className="delete_button">Delete</Button>
+            </Popconfirm>
             <span>Selected {selectedRowKeys.length} items</span>
           </div>
         )}

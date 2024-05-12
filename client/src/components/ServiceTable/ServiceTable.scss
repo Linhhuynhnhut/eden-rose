@@ -14,6 +14,7 @@
         border-color: #bc4147;
         opacity: 0.8;
     }
+    
 }
 
 .ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected >.ant-table-cell {
@@ -56,9 +57,12 @@
     background: #517669;
 }
 
-.image_in_table{
-    height: 50px;
-    width: 50px;
-    border-radius: 5px;
-
+.image_name{
+    display: flex;
+    align-items: center;
+    .image_in_table{
+        height: 50px;
+        width: 50px;
+        border-radius: 5px;
+    }
 }
