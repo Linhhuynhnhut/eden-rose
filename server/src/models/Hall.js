@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/dbConfig'; 
+import sequelize from '../config/dbConfig.js'; 
 
 const Sanh = sequelize.define('Sanh', {
   MaSanh: {
@@ -11,7 +11,8 @@ const Sanh = sequelize.define('Sanh', {
   SLBanToiDa: DataTypes.INTEGER,
   GhiChu: DataTypes.STRING
 }, {
-  
+  timestamps: false,
+  tableName: 'Sanh'
 });
 
 export default Sanh;
