@@ -56,9 +56,15 @@
     background: #517669;
 }
 
-.image_in_table{
-    height: 50px;
-    width: 50px;
-    border-radius: 5px;
 
+.image_name{
+    display: flex;
+    align-items: center;
+    .image_in_table{
+        height: 50px;
+        width: 50px;
+        border-radius: 5px;
+        margin-right: 10px;
+    
+    }
 }

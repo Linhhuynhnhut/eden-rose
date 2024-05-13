@@ -1,6 +1,14 @@
 import React, { useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table } from "antd";
+import {
+  Button,
+  Input,
+  Space,
+  Table,
+  message,
+  Popconfirm,
+  Tooltip
+} from "antd";
 import Highlighter from "react-highlight-words";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
@@ -17,6 +25,9 @@ const ServiceTable = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tableData, setTableData] = useState(data);
 
+  const cancel = (e) => {
+    console.log(e);
+  };
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -47,12 +58,15 @@ const ServiceTable = ({ data }) => {
   };
   const hasSelected = selectedRowKeys.length > 0;
   const handleDelete = (id) => {
+    message.success("You have deleted a service");
     const newData = tableData.filter((item) => item.key !== id);
     setTableData(newData);
   };
   const handleDeleteSelectedItems = (selectedKeys) => {
-    // Filter out the deleted records
-    const newData = tableData.filter((item) => !selectedKeys.includes(item.key));
+    message.success("You have deleted selected services");
+    const newData = tableData.filter(
+      (item) => !selectedKeys.includes(item.key)
+    );
     // Update the state with the new data
     setTableData(newData);
     // Clear the selectedRowKeys state
@@ -168,10 +182,10 @@ const ServiceTable = ({ data }) => {
       width: "50%",
       ...getColumnSearchProps("name"),
       render: (text, record) => (
-        <Space>
-          <img src={record.imageUrl} alt={text} className ="image_in_table"  />
+        <div className="image_name">
+          <img src={record.imageUrl} alt={text} className="image_in_table" />
           {text}
-        </Space>
+        </div>
       ),
     },
     {
@@ -208,8 +222,21 @@ const ServiceTable = ({ data }) => {
       width: "10%",
       render: (_, record) => (
         <Space>
-          <MdDeleteForever onClick={() => handleDelete(record.key)} />
-          <FaEdit onClick={showModal} />
+          <Tooltip title="Edit">
+            <FaEdit onClick={showModal} />
+          </Tooltip>
+          <Popconfirm
+            title="Delete the service"
+            description="Are you sure to delete this service?"
+            onConfirm={() => handleDelete(record.key)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tooltip title="Delete">
+              <MdDeleteForever danger />
+            </Tooltip>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -220,7 +247,20 @@ const ServiceTable = ({ data }) => {
       <div>
         {hasSelected && (
           <div className="delete_button_wrapper">
-            <Button className="delete_button" onClick={()=>handleDeleteSelectedItems(selectedRowKeys)}>Delete</Button>
+            <Popconfirm
+            title="Delete the service"
+            description="Are you sure to delete these services?"
+            onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              className="delete_button"              
+            >
+              Delete
+            </Button>
+          </Popconfirm>
             <span>Selected {selectedRowKeys.length} items</span>
           </div>
         )}
