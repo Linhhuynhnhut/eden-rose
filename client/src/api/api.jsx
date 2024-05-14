@@ -10,8 +10,8 @@ export const api = {
     const url = "student";
     return axiosClient.get(url, params);
   },
-  getTest: (params) => {
-    const url = "";
+  getDishes: (params) => {
+    const url = "dish";
     return axiosClient.get(url, params);
   },
 
