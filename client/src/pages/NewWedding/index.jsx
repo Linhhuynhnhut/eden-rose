@@ -80,7 +80,7 @@ const NewWedding = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const hello = await api.getTest();
+      const hello = await api.getDishes();
       console.log("hello: ", hello);
     };
 
