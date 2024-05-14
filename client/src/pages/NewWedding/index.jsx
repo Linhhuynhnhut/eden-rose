@@ -5,6 +5,7 @@ import InformationForm from "../../components/InformationForm/InformationForm";
 import TableForm from "../../components/TableForm/TableForm";
 import { stepsAddWedding as steps, menu, services } from "../../constants";
 import { Steps, theme } from "antd";
+import { api } from "../../api/api";
 
 import "./newWedding.scss";
 import Summary from "../../components/Summary/Summary";
@@ -77,10 +78,14 @@ const NewWedding = () => {
     ),
   };
 
-  // useEffect(() => {
-  // console.log("infor: ", formRef.current);
-  // console.log("menu: ", menuRef.current);
-  // }, [formRef.current, menuRef.current]);
+  useEffect(() => {
+    const getData = async () => {
+      const hello = await api.getTest();
+      console.log("hello: ", hello);
+    };
+
+    getData();
+  }, []);
 
   return (
     <div className="add-wedding">
