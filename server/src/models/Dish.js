@@ -1,12 +1,19 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/dbConfig'; 
-
+import sequelize from '../config/dbConfig.js'; 
 
 const MonAn = sequelize.define('MonAn', {
-    MaMonAn: { type: DataTypes.STRING, primaryKey: true },
+    MaMonAn: { 
+        type: DataTypes.INTEGER, 
+        primaryKey: true,
+
+    },
     TenMonAn: DataTypes.STRING,
     MaPhanLoai: DataTypes.STRING,
     DonGia: DataTypes.FLOAT,
+    MaTinhTrang: DataTypes.STRING
+}, {
+    timestamps: false,
+    tableName: 'MonAn'
 });
 
-module.exports = MonAn;
+export default MonAn;

@@ -28,12 +28,6 @@ sequelize.authenticate()
     });
 
 
-sequelize.sync({ force: true, logging: console.log }).then(() => {
-  console.log("Database synchronized");
-}).catch((error) => {
-  console.error("Error synchronizing the database: ", error);
-});
-
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });

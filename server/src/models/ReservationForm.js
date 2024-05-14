@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/dbConfig'; 
+import sequelize from '../config/dbConfig.js'; 
 
 const PhieuDatTC = sequelize.define('PhieuDatTC', {
   MaPhieuDatTC: {
@@ -20,7 +20,8 @@ const PhieuDatTC = sequelize.define('PhieuDatTC', {
   TongTienPhieuDatTC: DataTypes.FLOAT,
   TinhTrangThanhToan: DataTypes.STRING
 }, {
-  
+  timestamps: false,
+  tableName: 'PhieuDatTC'
 });
 
 module.exports = PhieuDatTC;
