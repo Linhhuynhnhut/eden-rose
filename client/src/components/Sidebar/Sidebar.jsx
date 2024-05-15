@@ -74,10 +74,10 @@ const Sidebar = () => {
               component={<Link to={sidebarNav[1].path}></Link>}
             >
               <div className="logotext">
-                <p>
+                <div className="logo_img">
                   <img src={logo} alt="logo.png" />
-                  <span>EDEN ROSE</span>
-                </p>
+                </div>
+                <div className="app_name">EDEN ROSE</div>
               </div>
             </MenuItem>
             <MenuItem

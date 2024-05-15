@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Space, Table, message, Popconfirm } from "antd";
 import Highlighter from "react-highlight-words";
@@ -6,18 +6,36 @@ import { MdCancelPresentation } from "react-icons/md";
 import { MdPayment } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { Tooltip } from "antd";
+import NewWedding from "../../pages/NewWedding/index";
+import Payment from "../../pages/Payment";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoChevronBack } from "react-icons/io5";
+import { IoArrowBack } from "react-icons/io5";
 
 import "./WeddingTable.scss";
 
-const WeddingTable = ({ data }) => {
+const WeddingTable = ({ data, onEdit, onEditClick }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isWeddingEdit, setIsWeddingEdit] = useState(false);
+  const [isPayment, setIsPayment] = useState(false);
   const [tableData, setTableData] = useState(data);
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  // useEffect(() => {
+  //   setIsWeddingEdit(showEdit);
+  // }, [showEdit]);
+
+  const showWeddingEdit = (record) => {
+    setIsWeddingEdit(true);
+    onEdit(record);
+    onEditClick(true);
+  };
+
+  const handlePay = (record) => {
+    setIsPayment(true);
+    onEdit(record);
+    onEditClick(true);
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -198,10 +216,10 @@ const WeddingTable = ({ data }) => {
       render: (_, record) => (
         <Space>
           <Tooltip title="Edit">
-            <FaEdit onClick={showModal} />
+            <FaEdit onClick={() => showWeddingEdit(record)} />
           </Tooltip>
           <Tooltip title="Pay">
-            <MdPayment />
+            <MdPayment onClick={() => handlePay(record)} />
           </Tooltip>
           <Popconfirm
             title="Cancel the wedding"
@@ -221,36 +239,69 @@ const WeddingTable = ({ data }) => {
 
   return (
     <>
-      <div>
-        <Table
-          columns={columns}
-          dataSource={tableData}
-          expandable={{
-            expandedRowRender: (record) => (
-              <div className="wedding_detail">
-                <div className="left_wedding_detail">
-                  <p>Wedding Date: {record.weddingDate}</p>
-                  <p>Booking Date: {record.bookingDate}</p>
+      {isWeddingEdit && (
+        <div>
+          <NewWedding isWeddingEdit={true} />
+          <div className="btn_cancel_changes">
+            <Button
+              type="primary"
+              onClick={() => {
+                setIsWeddingEdit(false);
+                onEditClick(false);
+              }}
+            >
+              Cancel Changes
+            </Button>
+          </div>
+        </div>
+      )}
+      {isPayment && (
+        <div>
+          <Payment />
+          <div className="btn_back">
+            <Button
+              type="primary"
+              onClick={() => {
+                setIsPayment(false);
+                onEditClick(false);
+              }}
+            >
+              Back
+            </Button>
+          </div>
+        </div>
+      )}
+      {!isPayment && !isWeddingEdit && (
+        <div>
+          <Table
+            columns={columns}
+            dataSource={tableData}
+            expandable={{
+              expandedRowRender: (record) => (
+                <div className="wedding_detail">
+                  <div className="left_wedding_detail">
+                    <p>Wedding Date: {record.weddingDate}</p>
+                    <p>Booking Date: {record.bookingDate}</p>
+                  </div>
+                  <div className="left_wedding_detail">
+                    <p>Shift: {record.shift}</p>
+                    <p>Number of table: {record.tableNum}</p>
+                  </div>
+                  <div className="left_wedding_detail">
+                    <p>Deposit: {record.deposit}</p>
+                    <p>ServicesTotal: {record.servicesTotal}</p>
+                  </div>
+                  <div className="left_wedding_detail">
+                    <p>Foods Total: {record.foodsTotal}</p>
+                    <p>Bill Total: {record.billTotal}</p>
+                  </div>
                 </div>
-                <div className="left_wedding_detail">
-                  
-                  <p>Shift: {record.shift}</p>
-                  <p>Number of table: {record.tableNum}</p>
-                </div>
-                <div className="left_wedding_detail">
-                  <p>Deposit: {record.deposit}</p>
-                  <p>ServicesTotal: {record.servicesTotal}</p>
-                </div>
-                <div className="left_wedding_detail">
-                  <p>Foods Total: {record.foodsTotal}</p>
-                  <p>Bill Total: {record.billTotal}</p>
-                </div>
-              </div>
-            ),
-            rowExpandable: (record) => record.name !== "Not Expandable",
-          }}
-        />
-      </div>
+              ),
+              rowExpandable: (record) => record.name !== "Not Expandable",
+            }}
+          />
+        </div>
+      )}
     </>
   );
 };

@@ -70,3 +70,26 @@
 .ant-table-expanded-row{
     background-color: #E1E6DD;
 }
+.btn_cancel_changes{
+    display: flex;
+    justify-content: center;
+    .ant-btn-primary {
+    background-color: #bc4147;
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+    border-color: #bc4147;
+    margin-top: 20px;
+    }
+    .ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+        background-color: #bc4147;
+        color: #ffffff;
+        border-color: #bc4147;
+        opacity: 0.8;
+    }
+}
+
+.btn_back{
+    .ant-btn-primary{
+        margin-left: 40px;
+    }
+}

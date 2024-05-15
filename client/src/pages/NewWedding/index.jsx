@@ -9,7 +9,7 @@ import { Steps, theme } from "antd";
 import "./newWedding.scss";
 import Summary from "../../components/Summary/Summary";
 
-const NewWedding = () => {
+const NewWedding = ({isWeddingEdit}) => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const formRef = useRef();
@@ -84,7 +84,7 @@ const NewWedding = () => {
 
   return (
     <div className="add-wedding">
-      <Header title="New wedding" />
+      <Header title={isWeddingEdit?"Edit Wedding":"New wedding"} />
       <Label name={steps[current].title} />
       <div>
         <div style={contentStyle}>{mapper[steps[current].content]}</div>

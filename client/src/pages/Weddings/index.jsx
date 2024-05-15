@@ -1,10 +1,10 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import WeddingTable from "../../components/WeddingTable/WeddingTable";
 import { PlusOutlined } from "@ant-design/icons";
 import "./weddings.scss";
-import { Button} from "antd";
+import { Button } from "antd";
 
 const Weddings = () => {
   const data = [
@@ -74,18 +74,32 @@ const Weddings = () => {
     },
   ];
 
+  const [showNoHeader, setShowNoHeader] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const handleEditForm = (isVisible) => {
+    setShowNoHeader(isVisible);
+  };
   return (
     <div className="wedding_page">
-      <Header title="Weddings Management" />
-      <div className="btn_new_wedding">
-        <Link to="/management/new-wedding">
-          <Button type="primary" icon={<PlusOutlined />}>
-            New Wedding
-          </Button>
-        </Link>
-      </div>
+      {console.log(showEditForm)}
+      {!showNoHeader && <Header title="Weddings Management" />}
+      {!showNoHeader && (
+        <div className="btn_new_wedding">
+          <Link to="/management/new-wedding">
+            <Button type="primary" icon={<PlusOutlined />}>
+              New Wedding
+            </Button>
+          </Link>
+        </div>
+      )}
       <div className="wedding_table">
-        <WeddingTable data={data} />
+        <WeddingTable
+          data={data}
+          onEdit={(record) => console.log("Editing", record)}
+          onEditClick={handleEditForm}
+          // showEdit={showEditForm}
+        />
       </div>
     </div>
   );
