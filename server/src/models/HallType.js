@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/dbConfig'; 
+import sequelize from '../config/dbConfig.js'; 
 
 const LoaiSanh = sequelize.define('LoaiSanh', {
   MaLoaiSanh: {
@@ -10,7 +10,8 @@ const LoaiSanh = sequelize.define('LoaiSanh', {
   DGBanToiThieu: DataTypes.FLOAT,
   GhiChu: DataTypes.STRING
 }, {
-  
+  timestamps: false,
+  tableName: 'LoaiSanh'
 });
 
 module.exports = LoaiSanh;

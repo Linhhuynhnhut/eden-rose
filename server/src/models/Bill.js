@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/dbConfig'; 
+import sequelize from '../config/dbConfig.js'; 
 
 const HoaDon = sequelize.define('HoaDon', {
     MaHoaDon: { type: DataTypes.STRING, primaryKey: true },
@@ -9,6 +9,9 @@ const HoaDon = sequelize.define('HoaDon', {
     SoTienPhaiTra: DataTypes.FLOAT,
     SoNgayTre: DataTypes.INTEGER,
     TienPhat: DataTypes.FLOAT,
+}, {
+    timestamps: false,
+    tableName: 'HoaDon'
 });
 
 module.exports = HoaDon;
