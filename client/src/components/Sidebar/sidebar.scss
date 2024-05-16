@@ -74,17 +74,20 @@
               }
             }
             .logotext {
-              p {
-                font-size: 20px;
-                padding: 0 20px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                img {
-                  width: 100px;
-                  height: 110px;
-                }
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              .app_name {
+                font-family: "Kumar One", serif;
+                font-weight: 400;
+                font-style: normal;
+                font-size: 25px;
+                padding: 10px 20px 0;
+              }
+              img {
+                width: 65px;
+                height: 85px;
               }
             }
           }

@@ -3,27 +3,39 @@
 .header {
   text-align: left;
   margin-left: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
+  width: fit-content;
+  .title{
+    margin-right: 70px;
+    h1{
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+  }
   .ant-typography {
     color: $primary-color !important;
     font-weight: 700;
   }
-  .span-line {
-    content: "";
-    width: 345px;
-    height: 10px;
-    background-color: $secondary-color;
-    position: absolute;
-    border-radius: 10px;
-  }
+  .line-container {
+    position: relative;
+    .span-line {
+      content: "";
+      width: 93%;
+      height: 10px;
+      background-color: $secondary-color;
+      position: absolute;
+      border-radius: 10px;
+    }
 
-  .span-dot {
-    content: "";
-    margin-left: 355px;
-    width: 10px;
-    height: 10px;
-    background-color: $secondary-color;
-    position: absolute;
-    border-radius: 10px;
+    .span-dot {
+      content: "";
+      // margin-left: 355px;
+      width: 10px;
+      height: 10px;
+      background-color: $secondary-color;
+      position: absolute;
+      border-radius: 10px;
+      right: 0;
+    }
   }
 }
