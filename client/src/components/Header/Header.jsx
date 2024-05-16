@@ -6,8 +6,10 @@ const { Title } = Typography;
 const Header = ({ title }) => {
   return (
     <div className="header">
-      <Title>{title}</Title>
-      <div>
+      <div className="title">
+        <Title>{title}</Title>
+      </div>
+      <div className="line-container">
         <span className="span-line"></span>
         <span className="span-dot"></span>
       </div>
