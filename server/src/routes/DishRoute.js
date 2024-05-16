@@ -7,4 +7,8 @@ dishRouter.get("/", dishController.search);
 
 dishRouter.post("/", dishController.create);
 
+// dishRouter.put("/", dishController.update);
+
+// dishRouter.delete("/:id", dishController.remove);
+
 export default dishRouter;

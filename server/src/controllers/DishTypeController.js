@@ -1,49 +1,47 @@
 import responseHandler from "../handlers/ResponseHandler.js";
-import MonAn from "../models/Dish.js";
+import PhanLoai from "../models/DishType.js";
 
 const search = async (req, res) => {
   try {
-    const dishes = await MonAn.findAll();
+    const dishTypes = await PhanLoai.findAll();
 
-    if (!dishes || dishes.length === 0) {
+    if (!dishTypes || dishTypes.length === 0) {
       responseHandler.notfound(res);
       return;
     }
 
-    responseHandler.ok(res, dishes);
+    responseHandler.ok(res, dishTypes);
   } catch (error) {
-    console.error("Error fetching dishes:", error);
+    console.error("Error fetching dish type:", error);
     responseHandler.error(res);
   }
 };
 
 const create = async (req, res) => {
   try {
-    const { TenMonAn, MaPhanLoai, DonGia, MaTinhTrang } = req.body;
+    const { PhanLoai: TenPhanLoai } = req.body;
 
-    if (!TenMonAn || !MaPhanLoai || !DonGia || !MaTinhTrang) {
+    if (!TenPhanLoai) {
       responseHandler.error(res);
       return;
     }
 
-    const newDish = await MonAn.create({
-      TenMonAn,
-      MaPhanLoai,
-      DonGia,
-      MaTinhTrang,
+    const newDishType = await PhanLoai.create({
+      PhanLoai: TenPhanLoai,
     });
 
-    responseHandler.ok(res, newDish);
+    responseHandler.ok(res, newDishType);
   } catch (error) {
-    console.error("Error creating new dish:", error);
+    console.error("Error creating new dish type:", error);
     responseHandler.error(res, error.message);
   }
 };
 
 // const update = async (req, res) => {
 //   try {
-//     const updateDish = await MonAn.findById(req.params.id);
-//     await updateDish.updateOne({ $set: req.body });
+//     const { MaPhanLoai, PhanLoai: TenPhanLoai } = req.body;
+//     const updateDishType = await PhanLoai.findById(MaPhanLoai);
+//     await updateDishType.updateOne({ $set: req.body });
 //     res.status(200).json("Updated successfully!");
 //   } catch (err) {
 //     res.status(500).json(err);
@@ -52,7 +50,7 @@ const create = async (req, res) => {
 
 // const remove = async (req, res) => {
 //   try {
-//     await MonAn.findByIdAndDelete(req.params.id);
+//     await PhanLoai.findByIdAndDelete(req.params.id);
 //     res.status(200).json("Deleted successfully!");
 //   } catch (err) {
 //     res.status(500).json(err);

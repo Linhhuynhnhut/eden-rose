@@ -1,12 +1,16 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../config/dbConfig.js'; 
+import { DataTypes } from "sequelize";
+import sequelize from "../config/dbConfig.js";
 
-const PhanLoai = sequelize.define('PhanLoai', {
+const PhanLoai = sequelize.define(
+  "PhanLoai",
+  {
     MaPhanLoai: { type: DataTypes.STRING, primaryKey: true },
     PhanLoai: DataTypes.STRING,
-}, {
+  },
+  {
     timestamps: false,
-    tableName: 'PhanLoai'
-});
+    tableName: "PhanLoai",
+  }
+);
 
-module.exports = PhanLoai;
+export default PhanLoai;
