@@ -9,11 +9,12 @@ import Halls from "../pages/Halls";
 import Menu from "../pages/Menu";
 import Services from "../pages/WeddingServices";
 import Payment from "../pages/Payment";
+import Setting from "../pages/Setting/Setting"
+
 
 const RoutesConfig = () => {
   return (
     <Routes>
-      <Route path="/" exact element={<HomePage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/management" element={<Management />} />
       <Route path="/management/new-wedding" element={<NewWedding />} />
@@ -22,6 +23,8 @@ const RoutesConfig = () => {
       <Route path="/management/menu" element={<Menu />} />
       <Route path="/management/services" element={<Services />} />
       <Route path="/payment" element={<Payment />} />
+      <Route path="/setting" element={<Setting />} />
+      <Route path="/" exact element={<HomePage />} />
     </Routes>
   );
 };

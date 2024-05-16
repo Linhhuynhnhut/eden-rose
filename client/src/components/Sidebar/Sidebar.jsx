@@ -58,6 +58,10 @@ const sidebarNav = [
     display: "New Wedding",
     path: "/management/new-Wedding",
   },
+  {
+    display: "Setting",
+    path: "/setting",
+  },
 ];
 
 const Sidebar = () => {
@@ -138,7 +142,11 @@ const Sidebar = () => {
               Payment
             </MenuItem>
 
-            <MenuItem icon={<BiCog />}>Settings</MenuItem>
+            <MenuItem
+             active={pathname === sidebarNav[9].path}
+              icon={<BiCog />}
+              component={<Link to={sidebarNav[9].path}></Link>}
+            >Settings</MenuItem>
           </Menu>
         </ProSidebar>
       </div>
