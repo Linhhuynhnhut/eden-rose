@@ -59,4 +59,4 @@ const create = async (req, res) => {
 //   }
 // };
 
-export default { search, create, update, remove };
+export default { search, create };
