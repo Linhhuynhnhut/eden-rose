@@ -5,6 +5,7 @@ import http from "http";
 import sequelize from "./src/config/dbConfig.js";
 import "dotenv/config";
 import routes from "./src/routes/index.js";
+import setupSwagger from "./src/config/swagger.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/v1", routes);
+setupSwagger(app);
 
 const port = process.env.PORT || 5000;
 

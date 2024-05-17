@@ -40,23 +40,46 @@ const create = async (req, res) => {
   }
 };
 
-// const update = async (req, res) => {
-//   try {
-//     const updateDish = await MonAn.findById(req.params.id);
-//     await updateDish.updateOne({ $set: req.body });
-//     res.status(200).json("Updated successfully!");
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// };
+const update = async (req, res) => {
+  const { MaMonAn } = req.params;
+  const { TenMonAn, MaPhanLoai, DonGia, MaTinhTrang } = req.body;
 
-// const remove = async (req, res) => {
-//   try {
-//     await MonAn.findByIdAndDelete(req.params.id);
-//     res.status(200).json("Deleted successfully!");
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// };
+  try {
+      const monAn = await MonAn.findByPk(MaMonAn);
 
-export default { search, create };
+      if (!monAn) {
+          return res.status(404).json({ message: 'MonAn not found' });
+      }
+
+      monAn.TenMonAn = TenMonAn || monAn.TenMonAn;
+      monAn.MaPhanLoai = MaPhanLoai || monAn.MaPhanLoai;
+      monAn.DonGia = DonGia || monAn.DonGia;
+      monAn.MaTinhTrang = MaTinhTrang || monAn.MaTinhTrang;
+
+      await monAn.save();
+
+      return res.status(200).json({ message: 'MonAn updated successfully', monAn });
+  } catch (error) {
+      return res.status(500).json({ message: 'Error updating MonAn', error });
+  }
+};
+
+const remove = async (req, res) => {
+  const { MaMonAn } = req.params;
+
+  try {
+      const monAn = await MonAn.findByPk(MaMonAn);
+
+      if (!monAn) {
+          return res.status(404).json({ message: 'MonAn not found' });
+      }
+
+      await monAn.destroy();
+
+      return res.status(200).json({ message: 'MonAn deleted successfully' });
+  } catch (error) {
+      return res.status(500).json({ message: 'Error deleting MonAn', error });
+  }
+};
+
+export default { search, create, update, remove };
