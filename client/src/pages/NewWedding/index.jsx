@@ -78,14 +78,14 @@ const NewWedding = ({isWeddingEdit}) => {
     ),
   };
 
-  useEffect(() => {
-    const getData = async () => {
-      const hello = await api.getDishes();
-      console.log("hello: ", hello);
-    };
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const hello = await api.getDishes();
+  //     console.log("hello: ", hello);
+  //   };
 
-    getData();
-  }, []);
+  //   getData();
+  // }, []);
 
   return (
     <div className="add-wedding">
