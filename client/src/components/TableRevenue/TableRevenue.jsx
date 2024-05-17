@@ -15,16 +15,6 @@ const months = [
   'September', 'October', 'November', 'December'
 ];
 
-
-// const getMonthMenu = (year) => (
-//   <Menu>
-//     {months.map((month, index) => (
-//       <Menu.Item key={`${year}-${index + 1}`}>
-//         {month}
-//       </Menu.Item>
-//     ))}
-//   </Menu>
-// );
 const columns = [
   {
     title: 'No.', // Column title for serial numbers
@@ -194,13 +184,7 @@ const onChange = (pagination, filters, sorter, extra) => {
 const TableRevenue = () => ( <Table
   columns={columns}
   expandable={{
-    expandedRowRender: (record) => (
-      <div className="item_extension">
-            <p style={{ margin: 0, }} >{record.Date}</p>
-
-      </div>
-  
-    ),
+   
     rowExpandable: (record) => record.name !== 'Not Expandable',
   }}
   dataSource={data}
