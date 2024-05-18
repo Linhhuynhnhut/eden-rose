@@ -79,16 +79,15 @@ const NewWedding = ({ isWeddingEdit }) => {
   };
 
   useEffect(() => {
-    const getData = async () => {
-      const payload = {
-        TenMonAn: "a",
-        DonGia: 25000,
-      };
-      const hello = await api.postDishes(payload);
-      console.log("hello: ", hello);
-    };
-
-    getData();
+    // const getData = async () => {
+    //   const payload = {
+    //     TenMonAn: "a",
+    //     DonGia: 25000,
+    //   };
+    //   const hello = await api.postDishes(payload);
+    //   console.log("hello: ", hello);
+    // };
+    // getData();
   }, []);
 
   return (
