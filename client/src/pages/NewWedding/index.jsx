@@ -10,7 +10,7 @@ import { api } from "../../api/api";
 import "./newWedding.scss";
 import Summary from "../../components/Summary/Summary";
 
-const NewWedding = ({isWeddingEdit}) => {
+const NewWedding = ({ isWeddingEdit }) => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const formRef = useRef();
@@ -78,18 +78,22 @@ const NewWedding = ({isWeddingEdit}) => {
     ),
   };
 
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const hello = await api.getDishes();
-  //     console.log("hello: ", hello);
-  //   };
+  useEffect(() => {
+    const getData = async () => {
+      const payload = {
+        TenMonAn: "a",
+        DonGia: 25000,
+      };
+      const hello = await api.postDishes(payload);
+      console.log("hello: ", hello);
+    };
 
-  //   getData();
-  // }, []);
+    getData();
+  }, []);
 
   return (
     <div className="add-wedding">
-      <Header title={isWeddingEdit?"Edit Wedding":"New wedding"} />
+      <Header title={isWeddingEdit ? "Edit Wedding" : "New wedding"} />
       <Label name={steps[current].title} />
       <div>
         <div style={contentStyle}>{mapper[steps[current].content]}</div>
