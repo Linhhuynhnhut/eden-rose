@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import './Setting.scss';
+import React, { useState, useEffect } from "react";
+import "./Setting.scss";
 import Header from "../../components/Header/Header";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
@@ -9,8 +9,12 @@ import TablePenaltyRate from "../../components/TablePenaltyRate/TablePenaltyRate
 import FormHallType from "../../components/FormHallType/FormHallType";
 import FormShiftType from "../../components/FormShiftType/FormShiftType";
 import FormPenalty from "../../components/FormPenalty/FormPenalty";
+import { api } from "../../api/api";
+import axios from "axios";
+import img from "../../assets/services/service1.jpg";
 
 function Setting() {
+  const [halltypes, setHallTypes] = useState([]);
   const TypeHall = [
     {
       key: "1",
@@ -100,11 +104,11 @@ function Setting() {
     setIsModalOpen(true);
   };
 
-  const showPenalty=()=>{
+  const showPenalty = () => {
     setModalTitle("Add New Penalty Rate");
     setModalForm(<FormPenalty />);
     setIsModalOpen(true);
-  }
+  };
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -114,17 +118,42 @@ function Setting() {
     setIsModalOpen(false);
   };
 
+  useEffect(() => {
+    const getData = async () => {
+      // const payload = {
+      //   TenMonAn: "a",
+      //   DonGia: 25000,
+      // };
+      const hello = await api.getHallTypes();
+      console.log("hello: ", hello);
+      const data = hello.map((item) => {
+        return {
+          key: item.MaLoaiSanh,
+          name: item.TenLoaiSanh,
+          MinimumPrice: item.DGBanToiThieu,
+        };
+      });
+      console.log("new data: ", data);
+    };
+    // uploadImage(img);
+    getData();
+  }, []);
+
   return (
     <div className="SettingPage">
       <div className="Setting_header">
         <Header title="Setting" />
       </div>
-
       <div className="table_hall_type">
         <h2>Hall Type</h2>
         <TableHallType data={TypeHall} />
         <div className="btn_Add_div">
-          <Button className="btn_Add" type="primary" icon={<PlusOutlined />} onClick={showHallType}>
+          <Button
+            className="btn_Add"
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={showHallType}
+          >
             New Hall Type
           </Button>
         </div>
@@ -135,7 +164,12 @@ function Setting() {
           <h2>Shift Type</h2>
           <TableShiftType data={ShiftType} />
           <div className="btn_Add_div">
-            <Button className="btn_Add" type="primary" icon={<PlusOutlined />} onClick={showShiftType}>
+            <Button
+              className="btn_Add"
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={showShiftType}
+            >
               New Shift Type
             </Button>
           </div>
@@ -144,7 +178,12 @@ function Setting() {
           <h2>Dish Type</h2>
           <TableShiftType data={DishType} />
           <div className="btn_Add_div">
-            <Button className="btn_Add" type="primary" icon={<PlusOutlined />} onClick={showDishType}>
+            <Button
+              className="btn_Add"
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={showDishType}
+            >
               New Dish Type
             </Button>
           </div>
@@ -167,7 +206,12 @@ function Setting() {
         <h2>Penalty Regulations</h2>
         <TablePenaltyRate data={penaltyRateData} />
         <div className="btn_Add_div">
-          <Button className="btn_Add" type="primary" icon={<PlusOutlined />} onClick={showPenalty}>
+          <Button
+            className="btn_Add"
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={showPenalty}
+          >
             New Penalty Regulations
           </Button>
         </div>

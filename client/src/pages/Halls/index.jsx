@@ -3,11 +3,12 @@ import TableHall from "../../components/TableHall/TableHall";
 import HallForm from "../../components/FormHall/HallForm";
 import Header from "../../components/Header/Header";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Modal } from "antd";
-import image1 from "../../assets/halls/hall1.jpg"
+import { Button, Modal, Form } from "antd";
+import image1 from "../../assets/halls/hall1.jpg";
 import "./halls.scss";
 
 const Halls = () => {
+  const [form] = Form.useForm();
   const data = [
     {
       key: "1",
@@ -48,13 +49,16 @@ const Halls = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
+    const values = await form?.validateFields();
+    console.log("values", values);
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
   return (
     <div className="hall_page">
       <Header title="Hall Management" />
@@ -72,7 +76,7 @@ const Halls = () => {
           onCancel={handleCancel}
           okText="Save"
         >
-          <HallForm />
+          <HallForm form={form} />
         </Modal>
       </div>
       <div className="table_hall">
