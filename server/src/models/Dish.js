@@ -10,7 +10,8 @@ const MonAn = sequelize.define('MonAn', {
     TenMonAn: DataTypes.STRING,
     MaPhanLoai: DataTypes.STRING,
     DonGia: DataTypes.FLOAT,
-    MaTinhTrang: DataTypes.STRING
+    MaTinhTrang: DataTypes.STRING,
+    isDeleted: DataTypes.BOOLEAN
 }, {
     timestamps: false,
     tableName: 'MonAn'
