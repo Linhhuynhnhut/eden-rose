@@ -7,8 +7,8 @@ dishRouter.get("/", dishController.search);
 
 dishRouter.post("/", dishController.create);
 
-// dishRouter.put("/", dishController.update);
+dishRouter.put("/:MaMonAn", dishController.update);
 
-// dishRouter.delete("/:id", dishController.remove);
+dishRouter.delete("/:MaMonAn", dishController.remove);
 
 export default dishRouter;
