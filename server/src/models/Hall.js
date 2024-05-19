@@ -9,7 +9,8 @@ const Sanh = sequelize.define('Sanh', {
   TenSanh: DataTypes.STRING,
   MaLoaiSanh: DataTypes.STRING,
   SLBanToiDa: DataTypes.INTEGER,
-  GhiChu: DataTypes.STRING
+  GhiChu: DataTypes.STRING,
+  Anh: DataTypes.STRING
 }, {
   timestamps: false,
   tableName: 'Sanh'
