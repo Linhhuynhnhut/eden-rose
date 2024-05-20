@@ -21,6 +21,7 @@ const Sanh = sequelize.define(
     GhiChu: DataTypes.STRING,
     Anh: DataTypes.STRING,
   },
+
   {
     timestamps: false,
     tableName: "Sanh",

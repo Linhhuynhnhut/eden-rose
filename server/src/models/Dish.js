@@ -19,6 +19,7 @@ const MonAn = sequelize.define(
       },
     },
     DonGia: DataTypes.FLOAT,
+
     MaTinhTrang: {
       type: DataTypes.INTEGER,
       references: {

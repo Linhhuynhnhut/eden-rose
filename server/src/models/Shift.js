@@ -6,6 +6,7 @@ const Ca = sequelize.define(
   {
     MaCa: { type: DataTypes.STRING, primaryKey: true },
     TenCa: DataTypes.STRING,
+    isDeleted: DataTypes.BOOLEAN
   },
   {
     timestamps: false,

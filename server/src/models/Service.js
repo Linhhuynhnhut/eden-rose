@@ -8,6 +8,7 @@ const DichVu = sequelize.define(
     TenDichVu: DataTypes.STRING,
     DonGia: DataTypes.FLOAT,
     MaTinhTrang: DataTypes.STRING,
+    isDeleted: DataTypes.BOOLEAN
   },
   {
     timestamps: false,

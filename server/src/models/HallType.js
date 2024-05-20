@@ -11,6 +11,7 @@ const LoaiSanh = sequelize.define(
     TenLoaiSanh: DataTypes.STRING,
     DGBanToiThieu: DataTypes.FLOAT,
     GhiChu: DataTypes.STRING,
+    isDeleted: DataTypes.BOOLEAN
   },
   {
     timestamps: false,
