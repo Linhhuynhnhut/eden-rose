@@ -37,4 +37,27 @@ const create = async (req, res) => {
   }
 };
 
-export default { search, create };
+const update = async (req, res) => {
+  const { MaCa } = req.params;
+  const { TenCa } = req.body;
+
+  try {
+    const shift = await Ca.findByPk(MaCa);
+
+    if (!shift) {
+      return res.status(404).json({ message: "Shift not found" });
+    }
+
+    shift.TenCa = TenCa || shift.TenCa;
+
+    await shift.save();
+
+    return res
+      .status(200)
+      .json({ message: "Shift updated successfully", shift });
+  } catch (error) {
+    return res.status(500).json({ message: "Error updating Ca", error });
+  }
+};
+
+export default { search, create, update };

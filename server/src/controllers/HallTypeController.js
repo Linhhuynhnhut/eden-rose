@@ -40,4 +40,29 @@ const create = async (req, res) => {
   }
 };
 
-export default { search, create };
+const update = async (req, res) => {
+  const { MaLoaiSanh } = req.params;
+  const { TenLoaiSanh, DGBanToiThieu, GhiChu } = req.body;
+
+  try {
+    const hallType = await LoaiSanh.findByPk(MaLoaiSanh);
+
+    if (!hallType) {
+      return res.status(404).json({ message: "Hall Type not found" });
+    }
+
+    hallType.TenLoaiSanh = TenLoaiSanh || hallType.TenLoaiSanh;
+    hallType.DGBanToiThieu = DGBanToiThieu || hallType.DGBanToiThieu;
+    hallType.GhiChu = GhiChu || hallType.GhiChu;
+
+    await hallType.save();
+
+    return res
+      .status(200)
+      .json({ message: "Hall type updated successfully", hallType });
+  } catch (error) {
+    return res.status(500).json({ message: "Error updating LoaiSanh", error });
+  }
+};
+
+export default { search, create, update };

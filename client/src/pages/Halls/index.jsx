@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TableHall from "../../components/TableHall/TableHall";
 import HallForm from "../../components/FormHall/HallForm";
 import Header from "../../components/Header/Header";
@@ -6,9 +6,29 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Button, Modal, Form } from "antd";
 import image1 from "../../assets/halls/hall1.jpg";
 import "./halls.scss";
+import { api } from "../../api/api";
 
 const Halls = () => {
   const [form] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hallTypes, setHallTypes] = useState([]);
+
+  const getData = async () => {
+    // get hall type
+    const rawDataHallTypes = await api.getHallTypes();
+    const data = rawDataHallTypes.map((item) => {
+      return {
+        key: item.MaLoaiSanh,
+        name: item.TenLoaiSanh,
+        MinimumPrice: item.DGBanToiThieu,
+      };
+    });
+    setHallTypes(data);
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
   const data = [
     {
       key: "1",
@@ -43,7 +63,6 @@ const Halls = () => {
       imageUrl: image1,
     },
   ];
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
