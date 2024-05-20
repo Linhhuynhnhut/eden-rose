@@ -18,7 +18,8 @@ const PhieuDatTC = sequelize.define('PhieuDatTC', {
   TongTienBan: DataTypes.FLOAT,
   TongTienDichVu: DataTypes.FLOAT,
   TongTienPhieuDatTC: DataTypes.FLOAT,
-  TinhTrangThanhToan: DataTypes.STRING
+  TinhTrangThanhToan: DataTypes.STRING,
+  isDeleted: DataTypes.BOOLEAN
 }, {
   timestamps: false,
   tableName: 'PhieuDatTC'

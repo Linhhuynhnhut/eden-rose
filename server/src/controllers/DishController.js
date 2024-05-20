@@ -19,9 +19,10 @@ const search = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const { TenMonAn, MaPhanLoai, DonGia, MaTinhTrang } = req.body;
+    const { TenMonAn, MaPhanLoai, DonGia, MaTinhTrang, Anh, isDeleted } =
+      req.body;
 
-    if (!TenMonAn || !MaPhanLoai || !DonGia || !MaTinhTrang) {
+    if (!TenMonAn || !MaPhanLoai || !DonGia || !MaTinhTrang || !Anh) {
       responseHandler.error(res);
       return;
     }
@@ -31,6 +32,8 @@ const create = async (req, res) => {
       MaPhanLoai,
       DonGia,
       MaTinhTrang,
+      Anh,
+      isDeleted,
     });
 
     responseHandler.ok(res, newDish);
@@ -42,25 +45,30 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   const { MaMonAn } = req.params;
-  const { TenMonAn, MaPhanLoai, DonGia, MaTinhTrang } = req.body;
+  const { TenMonAn, MaPhanLoai, DonGia, MaTinhTrang, Anh, isDeleted } =
+    req.body;
 
   try {
-      const monAn = await MonAn.findByPk(MaMonAn);
+    const monAn = await MonAn.findByPk(MaMonAn);
 
-      if (!monAn) {
-          return res.status(404).json({ message: 'MonAn not found' });
-      }
+    if (!monAn) {
+      return res.status(404).json({ message: "MonAn not found" });
+    }
 
-      monAn.TenMonAn = TenMonAn || monAn.TenMonAn;
-      monAn.MaPhanLoai = MaPhanLoai || monAn.MaPhanLoai;
-      monAn.DonGia = DonGia || monAn.DonGia;
-      monAn.MaTinhTrang = MaTinhTrang || monAn.MaTinhTrang;
+    monAn.TenMonAn = TenMonAn || monAn.TenMonAn;
+    monAn.MaPhanLoai = MaPhanLoai || monAn.MaPhanLoai;
+    monAn.DonGia = DonGia || monAn.DonGia;
+    monAn.MaTinhTrang = MaTinhTrang || monAn.MaTinhTrang;
+    monAn.Anh = Anh || monAn.Anh;
+    monAn.isDeleted = isDeleted || monAn.isDeleted;
 
-      await monAn.save();
+    await monAn.save();
 
-      return res.status(200).json({ message: 'MonAn updated successfully', monAn });
+    return res
+      .status(200)
+      .json({ message: "MonAn updated successfully", monAn });
   } catch (error) {
-      return res.status(500).json({ message: 'Error updating MonAn', error });
+    return res.status(500).json({ message: "Error updating MonAn", error });
   }
 };
 
@@ -68,17 +76,17 @@ const remove = async (req, res) => {
   const { MaMonAn } = req.params;
 
   try {
-      const monAn = await MonAn.findByPk(MaMonAn);
+    const monAn = await MonAn.findByPk(MaMonAn);
 
-      if (!monAn) {
-          return res.status(404).json({ message: 'MonAn not found' });
-      }
+    if (!monAn) {
+      return res.status(404).json({ message: "MonAn not found" });
+    }
 
-      await monAn.destroy();
+    await monAn.destroy();
 
-      return res.status(200).json({ message: 'MonAn deleted successfully' });
+    return res.status(200).json({ message: "MonAn deleted successfully" });
   } catch (error) {
-      return res.status(500).json({ message: 'Error deleting MonAn', error });
+    return res.status(500).json({ message: "Error deleting MonAn", error });
   }
 };
 

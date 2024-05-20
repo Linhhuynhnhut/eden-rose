@@ -1,29 +1,28 @@
-.SettingPage{
-    width: 100%;
+.SettingPage {
+  width: 100%;
 
-    color: #3B564D;
+  color: #3b564d;
 }
 .Setting_header {
-    text-align: left;
-    margin-bottom: 50px;
-    padding-left: 3%;
-  }
-  
+  text-align: left;
+  margin-bottom: 50px;
+  padding-left: 3%;
+}
+
 .Setting_header h1 {
   margin-bottom: 0px;
   font-size: 48px;
-
 }
-.table_hall_type{
+.table_hall_type {
   width: 90%;
   margin-left: 5%;
   margin-right: 5%;
 }
-.btn_Add_div{
+.btn_Add_div {
   position: relative;
   display: flex;
 
-  .btn_Add{
+  .btn_Add {
     margin-top: 20px;
     position: absolute;
     display: flex;
@@ -31,30 +30,30 @@
     display: flex;
     justify-content: right;
     margin-bottom: 10px;
-    button{
-        background-color: #5E7249;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+    button {
+      background-color: #5e7249;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
     }
-    .ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover{
-        background-color: #5E7249;
-        opacity: 0.9;
+    .ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+      background-color: #5e7249;
+      opacity: 0.9;
     }
   }
-  
 }
-.shift_dish_type{
+.shift_dish_type {
   width: 100%;
-  background-color: #BDC6B5;
+  background-color: #bdc6b5;
   display: flex;
   margin-top: 80px;
   padding-bottom: 80px;
-  .shift_type{
+  .shift_type,
+  .dish_type {
     flex: 40%;
     margin-left: 5%;
     margin-right: 5%;
   }
 }
-.TablePenaltyRate{
+.TablePenaltyRate {
   width: 90%;
   margin: 5%;
 }

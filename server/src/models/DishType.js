@@ -6,6 +6,7 @@ const PhanLoai = sequelize.define(
   {
     MaPhanLoai: { type: DataTypes.STRING, primaryKey: true },
     PhanLoai: DataTypes.STRING,
+    isDeleted: DataTypes.BOOLEAN
   },
   {
     timestamps: false,
