@@ -5,7 +5,6 @@ import { PlusOutlined } from "@ant-design/icons";
 import "./menu.scss";
 import { Button, Modal, Form } from "antd";
 import MenuForm from "../../components/MenuForm/MenuForm";
-import image1 from "../../assets/menu/dish1.jpg";
 import { api } from "../../api/api";
 
 const Menu = () => {
@@ -27,7 +26,7 @@ const Menu = () => {
         MaPhanLoai: +values.dishType,
         DonGia: +values.price,
         MaTinhTrang: +values.status,
-        Anh: values.image,
+        Anh: values.imageUrl,
         isDeleted: false,
       };
       const res = await api.postDish(data);
@@ -42,29 +41,39 @@ const Menu = () => {
   };
 
   const handleUpdateDish = async (payload) => {
-    const {
-      key,
-      name,
-      dishType,
-      status,
-      price,
-      imageUrl,
-      isDeleted = "false",
-    } = payload;
-    const data = {
-      MaMonAn: key,
-      TenMonAn: name,
-      MaPhanLoai: dishType,
-      MaTinhTrang: status,
-      DonGia: price,
-      Anh: imageUrl,
-      isDeleted,
-    };
-    // const res = await api.putHallType(key, data);
-    // if (res != null) {
-    //   getData();
-    // }
-    console.log("update dish ", data);
+    try {
+      const {
+        key,
+        name,
+        dishType,
+        status,
+        price,
+        imageUrl,
+        isDeleted = "false",
+      } = payload;
+      const typeId = dishTypes.find((i) => {
+        return i?.name === dishType;
+      });
+
+      const statusId = statuses.find((i) => {
+        return i?.name === status;
+      });
+
+      const data = {
+        TenMonAn: name,
+        MaPhanLoai: typeId.id,
+        MaTinhTrang: statusId.id,
+        DonGia: price,
+        Anh: imageUrl,
+        isDeleted,
+      };
+      const res = await api.putDish(key, data);
+      if (res != null) {
+        getData();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCancel = () => {
