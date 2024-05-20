@@ -1,12 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import "./MenuForm.scss"
-import {
-  Form,
-  Input,
-  Select,
-  Upload,
-} from "antd";
+import "./MenuForm.scss";
+import { Form, Input, Select, Upload } from "antd";
+import axios from "axios";
 
 const normFile = (e) => {
   if (Array.isArray(e)) {
@@ -15,79 +11,90 @@ const normFile = (e) => {
   return e?.fileList;
 };
 
-const dishTypes = [
-  {
-    id: 1,
-    name: "Main Dish"
-  },
-  {
-    id: 2,
-    name: "Dessert"
-  },
-  {
-    id: 3,
-    name: "Appetizer"
-  },
-  {
-    id: 4,
-    name: "Beverage"
-  },
-]
+const MenuForm = ({ form, dishTypes, statuses, rawData }) => {
+  useEffect(() => {
+    form.setFieldsValue({
+      name: rawData?.name,
+      price: rawData?.price,
+      dishType: rawData?.type,
+      status: rawData?.status,
+      imageUrl: rawData?.imageUrl,
+    });
+  }, [rawData]);
+  const uploadImage = async (image) => {
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", "xc6w5f9t");
 
-const status = [
-  {
-    id: 1,
-    name: "Available"
-  },
-  {
-    id: 2,
-    name: "Unavailable"
-  }
-]
+    await axios
+      .post("https://api.cloudinary.com/v1_1/dbqvo0078/image/upload", formData)
+      .then((res) => {
+        console.log(res);
+        console.log("url ảnh>>>>", res.data.secure_url);
+        // setImageLink(res?.data?.secure_url);
+        const { setFieldValue } = form;
+        setFieldValue("imageUrl", res?.data?.secure_url);
+      });
+  };
 
-const MenuForm = () => {
+  const handleChange = (info) => {
+    if (info.file.status !== "uploading") {
+      console.log(info.fileList);
+    }
+    // console.log("url: ", info.file);
+    uploadImage(info.file.originFileObj);
+  };
+
   return (
     <>
-      
-      <Form
-        // labelCol={{ span: 4 }}
-        // wrapperCol={{ span: 14 }}
-        layout="vertical"
-        style={{ maxWidth: 600 }}
-      >
-        <Form.Item label="Name" rules={[{ required: true }]}>
-          <Input />
+      <Form form={form} layout="vertical" style={{ maxWidth: 600 }}>
+        <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+          <Input placeholder={rawData?.name} />
         </Form.Item>
-        <Form.Item label="Price" rules={[{ required: true }]}>
-          <Input />
+        <Form.Item name="price" label="Price" rules={[{ required: true }]}>
+          <Input placeholder={rawData?.price} />
         </Form.Item>
-        <Form.Item label="Type" rules={[{ required: true }]}>
-          <Select>
-            {dishTypes.map((hall, index) => (
-              <Select.Option key={hall.id} value={hall.name}>{hall.name}</Select.Option>
+        <Form.Item name="dishType" label="Type" rules={[{ required: true }]}>
+          <Select defaultValue={rawData?.type}>
+            {dishTypes.map((type, index) => (
+              <Select.Option key={type.id} value={type.key}>
+                {type.name}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>
-        <Form.Item label="Status" rules={[{ required: true }]}>
-          <Select>
-            {status.map((status, index) => (
-              <Select.Option key={status.id} value={status.name}>{status.name}</Select.Option>
+        <Form.Item name="status" label="Status" rules={[{ required: true }]}>
+          <Select defaultValue={rawData?.status}>
+            {statuses.map((status, index) => (
+              <Select.Option key={status.id} value={status.key}>
+                {status.name}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>
         <Form.Item
           label="Upload Image"
-          valuePropName="fileList"
+          name="imageUrl"
           getValueFromEvent={normFile}
         >
-          <Upload action="/upload.do" listType="picture-card">
+          <Upload
+            action="/upload.do"
+            listType="picture-card"
+            onChange={handleChange}
+            maxCount={1}
+            customRequest={({ file, onSuccess }) => {
+              setTimeout(() => {
+                onSuccess("ok");
+              }, 0);
+            }}
+            // showUploadList={false}
+          >
             <button style={{ border: 0, background: "none" }} type="button">
               <PlusOutlined />
               <div style={{ marginTop: 8 }}>Upload</div>
             </button>
           </Upload>
         </Form.Item>
-        
       </Form>
     </>
   );

@@ -37,16 +37,28 @@ const create = async (req, res) => {
   }
 };
 
-// const update = async (req, res) => {
-//   try {
-//     const { MaPhanLoai, PhanLoai: TenPhanLoai } = req.body;
-//     const updateDishType = await PhanLoai.findById(MaPhanLoai);
-//     await updateDishType.updateOne({ $set: req.body });
-//     res.status(200).json("Updated successfully!");
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// };
+const update = async (req, res) => {
+  const { MaPhanLoai } = req.params;
+  const { PhanLoai: TenPhanLoai } = req.body;
+
+  try {
+    const dishType = await PhanLoai.findByPk(MaPhanLoai);
+
+    if (!dishType) {
+      return res.status(404).json({ message: "Dish Type not found" });
+    }
+
+    dishType.PhanLoai = TenPhanLoai || dishType.PhanLoai;
+
+    await dishType.save();
+
+    return res
+      .status(200)
+      .json({ message: "Dish Type updated successfully", dishType });
+  } catch (error) {
+    return res.status(500).json({ message: "Error updating PhanLoai", error });
+  }
+};
 
 // const remove = async (req, res) => {
 //   try {
@@ -57,4 +69,4 @@ const create = async (req, res) => {
 //   }
 // };
 
-export default { search, create };
+export default { search, create, update };

@@ -1,12 +1,20 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../config/dbConfig.js'; 
+import { DataTypes } from "sequelize";
+import sequelize from "../config/dbConfig.js";
 
-const ThamSo = sequelize.define('ThamSo', {
-    TenThamSo: { type: DataTypes.STRING, primaryKey: true },
-    GiaTri: DataTypes.STRING,
-}, {
+const ThamSo = sequelize.define(
+  "ThamSo",
+  {
+    MaThamSo: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+    },
+    TenThamSo: DataTypes.STRING,
+    GiaTri: DataTypes.INTEGER,
+  },
+  {
     timestamps: false,
-    tableName: 'ThamSo'
-})
+    tableName: "ThamSo",
+  }
+);
 
-module.exports = ThamSo;
+export default ThamSo;

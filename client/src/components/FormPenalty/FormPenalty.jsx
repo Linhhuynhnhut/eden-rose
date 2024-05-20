@@ -1,44 +1,26 @@
-import React, { useState } from 'react';
-import { Form, Input, Select } from 'antd';
-import "./FormPenalty.scss"
+import React, { useEffect, useState } from "react";
+import { Form, Input, Select } from "antd";
+import "./FormPenalty.scss";
 
-const FormPenalty = ({ penalty, status }) => {
-  const [form] = Form.useForm();
-  const [formLayout, setFormLayout] = useState('horizontal');
-
-  const onFormLayoutChange = ({ layout }) => {
-    setFormLayout(layout);
-  };
-
-  const formItemLayout = formLayout === 'horizontal'
-    ? {
-        labelCol: {
-          span: 6,
-        },
-        wrapperCol: {
-          span: 14,
-        },
-      }
-    : null;
-
+const FormPenalty = ({ data, form }) => {
+  const [penalty, setPenalty] = useState("1");
+  const [status, setStatus] = useState("Yes");
+  useEffect(() => {
+    if (data) {
+      setPenalty(data[0].value);
+      setStatus(data[1].value);
+    }
+  }, []);
   return (
-    <div className='FormHallType'>
-      <Form
-        {...formItemLayout}
-        layout='horizontal'
-        form={form}
-        initialValues={{
-          layout: 'horizontal',
-        }}
-        onValuesChange={onFormLayoutChange}
-      >
-        <Form.Item label="Penalty Rate:" name="penaltyRate">
-          <Input className='input_div' placeholder={penalty}/>
+    <div className="FormHallType">
+      <Form layout="vertical" form={form}>
+        <Form.Item name="penaltyRate" label="Penalty Rate:">
+          <Input className="input_div" placeholder={penalty} />
         </Form.Item>
-        <Form.Item label="Status:" name="status">
-          <Select className='select_div' placeholder={status}>
-            <Select.Option value="apply">Apply</Select.Option>
-            <Select.Option value="inactive">Inactive</Select.Option>
+        <Form.Item name="isApply" label="Is apply penalty regulations:">
+          <Select className="select_div" placeholder={status}>
+            <Select.Option value="1">Yes</Select.Option>
+            <Select.Option value="0">No</Select.Option>
           </Select>
         </Form.Item>
       </Form>

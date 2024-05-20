@@ -37,4 +37,21 @@ const create = async (req, res) => {
   }
 };
 
-export default { search, create };
+const remove = async (req, res) => {
+  const { MaTinhTrang } = req.params;
+
+  try {
+    const status = await TinhTrang.findByPk(MaTinhTrang);
+
+    if (!status) {
+      return res.status(404).json({ message: "status not found" });
+    }
+
+    await status.destroy();
+
+    return res.status(200).json({ message: "Status deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Error deleting Status", error });
+  }
+};
+export default { search, create, remove };

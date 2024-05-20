@@ -3,28 +3,25 @@ import { Button, Table, Modal, Space } from "antd";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit, FaCheck, FaTimes } from "react-icons/fa";
 import FormPenalty from "../FormPenalty/FormPenalty";
-import './TablePenaltyRate.scss';
+import "./TablePenaltyRate.scss";
 
 function TablePenaltyRate({ data }) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRow, setEditingRow] = useState(null);
 
-  const [tableData, setTableData] = useState(data.map(item => ({
-    ...item,
-    isApply: item.status.toLowerCase() === 'apply'
-  })));
+  // const [tableData, setTableData] = useState(data);
 
-  const toggleApply = (key) => {
-    const newData = tableData.map(item =>
-      item.key === key ? {
-        ...item,
-        isApply: !item.isApply,
-        status: item.isApply ? 'Inactive' : 'Apply' 
-      } : item
-    );
-    setTableData(newData);
-  };
+  // const toggleApply = (key) => {
+  //   const newData = tableData.map(item =>
+  //     item.key === key ? {
+  //       ...item,
+  //       isApply: !item.isApply,
+  //       status: item.isApply ? 'Inactive' : 'Apply'
+  //     } : item
+  //   );
+  //   setTableData(newData);
+  // };
 
   const showModal = (record) => {
     setEditingRow(record);
@@ -43,36 +40,38 @@ function TablePenaltyRate({ data }) {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
-  const handleDelete = (id) => {
-    const newData = tableData.filter(item => item.key !== id);
-    setTableData(newData);
-  };
+  // const handleDelete = (id) => {
+  //   const newData = tableData.filter(item => item.key !== id);
+  //   setTableData(newData);
+  // };
 
-  const handleDeleteSelectedItems = () => {
-    const newData = tableData.filter(item => !selectedRowKeys.includes(item.key));
-    setTableData(newData);
-    setSelectedRowKeys([]);
-  };
+  // const handleDeleteSelectedItems = () => {
+  //   const newData = tableData.filter(
+  //     (item) => !selectedRowKeys.includes(item.key)
+  //   );
+  //   setTableData(newData);
+  //   setSelectedRowKeys([]);
+  // };
 
   const columns = [
-    { title: "Penalty Rate", dataIndex: "penaltyRate", key: "penaltyRate", width: "30%" },
-    { title: "Status", dataIndex: "status", key: "status", width: "40%" },
-    {
-      title: "Action",
-      key: "action",
-      width: "20%",
-      render: (_, record) => (
-        <Space>
-          <MdDeleteForever onClick={() => handleDelete(record.key)} />
-          <FaEdit onClick={() => showModal(record)} />
-          {record.isApply ? (
-            <FaCheck className="iconFaCheck" onClick={() => toggleApply(record.key)} />
-          ) : (
-            <FaTimes className="iconFaTimes" onClick={() => toggleApply(record.key)} />
-          )}
-        </Space>
-      ),
-    },
+    { title: "Param", dataIndex: "param", key: "param", width: "40%" },
+    { title: "value", dataIndex: "value", key: "value", width: "30%" },
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   width: "20%",
+    //   render: (_, record) => (
+    //     <Space>
+    //       {/* <MdDeleteForever onClick={() => handleDelete(record.key)} /> */}
+    //       <FaEdit onClick={() => showModal(record)} />
+    //       {/* {record.isApply ? (
+    //         <FaCheck className="iconFaCheck" onClick={() => toggleApply(record.key)} />
+    //       ) : (
+    //         <FaTimes className="iconFaTimes" onClick={() => toggleApply(record.key)} />
+    //       )} */}
+    //     </Space>
+    //   ),
+    // },
   ];
 
   return (
@@ -80,19 +79,23 @@ function TablePenaltyRate({ data }) {
       <div>
         {selectedRowKeys.length > 0 && (
           <div className="delete_button_wrapper">
-            <Button className="delete_button" onClick={handleDeleteSelectedItems}>
+            <Button className="delete_button" onClick={() => {}}>
               Delete Selected ({selectedRowKeys.length})
             </Button>
           </div>
         )}
         <Table
-          rowSelection={{ type: "checkbox", selectedRowKeys, onChange: onSelectChange }}
+          // rowSelection={{
+          //   type: "checkbox",
+          //   selectedRowKeys,
+          //   onChange: onSelectChange,
+          // }}
           columns={columns}
-          dataSource={tableData}
+          dataSource={data}
           pagination={false}
         />
       </div>
-      <Modal
+      {/* <Modal
         title="Update Penalty Regulations"
         open={isModalOpen}
         onOk={handleOk}
@@ -100,9 +103,12 @@ function TablePenaltyRate({ data }) {
         okText="Save"
       >
         {editingRow && (
-          <FormPenalty penalty={editingRow.penaltyRate} status={editingRow.status} />
+          <FormPenalty
+            penalty={editingRow.penaltyRate}
+            status={editingRow.status}
+          />
         )}
-      </Modal>
+      </Modal> */}
     </>
   );
 }

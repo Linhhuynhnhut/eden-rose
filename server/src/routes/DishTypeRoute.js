@@ -10,7 +10,7 @@ dishTypeRouter.get("/", dishTypeController.search);
 dishTypeRouter.post("/", dishTypeController.create);
 
 // // update 1 type
-// dishTypeRouter.put("/", dishTypeController.update);
+dishTypeRouter.put("/:MaPhanLoai", dishTypeController.update);
 
 // // delete 1 type
 // dishTypeRouter.delete("/:id", dishTypeController.remove);

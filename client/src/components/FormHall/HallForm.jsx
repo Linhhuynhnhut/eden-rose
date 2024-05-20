@@ -78,13 +78,10 @@ const HallForm = ({ form }) => {
           <Input />
         </Form.Item>
         <Form.Item
-          name="minimumPrice"
-          label="Minimum Price"
+          name="hallType"
+          label="Hall Type"
           rules={[{ required: true }]}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item name="hallType" label="Type" rules={[{ required: true }]}>
           <Select>
             {hallTypes.map((hall, index) => (
               <Select.Option key={hall.id} value={hall.name}>
@@ -92,6 +89,13 @@ const HallForm = ({ form }) => {
               </Select.Option>
             ))}
           </Select>
+        </Form.Item>
+        <Form.Item
+          name="minimumPrice"
+          label="Minimum Price"
+          rules={[{ required: true }]}
+        >
+          <Input disabled />
         </Form.Item>
         <Form.Item
           label="Upload Image"
