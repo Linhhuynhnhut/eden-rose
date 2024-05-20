@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, message, Popconfirm } from "antd";
+import { Button, Input, Space, Table, message, Popconfirm, Form } from "antd";
 import Highlighter from "react-highlight-words";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
@@ -9,26 +9,38 @@ import { Modal } from "antd";
 import { Tooltip } from "antd";
 import "./MenuTable.scss";
 
-const MenuTable = ({ data }) => {
+const MenuTable = ({ data, dishTypes, statuses, update }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [rowData, setRowData] = useState(null);
   const searchInput = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tableData, setTableData] = useState(data);
+  const [form] = Form.useForm();
 
   const cancel = (e) => {
     console.log(e);
   };
-  const showModal = () => {
+  const showModal = (record) => {
+    setRowData(record);
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const handleOk = async () => {
+    try {
+      const values = await form?.validateFields();
+      if (!values.imageUrl) values.imageUrl = rowData?.imageUrl;
+      setIsModalOpen(false);
+      form?.resetFields();
+      update({ ...values, key: rowData.key });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleCancel = () => {
+    form?.resetFields();
+    setRowData(null);
     setIsModalOpen(false);
   };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -49,21 +61,21 @@ const MenuTable = ({ data }) => {
     onChange: onSelectChange,
   };
   const hasSelected = selectedRowKeys.length > 0;
-  const handleDelete = (id) => {
-    const newData = tableData.filter((item) => item.key !== id);
-    setTableData(newData);
-    message.success("You have deleted a dish");
-  };
-  const handleDeleteSelectedItems = (selectedKeys) => {
-    message.success("You have deleted selected dishes");
-    const newData = tableData.filter(
-      (item) => !selectedKeys.includes(item.key)
-    );
-    // Update the state with the new data
-    setTableData(newData);
-    // Clear the selectedRowKeys state
-    setSelectedRowKeys([]);
-  };
+  // const handleDelete = (id) => {
+  //   const newData = tableData.filter((item) => item.key !== id);
+  //   setTableData(newData);
+  //   message.success("You have deleted a dish");
+  // };
+  // const handleDeleteSelectedItems = (selectedKeys) => {
+  //   message.success("You have deleted selected dishes");
+  //   const newData = tableData.filter(
+  //     (item) => !selectedKeys.includes(item.key)
+  //   );
+  //   // Update the state with the new data
+  //   setTableData(newData);
+  //   // Clear the selectedRowKeys state
+  //   setSelectedRowKeys([]);
+  // };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -175,9 +187,9 @@ const MenuTable = ({ data }) => {
       ...getColumnSearchProps("name"),
       render: (text, record) => (
         <div className="image_name">
-        <img src={record.imageUrl} alt={text} className="image_in_table" />
-        {text}
-      </div>
+          <img src={record.imageUrl} alt={text} className="image_in_table" />
+          {text}
+        </div>
       ),
     },
     {
@@ -185,24 +197,12 @@ const MenuTable = ({ data }) => {
       dataIndex: "type",
       key: "type",
       width: "20%",
-      filters: [
-        {
-          text: "Main Dish",
-          value: "Main Dish",
-        },
-        {
-          text: "Dessert",
-          value: "Dessert",
-        },
-        {
-          text: "Appetizer",
-          value: "Appetizer",
-        },
-        {
-          text: "Beverage",
-          value: "Beverage",
-        },
-      ],
+      filters: dishTypes.map((item) => {
+        return {
+          text: item.name,
+          value: item.name,
+        };
+      }),
       filterMode: "tree",
       // filterSearch: true,
       onFilter: (value, record) => record.type.startsWith(value),
@@ -220,16 +220,12 @@ const MenuTable = ({ data }) => {
       dataIndex: "status",
       key: "status",
       width: "20%",
-      filters: [
-        {
-          text: "Available",
-          value: "Available",
-        },
-        {
-          text: "Unavailable",
-          value: "Unavailable",
-        },
-      ],
+      filters: statuses.map((item) => {
+        return {
+          text: item.name,
+          value: item.name,
+        };
+      }),
       filterMode: "tree",
       // filterSearch: true,
       onFilter: (value, record) => record.status.startsWith(value),
@@ -242,12 +238,12 @@ const MenuTable = ({ data }) => {
       render: (_, record) => (
         <Space>
           <Tooltip title="Edit">
-            <FaEdit onClick={showModal} />
+            <FaEdit onClick={() => showModal(record)} />
           </Tooltip>
           <Popconfirm
             title="Delete the dish"
             description="Are you sure to delete this dish?"
-            onConfirm={() => handleDelete(record.key)}
+            // onConfirm={() => handleDelete(record.key)}
             onCancel={cancel}
             okText="Yes"
             cancelText="No"
@@ -269,7 +265,7 @@ const MenuTable = ({ data }) => {
             <Popconfirm
               title="Delete the dish"
               description="Are you sure to delete these dishes?"
-              onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
+              // onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
               onCancel={cancel}
               okText="Yes"
               cancelText="No"
@@ -284,7 +280,7 @@ const MenuTable = ({ data }) => {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={tableData}
+          dataSource={data}
         />
       </div>
       <div>
@@ -295,7 +291,12 @@ const MenuTable = ({ data }) => {
           onCancel={handleCancel}
           okText="Save"
         >
-          <MenuForm />
+          <MenuForm
+            form={form}
+            dishTypes={dishTypes}
+            statuses={statuses}
+            rawData={rowData}
+          />
         </Modal>
       </div>
     </>
