@@ -18,6 +18,10 @@ export const api = {
     const url = "hall-type";
     return axiosClient.get(url, params);
   },
+  getServices: (params) => {
+    const url = "service";
+    return axiosClient.get(url, params);
+  },
 
   //POST******************************************************
   postStudentInfo: (payload) => {

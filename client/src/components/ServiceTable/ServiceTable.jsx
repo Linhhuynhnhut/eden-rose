@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -23,7 +23,7 @@ const ServiceTable = ({ data }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const searchInput = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tableData, setTableData] = useState(data);
+  const [tableData, setTableData] = useState();
 
   const cancel = (e) => {
     console.log(e);
@@ -59,12 +59,12 @@ const ServiceTable = ({ data }) => {
   const hasSelected = selectedRowKeys.length > 0;
   const handleDelete = (id) => {
     message.success("You have deleted a service");
-    const newData = tableData.filter((item) => item.key !== id);
+    const newData = data.filter((item) => item.key !== id);
     setTableData(newData);
   };
   const handleDeleteSelectedItems = (selectedKeys) => {
     message.success("You have deleted selected services");
-    const newData = tableData.filter(
+    const newData = data.filter(
       (item) => !selectedKeys.includes(item.key)
     );
     // Update the state with the new data
@@ -241,7 +241,7 @@ const ServiceTable = ({ data }) => {
       ),
     },
   ];
-
+  
   return (
     <>
       <div>
@@ -268,7 +268,7 @@ const ServiceTable = ({ data }) => {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={tableData}
+          dataSource={data}
         />
       </div>
       <div>
