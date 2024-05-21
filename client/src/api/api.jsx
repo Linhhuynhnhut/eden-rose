@@ -10,6 +10,10 @@ export const api = {
     const url = "dish-type";
     return axiosClient.get(url, params);
   },
+  getHalls: (params) => {
+    const url = "hall";
+    return axiosClient.get(url, params);
+  },
   getHallTypes: (params) => {
     const url = "hall-type";
     return axiosClient.get(url, params);
@@ -28,6 +32,10 @@ export const api = {
   },
 
   //POST******************************************************
+  postHall: (payload) => {
+    const url = "hall";
+    return axiosClient.post(url, payload);
+  },
   postHallType: (payload) => {
     const url = "hall-type";
     return axiosClient.post(url, payload);
@@ -46,6 +54,10 @@ export const api = {
   },
 
   //PUT***************************
+  putHall: (id, payload) => {
+    const url = "hall/" + String(id);
+    return axiosClient.put(url, payload);
+  },
   putHallType: (id, payload) => {
     const url = "hall-type/" + String(id);
     return axiosClient.put(url, payload);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import "./HallForm.scss";
 import { Form, Input, Select, Upload } from "antd";
@@ -27,16 +27,29 @@ const hallTypes = [
   },
 ];
 
-const HallForm = ({ form }) => {
-  const [imageLink, setImageLink] = useState("");
-
+const HallForm = ({ form, hallTypes, rawData }) => {
+  useEffect(() => {
+    try {
+      const type = hallTypes.find((i) => {
+        return i?.name === rawData?.type;
+      });
+      console.log("type price: ", type);
+      form?.setFieldValue("minimumPrice", type.MinimumPrice);
+      form.setFieldsValue({
+        name: rawData?.name,
+        maximumTable: rawData?.tables,
+        hallType: type?.key,
+        status: rawData?.status,
+        image: rawData?.imageUrl,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [rawData]);
   const onFinish = (values) => {
-    const payload = {
-      ...values,
-      img: imageLink,
-    };
-    console.log("post api: ", payload);
+    console.log("finish: ", values);
   };
+
   const uploadImage = async (image) => {
     const formData = new FormData();
     formData.append("file", image);
@@ -52,16 +65,22 @@ const HallForm = ({ form }) => {
         setFieldValue("image", res?.data?.secure_url);
       });
   };
+
   const handleChange = (info) => {
     console.log("url: ", info.file);
     uploadImage(info.file.originFileObj);
   };
 
+  const onChange = (value) => {
+    const type = hallTypes.find((i) => {
+      return i?.key === value;
+    });
+    form?.setFieldValue("minimumPrice", type.MinimumPrice);
+  };
+
   return (
     <>
       <Form
-        // labelCol={{ span: 4 }}
-        // wrapperCol={{ span: 14 }}
         form={form}
         onFinish={onFinish}
         layout="vertical"
@@ -75,17 +94,17 @@ const HallForm = ({ form }) => {
           label="Maximum Table"
           rules={[{ required: true }]}
         >
-          <Input />
+          <Input type="number" />
         </Form.Item>
         <Form.Item
           name="hallType"
           label="Hall Type"
           rules={[{ required: true }]}
         >
-          <Select>
-            {hallTypes.map((hall, index) => (
-              <Select.Option key={hall.id} value={hall.name}>
-                {hall.name}
+          <Select onChange={onChange}>
+            {hallTypes.map((type, index) => (
+              <Select.Option key={type.key} value={type.key}>
+                {type.name}
               </Select.Option>
             ))}
           </Select>
@@ -93,14 +112,14 @@ const HallForm = ({ form }) => {
         <Form.Item
           name="minimumPrice"
           label="Minimum Price"
-          rules={[{ required: true }]}
+          // rules={[{ required: true }]}
         >
           <Input disabled />
         </Form.Item>
         <Form.Item
           label="Upload Image"
           name="image"
-          // valuePropName="fileList"
+          rules={[{ required: true }]}
           getValueFromEvent={normFile}
         >
           <Upload
