@@ -57,7 +57,7 @@ const MenuForm = ({ form, dishTypes, statuses, rawData }) => {
         <Form.Item name="dishType" label="Type" rules={[{ required: true }]}>
           <Select defaultValue={rawData?.type}>
             {dishTypes.map((type, index) => (
-              <Select.Option key={type.id} value={type.key}>
+              <Select.Option key={type.id} value={type.name}>
                 {type.name}
               </Select.Option>
             ))}
@@ -66,7 +66,7 @@ const MenuForm = ({ form, dishTypes, statuses, rawData }) => {
         <Form.Item name="status" label="Status" rules={[{ required: true }]}>
           <Select defaultValue={rawData?.status}>
             {statuses.map((status, index) => (
-              <Select.Option key={status.id} value={status.key}>
+              <Select.Option key={status.id} value={status.name}>
                 {status.name}
               </Select.Option>
             ))}

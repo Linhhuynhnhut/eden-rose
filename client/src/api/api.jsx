@@ -30,6 +30,10 @@ export const api = {
     const url = "service";
     return axiosClient.get(url, params);
   },
+  getReservations: (params) => {
+    const url = "reservationForm";
+    return axiosClient.get(url, params);
+  },
 
   //POST******************************************************
   postHall: (payload) => {

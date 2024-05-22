@@ -17,6 +17,8 @@ const NewWedding = ({ isWeddingEdit }) => {
   const [services1, setServices] = useState(0);
   const [dishTypes, setDishTypes] = useState([]);
   const [statuses, setStatuses] = useState([]);
+  const [hallTypes, setHallTypes] = useState([]);
+  const [halls, setHalls] = useState([]);
   const step1Ref = useRef();
   const step2Ref = useRef();
   const step3Ref = useRef();
@@ -42,6 +44,34 @@ const NewWedding = ({ isWeddingEdit }) => {
     });
     setStatuses(data1);
 
+    // get hall type
+    const rawDataHallTypes = await api.getHallTypes();
+    const mapHallTypes = rawDataHallTypes.map((item) => {
+      return {
+        id: item.MaLoaiSanh,
+        name: item.TenLoaiSanh,
+        minimumPrice: item.DGBanToiThieu,
+      };
+    });
+    setHallTypes(mapHallTypes);
+
+    // get hall
+    const rawDataHalls = await api.getHalls();
+    const mapHalls = rawDataHalls.map((item) => {
+      const type = mapHallTypes.find((i) => {
+        return i?.id === item?.MaLoaiSanh;
+      });
+      return {
+        key: item?.MaSanh,
+        name: item?.TenSanh,
+        type: type?.name,
+        tables: item?.SLBanToiDa,
+        imageUrl: item?.Anh,
+        minimumPrice: type?.minimumPrice,
+      };
+    });
+    setHalls(mapHalls);
+
     // get menu
     const rawDataMenu = await api.getMenu();
     const data2 = rawDataMenu.map((item) => {
@@ -55,23 +85,6 @@ const NewWedding = ({ isWeddingEdit }) => {
       };
     });
     setMenu(data2);
-
-    // map
-    // const newData = data2.map((item) => {
-    //   const type = data.find((i) => {
-    //     return i?.id === item?.type;
-    //   });
-
-    //   const status = data1.find((i) => {
-    //     return i?.id === item?.status;
-    //   });
-    //   return {
-    //     ...item,
-    //     type: type.name,
-    //     status: status.name,
-    //   };
-    // });
-    // console.log("new: ", newData);
 
     // get services
     const rawDataServices = await api.getServices();
@@ -137,6 +150,33 @@ const NewWedding = ({ isWeddingEdit }) => {
     console.log("prev step2: ", step2Ref);
     console.log("prev step3: ", step3Ref);
   };
+
+  const handleSubmitReservation = (content) => {
+    console.log("reservation: ", content);
+    const { infor, menu, services, tablePrice, servicePrice } = content;
+    const rawInfo = infor.info;
+    console.log("track data: ", infor.info);
+    const newDate = rawInfo.planningDate.toDate();
+    console.log("newDate", newDate);
+    console.log("date", newDate.getFullDate());
+    const payload = {
+      TenChuRe: rawInfo.groomName,
+      TenCoDau: rawInfo.brideName,
+      DienThoai: rawInfo.phoneNumber,
+      // NgayDatTiec: ,
+      // NgayDaiTiec: ,
+      // MaCa,
+      // TienCoc,
+      // SLBan,
+      // SLBanDuTru,
+      // TongTienBan,
+      // TongTienDichVu,
+      // TongTienPhieuDatTC,
+      // TinhTrangThanhToan,
+      // isDeleted,
+    };
+  };
+
   const items = steps.map((item) => ({
     key: item.title,
   }));
@@ -193,6 +233,8 @@ const NewWedding = ({ isWeddingEdit }) => {
         numberOfSteps={4}
         menu={mapData(menu)}
         services={services1}
+        halls={halls}
+        handleSubmitReservation={handleSubmitReservation}
       />
     ),
   };
