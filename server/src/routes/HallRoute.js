@@ -8,4 +8,7 @@ hallRouter.get("/", hallController.search);
 // create new hall
 hallRouter.post("/", hallController.create);
 
+// update hall
+hallRouter.put("/:MaSanh", hallController.update);
+
 export default hallRouter;

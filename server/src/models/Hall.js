@@ -20,6 +20,7 @@ const Sanh = sequelize.define(
     SLBanToiDa: DataTypes.INTEGER,
     GhiChu: DataTypes.STRING,
     Anh: DataTypes.STRING,
+    isDeleted: DataTypes.BOOLEAN,
   },
 
   {

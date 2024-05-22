@@ -1,6 +1,15 @@
 import React, { useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, message, Popconfirm, Form } from "antd";
+import {
+  Button,
+  Input,
+  Space,
+  Table,
+  message,
+  Popconfirm,
+  Form,
+  Image,
+} from "antd";
 import Highlighter from "react-highlight-words";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
@@ -186,8 +195,8 @@ const MenuTable = ({ data, dishTypes, statuses, update }) => {
       width: "30%",
       ...getColumnSearchProps("name"),
       render: (text, record) => (
-        <div className="image_name">
-          <img src={record.imageUrl} alt={text} className="image_in_table" />
+        <div className="image_name_menu">
+          <Image src={record.imageUrl} alt={text} className="image_in_table" />
           {text}
         </div>
       ),
