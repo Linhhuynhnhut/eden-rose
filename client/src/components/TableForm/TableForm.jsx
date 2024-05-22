@@ -14,11 +14,12 @@ const TableForm = ({
   next,
   prev,
   formRef,
-  isHidden = true,
+  typeCancel = true,
   content,
   isFilter = true,
+  options = [],
 }) => {
-  const [type, setType] = useState("");
+  const [type, setType] = useState("all");
   const [listItems, setListItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -31,49 +32,49 @@ const TableForm = ({
     } else setListItems(content);
   };
   const handleSubmit = () => {
-    console.log("formRef.current: ", formRef.current);
-    console.log("formRef update: ", {
-      ...formRef.current,
-      [tableName]: selectedItems,
-    });
-    formRef.current = { ...formRef.current, [tableName]: selectedItems };
+    formRef.current = { selectedItems };
     next();
   };
   const handleBack = () => {
-    console.log("formRef.current: ", formRef.current);
-    console.log("formRef update: ", {
-      ...formRef.current,
-      [tableName]: selectedItems,
-    });
-    console.log("formRef.selected: ", selectedItems);
-    formRef.current = { ...formRef.current, [tableName]: selectedItems };
+    formRef.current = { selectedItems };
     prev();
   };
-  const increaseCounter = (value) => {
+  const handleSelect = (id, amount) => {
+    if (amount === 0) {
+      setSelectedItems(selectedItems.filter((item) => item.id !== id));
+    } else if (amount > 1 || typeCancel === false) {
+      const tmp = selectedItems.filter((item) => item.id !== id);
+      setSelectedItems([...tmp, { id: id, amount: amount }]);
+    } else {
+      const isSelected = selectedItems.find((tmp) => tmp.id === id);
+      if (isSelected)
+        setSelectedItems(selectedItems.filter((item) => item.id !== id));
+      else setSelectedItems([...selectedItems, { id: id, amount: amount }]);
+    }
+  };
+  const increaseCounter = (value, amount) => {
+    console.log("test item: ", value, " ", amount);
     setSelectedItems([...selectedItems, value]);
   };
-  const decreaseCounter = (value) => {
+  const decreaseCounter = (value, amount) => {
     setSelectedItems(selectedItems.filter((item) => item.id !== value));
   };
   useEffect(() => {
     setListItems(content);
-    // if (formRef.current)
-    // console.log("formRef test: ", formRef.current[tableName]);
-    const tmp = [];
-    console.log(tmp.length);
-    // setSelectedItems();
+    setSelectedItems(formRef?.current?.selectedItems || []);
+    setType("all");
   }, [content]);
-  useEffect(() => {
-    // setSelectedItems(formRef.current[tableName]);
-    console.log("formRef : ", formRef.current);
-    if (!formRef.current[tableName]) console.log("formRef selected underfine ");
-    else {
-      // console.log("formRef selected OK: ", formRef.current[tableName]);
-      let tmp = formRef.current[tableName];
-      console.log("tam: ", ...tmp);
-      // setSelectedItems(...tmp);
-    }
-  }, []);
+  // useEffect(() => {
+  //   // setSelectedItems(formRef.current[tableName]);
+  //   // console.log(formRef?.current);
+  //   // try {
+  //   //   if (formRef.current) setSelectedItems(formRef.current?.selectedItems);
+  //   //   else setSelectedItems([]);
+  //   // } catch (error) {
+  //   //   console.log(error);
+  //   // }
+  //   // setSelectedItems([]);
+  // }, [formRef]);
   return (
     <div className="table-form">
       <Flex
@@ -84,19 +85,24 @@ const TableForm = ({
         className="segment-container"
       >
         <Segmented
+          value={type}
           className={isFilter ? " " : "none"}
           onChange={(value) => {
-            if (value.toLocaleLowerCase() === "all") {
-              setListItems(content);
-              setType("");
-            } else {
-              setType(value.toLocaleLowerCase());
-              setListItems(
-                content.filter(
-                  (item) =>
-                    item.type.toLowerCase() === value.toLocaleLowerCase()
-                )
-              );
+            try {
+              if (value === "all") {
+                setListItems(content);
+                setType("");
+              } else {
+                setType(value.toLocaleLowerCase());
+                setListItems(
+                  content.filter(
+                    (item) =>
+                      item.type.toLowerCase() === value.toLocaleLowerCase()
+                  )
+                );
+              }
+            } catch (error) {
+              console.log(error);
             }
           }}
           options={[
@@ -106,40 +112,18 @@ const TableForm = ({
                   <div>All</div>
                 </div>
               ),
-              value: "All",
+              value: "all",
             },
-            {
-              label: (
-                <div className="custom-segment">
-                  <div>Appetizer</div>
-                </div>
-              ),
-              value: "Appetizer",
-            },
-            {
-              label: (
-                <div className="custom-segment">
-                  <div>Main Dish</div>
-                </div>
-              ),
-              value: "Main Dish",
-            },
-            {
-              label: (
-                <div className="custom-segment">
-                  <div>Dessert</div>
-                </div>
-              ),
-              value: "Dessert",
-            },
-            {
-              label: (
-                <div className="custom-segment">
-                  <div>Beverage</div>
-                </div>
-              ),
-              value: "Beverage",
-            },
+            ...options?.map((item) => {
+              return {
+                label: (
+                  <div className="custom-segment">
+                    <div>{item?.name}</div>
+                  </div>
+                ),
+                value: item?.name,
+              };
+            }),
           ]}
         />
         <div className="search-bar">
@@ -159,14 +143,19 @@ const TableForm = ({
       <div className="list-items">
         <Row justify="start" gutter={40}>
           {listItems.map((item) => {
+            const isSelected = selectedItems.find((tmp) => tmp.id === item?.id);
+            // const amount =
+            console.log(" check selected: ", isSelected);
             return (
               <Col span={12} key={item?.id}>
                 <TableItem
                   item={item}
+                  isSelected={isSelected}
                   selectedItems={selectedItems}
                   selectItem={increaseCounter}
                   unselectItem={decreaseCounter}
-                  isHidden={isHidden}
+                  handleSelect={handleSelect}
+                  typeCancel={typeCancel}
                 />
               </Col>
             );
