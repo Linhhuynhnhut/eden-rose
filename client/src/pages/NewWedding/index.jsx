@@ -14,6 +14,7 @@ const NewWedding = ({ isWeddingEdit }) => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [menu, setMenu] = useState(0);
+  const [services1, setServices] = useState(0);
   const [dishTypes, setDishTypes] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const step1Ref = useRef();
@@ -56,21 +57,46 @@ const NewWedding = ({ isWeddingEdit }) => {
     setMenu(data2);
 
     // map
-    const newData = data2.map((item) => {
-      const type = data.find((i) => {
-        return i?.id === item?.type;
-      });
+    // const newData = data2.map((item) => {
+    //   const type = data.find((i) => {
+    //     return i?.id === item?.type;
+    //   });
 
+    //   const status = data1.find((i) => {
+    //     return i?.id === item?.status;
+    //   });
+    //   return {
+    //     ...item,
+    //     type: type.name,
+    //     status: status.name,
+    //   };
+    // });
+    // console.log("new: ", newData);
+
+    // get services
+    const rawDataServices = await api.getServices();
+    const data3 = rawDataServices.map((item) => {
+      return {
+        id: item.MaDichVu,
+        name: item.TenDichVu,
+        status: item.MaTinhTrang,
+        price: item.DonGia,
+        img: item.Anh,
+      };
+    });
+
+    const newData = data3.map((item) => {
       const status = data1.find((i) => {
         return i?.id === item?.status;
       });
       return {
         ...item,
-        type: type.name,
         status: status.name,
       };
     });
-    console.log("new: ", newData);
+    // console.log("all services: ", newData);
+
+    setServices(newData);
   };
 
   const mapData = (data) => {
@@ -154,7 +180,7 @@ const NewWedding = ({ isWeddingEdit }) => {
         numberOfSteps={4}
         typeCancel={false}
         tableName="services"
-        content={services}
+        content={services1}
         isFilter={false}
       />
     ),
@@ -166,7 +192,7 @@ const NewWedding = ({ isWeddingEdit }) => {
         currentStep={current}
         numberOfSteps={4}
         menu={mapData(menu)}
-        services={services}
+        services={services1}
       />
     ),
   };

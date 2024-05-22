@@ -17,6 +17,7 @@ const Summary = ({
   services,
 }) => {
   const [selectedMenu, setSelectedMenu] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
   const [tablePrice, setTablePrice] = useState("");
   const [servicePrice, setServicePrice] = useState("");
   // const [services, setServices] = useState([]);
@@ -39,7 +40,7 @@ const Summary = ({
         amount: item.amount,
       };
     });
-    // setSelectedMenu(svPrice);
+    setSelectedServices(svPrice);
 
     var servicePr = svPrice.reduce((acc, item) => {
       return acc + Number(item.price) * item.amount;
@@ -104,18 +105,17 @@ const Summary = ({
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
-      render: () => <span>1</span>,
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-    },
+    // {
+    //   title: "Status",
+    //   dataIndex: "status",
+    //   key: "status",
+    // },
   ];
   const handleSubmit = () => {
     const payload = {};
@@ -175,7 +175,7 @@ const Summary = ({
         <Table
           className="table-list-item"
           columns={columns2}
-          dataSource={services}
+          dataSource={selectedServices}
           pagination={false}
           scroll={{ y: 400 }}
         />
