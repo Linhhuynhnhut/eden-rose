@@ -24,7 +24,7 @@ const Services = () => {
       TenDichVu: values.name,
       MaTinhTrang: +values.status,
       DonGia: +values.price,
-      // Anh: values.imageUrl,
+      Anh: values.imageUrl,
       isDeleted: false,
     };
 

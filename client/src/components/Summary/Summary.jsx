@@ -1,10 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import InformationForm from "../InformationForm/InformationForm";
 import { RightOutlined, LeftOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Table, Tooltip, Row, Col, Typography, Image } from "antd";
-import { services } from "../../constants";
+import {
+  Button,
+  Table,
+  Tooltip,
+  Row,
+  Col,
+  Typography,
+  Image,
+  notification,
+} from "antd";
+// import { services } from "../../constants";
 
 import "./summary.scss";
+import { api as API } from "../../api/api";
 const { Title } = Typography;
 
 const Summary = ({
@@ -15,12 +25,20 @@ const Summary = ({
   numberOfSteps,
   menu,
   services,
+  handleSubmitReservation,
+  halls,
 }) => {
+  const [api, contextHolder] = notification.useNotification();
   const [selectedMenu, setSelectedMenu] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
-  const [tablePrice, setTablePrice] = useState("");
-  const [servicePrice, setServicePrice] = useState("");
-  // const [services, setServices] = useState([]);
+  const [tablePrice, setTablePrice] = useState();
+  const [servicePrice, setServicePrice] = useState();
+  const openNotificationWithIcon = (type, mess, descr) => {
+    api[type]({
+      message: mess,
+      description: descr,
+    });
+  };
   useEffect(() => {
     // menu
     const newMenu = formRef[1].current.selectedItems.map((item) => {
@@ -31,7 +49,7 @@ const Summary = ({
     var menuPrice = newMenu.reduce((acc, item) => {
       return acc + Number(item.price);
     }, 0);
-    setTablePrice(`${menuPrice}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    setTablePrice(menuPrice);
 
     // services
     const svPrice = formRef[2].current.selectedItems.map((item) => {
@@ -45,8 +63,7 @@ const Summary = ({
     var servicePr = svPrice.reduce((acc, item) => {
       return acc + Number(item.price) * item.amount;
     }, 0);
-    console.log("services: ", servicePr);
-    setServicePrice(`${servicePr}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    setServicePrice(servicePr);
   }, [formRef]);
   const columns1 = [
     {
@@ -110,6 +127,8 @@ const Summary = ({
       title: "Price",
       dataIndex: "price",
       key: "price",
+      render: (text) =>
+        `${text.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
     },
     // {
     //   title: "Status",
@@ -117,11 +136,65 @@ const Summary = ({
     //   key: "status",
     // },
   ];
-  const handleSubmit = () => {
-    const payload = {};
+
+  const validateMenuPrice = () => {
+    const hall = halls.find((i) => {
+      return i?.key === formRef[0].current.info.hall;
+    });
+    const minimumPrice = hall.minimumPrice;
+    const totalTables =
+      Number(formRef[0].current.info.numberOfSpareTables) +
+      Number(formRef[0].current.info.numberOfTables);
+
+    const uniqueTypes = [...new Set(selectedMenu.map((item) => item.type))];
+
+    if (minimumPrice <= tablePrice) {
+      if (hall.tables >= totalTables) {
+        if (uniqueTypes.length >= 4) {
+          return true;
+          // check trùng ca - sảnh - ngày
+        } else {
+          openNotificationWithIcon(
+            "warning",
+            "Number of Dish Types is not valid",
+            `Number of Dish Types must have at least 4 types: main dish, beverage, appetizer, dessert`
+          );
+          return false;
+        }
+      } else {
+        openNotificationWithIcon(
+          "warning",
+          "Number of Tables is not valid",
+          `Number of Tables must be smaller ${hall.tables} `
+        );
+        return false;
+      }
+    } else {
+      openNotificationWithIcon(
+        "warning",
+        "Table Price is not valid",
+        `Table Price must be larger ${minimumPrice} VND`
+      );
+      return false;
+    }
+  };
+  const handleSubmit = async () => {
+    if (validateMenuPrice()) {
+      const payload = {
+        infor: formRef[0].current,
+        menu: selectedMenu,
+        services: selectedServices,
+        tablePrice: tablePrice,
+        servicePrice: servicePrice,
+      };
+      handleSubmitReservation(payload);
+    } else {
+      console.log("try again");
+    }
   };
   return (
     <div className="summary">
+      {contextHolder}
       <InformationForm
         prev={prev}
         next={next}
@@ -163,7 +236,7 @@ const Summary = ({
               Table Price:
             </Title>
             <Title level={5} className="number-amount">
-              {tablePrice} VND
+              {`${tablePrice}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} VND
             </Title>
           </Col>
         </Row>
@@ -193,7 +266,7 @@ const Summary = ({
               Service Price:
             </Title>
             <Title level={5} className="number-amount">
-              {servicePrice} VND
+              {`${servicePrice}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} VND
             </Title>
           </Col>
         </Row>
