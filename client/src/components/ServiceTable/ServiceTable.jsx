@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -7,36 +7,49 @@ import {
   Table,
   message,
   Popconfirm,
-  Tooltip
+  Tooltip,
 } from "antd";
 import Highlighter from "react-highlight-words";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import ServiceForm from "../ServiceForm/ServiceForm";
-import { Modal } from "antd";
+import { Modal, Form } from "antd";
 
 import "./ServiceTable.scss";
 
-const ServiceTable = ({ data }) => {
+const ServiceTable = ({ data, statuses, update }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const searchInput = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tableData, setTableData] = useState(data);
+  const [tableData, setTableData] = useState();
+  const [rowData, setRowData] = useState(null);
+  const [form] = Form.useForm();
 
   const cancel = (e) => {
     console.log(e);
   };
-  const showModal = () => {
+  const showModal = (record) => {
+    setRowData(record);
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const handleOk = async () => {
+    try {
+      const values = await form?.validateFields();
+      if (!values.imageUrl) values.imageUrl = rowData?.imageUrl;
+      setIsModalOpen(false);
+      form?.resetFields();
+      update({ ...values, key: rowData.key });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleCancel = () => {
+    form?.resetFields();
+    setRowData(null);
     setIsModalOpen(false);
   };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -59,14 +72,12 @@ const ServiceTable = ({ data }) => {
   const hasSelected = selectedRowKeys.length > 0;
   const handleDelete = (id) => {
     message.success("You have deleted a service");
-    const newData = tableData.filter((item) => item.key !== id);
+    const newData = data.filter((item) => item.key !== id);
     setTableData(newData);
   };
   const handleDeleteSelectedItems = (selectedKeys) => {
     message.success("You have deleted selected services");
-    const newData = tableData.filter(
-      (item) => !selectedKeys.includes(item.key)
-    );
+    const newData = data.filter((item) => !selectedKeys.includes(item.key));
     // Update the state with the new data
     setTableData(newData);
     // Clear the selectedRowKeys state
@@ -201,16 +212,12 @@ const ServiceTable = ({ data }) => {
       dataIndex: "status",
       key: "status",
       width: "20%",
-      filters: [
-        {
-          text: "Available",
-          value: "Available",
-        },
-        {
-          text: "Unavailable",
-          value: "Unavailable",
-        },
-      ],
+      filters: statuses.map((item) => {
+        return {
+          text: item.name,
+          value: item.name,
+        }
+      }),
       filterMode: "tree",
       // filterSearch: true,
       onFilter: (value, record) => record.status.startsWith(value),
@@ -223,7 +230,7 @@ const ServiceTable = ({ data }) => {
       render: (_, record) => (
         <Space>
           <Tooltip title="Edit">
-            <FaEdit onClick={showModal} />
+            <FaEdit onClick={() => showModal(record)} />
           </Tooltip>
           <Popconfirm
             title="Delete the service"
@@ -248,19 +255,15 @@ const ServiceTable = ({ data }) => {
         {hasSelected && (
           <div className="delete_button_wrapper">
             <Popconfirm
-            title="Delete the service"
-            description="Are you sure to delete these services?"
-            onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
-            onCancel={cancel}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button
-              className="delete_button"              
+              title="Delete the service"
+              description="Are you sure to delete these services?"
+              onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
             >
-              Delete
-            </Button>
-          </Popconfirm>
+              <Button className="delete_button">Delete</Button>
+            </Popconfirm>
             <span>Selected {selectedRowKeys.length} items</span>
           </div>
         )}
@@ -268,7 +271,7 @@ const ServiceTable = ({ data }) => {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={tableData}
+          dataSource={data}
         />
       </div>
       <div>
@@ -279,7 +282,7 @@ const ServiceTable = ({ data }) => {
           onCancel={handleCancel}
           okText="Save"
         >
-          <ServiceForm />
+          <ServiceForm form={form} statuses={statuses} rowData={rowData} />
         </Modal>
       </div>
     </>
