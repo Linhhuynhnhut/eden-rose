@@ -8,4 +8,6 @@ serviceRouter.get("/", serviceController.search);
 // create new hall
 serviceRouter.post("/", serviceController.create);
 
+serviceRouter.put("/:MaDichVu", serviceController.update);
+
 export default serviceRouter;

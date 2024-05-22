@@ -20,9 +20,9 @@ const search = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const { TenDichVu, DonGia, MaTinhTrang } = req.body;
+    const { TenDichVu, DonGia, MaTinhTrang, Anh, isDeleted } = req.body;
 
-    if (!TenDichVu || !DonGia || !MaTinhTrang) {
+    if (!TenDichVu || !DonGia || !MaTinhTrang || !Anh) {
       responseHandler.error(res);
       return;
     }
@@ -31,6 +31,8 @@ const create = async (req, res) => {
       TenDichVu,
       DonGia,
       MaTinhTrang,
+      Anh,
+      isDeleted,
     });
 
     responseHandler.ok(res, newService);
@@ -40,4 +42,33 @@ const create = async (req, res) => {
   }
 };
 
-export default { search, create };
+const update = async (req, res) => {
+  const { MaDichVu } = req.params;
+  const { TenDichVu, DonGia, MaTinhTrang, Anh, isDeleted } =
+    req.body;
+
+  try {
+    const dichVu = await DichVu.findByPk(MaDichVu);
+
+    if (!dichVu) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+
+    dichVu.TenDichVu = TenDichVu || dichVu.TenDichVu;
+    dichVu.DonGia = DonGia || dichVu.DonGia;
+    dichVu.MaTinhTrang = MaTinhTrang || dichVu.MaTinhTrang;
+    dichVu.Anh = Anh || dichVu.Anh;
+    dichVu.isDeleted = isDeleted || dichVu.isDeleted;
+
+    console.log("....")
+    await dichVu.save();
+    console.log("success ")
+    return res
+      .status(200)
+      .json({ message: "Service updated successfully", dichVu });
+  } catch (error) {
+    return res.status(500).json({ message: "Error updating Service", error });
+  }
+};
+
+export default { search, create, update };
