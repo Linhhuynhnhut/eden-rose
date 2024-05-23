@@ -8,6 +8,9 @@ reservationFormRouter.get("/", reservationFormController.search);
 // create new status
 reservationFormRouter.post("/", reservationFormController.create);
 
+// update status
+reservationFormRouter.put("/:MaPhieuDatTC", reservationFormController.update);
+
 // delete status
 reservationFormRouter.delete(
   "/:MaPhieuDatTC",

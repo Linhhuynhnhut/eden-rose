@@ -14,16 +14,28 @@ const NewWedding = ({ isWeddingEdit }) => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [menu, setMenu] = useState(0);
-  const [services1, setServices] = useState(0);
+  const [services, setServices] = useState(0);
   const [dishTypes, setDishTypes] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [hallTypes, setHallTypes] = useState([]);
   const [halls, setHalls] = useState([]);
+  const [reservationForms, setreservationForms] = useState([]);
   const step1Ref = useRef();
   const step2Ref = useRef();
   const step3Ref = useRef();
 
   const getData = async () => {
+    // get reservationForms
+    const rawDataReservationForms = await api.getReservations();
+    // const mapHallTypes = rawDataReservationForms.map((item) => {
+    //   return {
+    //     id: item.MaLoaiSanh,
+    //     name: item.TenLoaiSanh,
+    //     minimumPrice: item.DGBanToiThieu,
+    //   };
+    // });
+    setreservationForms(rawDataReservationForms);
+
     // get dish type
     const rawDataDishTypes = await api.getDishTypes();
     const data = rawDataDishTypes.map((item) => {
@@ -151,30 +163,96 @@ const NewWedding = ({ isWeddingEdit }) => {
     console.log("prev step3: ", step3Ref);
   };
 
-  const handleSubmitReservation = (content) => {
+  const handleSubmitReservation = async (content) => {
     console.log("reservation: ", content);
-    const { infor, menu, services, tablePrice, servicePrice } = content;
+    const {
+      infor,
+      menu: selectedMenu,
+      services: selectedServices,
+      tablePrice,
+      servicePrice,
+    } = content;
     const rawInfo = infor.info;
-    console.log("track data: ", infor.info);
-    const newDate = rawInfo.planningDate.toDate();
-    console.log("newDate", newDate);
-    console.log("date", newDate.getFullDate());
+    const planningDate = rawInfo.planningDate;
+    const today = new Date();
+    console.log("planningDate", planningDate.date);
+    console.log("today", today);
+    console.log("planningDate ...", planningDate.toString());
+    console.log("today ...", today.toISOString());
+    // console.log("compare", today <= newDate);
+    const totalTablePrice =
+      tablePrice *
+      (Number(rawInfo.numberOfTables) + Number(rawInfo.numberOfSpareTables));
+
     const payload = {
       TenChuRe: rawInfo.groomName,
       TenCoDau: rawInfo.brideName,
       DienThoai: rawInfo.phoneNumber,
-      // NgayDatTiec: ,
-      // NgayDaiTiec: ,
-      // MaCa,
-      // TienCoc,
-      // SLBan,
-      // SLBanDuTru,
-      // TongTienBan,
-      // TongTienDichVu,
-      // TongTienPhieuDatTC,
-      // TinhTrangThanhToan,
-      // isDeleted,
+      NgayDatTiec: today,
+      NgayDaiTiec: planningDate,
+      MaCa: rawInfo.shift,
+      MaSanh: rawInfo.hall,
+      TienCoc: rawInfo.deposit,
+      SLBan: Number(rawInfo.numberOfTables),
+      SLBanDuTru: Number(rawInfo.numberOfSpareTables),
+      TongTienBan: totalTablePrice,
+      TongTienDichVu: servicePrice,
+      TongTienPhieuDatTC: totalTablePrice + servicePrice,
+      TinhTrangThanhToan: false,
+      isDeleted: false,
     };
+    console.log("payload: ", payload);
+    console.log("selectedMenu: ", selectedMenu);
+
+    const mapMenu = selectedMenu.map((item) => {
+      const dish = menu.find((i) => {
+        return i?.id === item?.id;
+      });
+      return {
+        MaMonAn: item?.id,
+        DonGia: Number(dish?.price),
+        GhiChu: "",
+      };
+    });
+    console.log("mapMenu ", mapMenu);
+
+    const mapServices = selectedServices.map((item) => {
+      const service = services.find((i) => {
+        return i?.id === item?.id;
+      });
+      return {
+        MaDichVu: item?.id,
+        DonGia: Number(service?.price),
+        SoLuong: Number(item?.amount),
+        NgayThem: today,
+      };
+    });
+    console.log("mapServices ", mapServices);
+
+    try {
+      const res = await api.postReservations(payload);
+      if (res != null) {
+        let MaPhieu;
+        const temp = await api.getReservations({
+          MaCa: rawInfo.shift,
+          MaSanh: rawInfo.hall,
+        });
+        temp.forEach((item) => {
+          if (item?.NgayDaiTiec === planningDate) MaPhieu = item?.MaPhieuDatTC;
+        });
+
+        mapMenu.forEach(async (dish) => {
+          await api.postDishDetail({ MaPhieuDatTC: MaPhieu, ...dish });
+        });
+        mapServices.forEach(async (service) => {
+          await api.postServiceDetail({ MaPhieuDatTC: MaPhieu, ...service });
+        });
+      }
+      // form?.resetFields();
+      // setIsModalOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const items = steps.map((item) => ({
@@ -220,7 +298,7 @@ const NewWedding = ({ isWeddingEdit }) => {
         numberOfSteps={4}
         typeCancel={false}
         tableName="services"
-        content={services1}
+        content={services}
         isFilter={false}
       />
     ),
@@ -232,24 +310,13 @@ const NewWedding = ({ isWeddingEdit }) => {
         currentStep={current}
         numberOfSteps={4}
         menu={mapData(menu)}
-        services={services1}
+        services={services}
         halls={halls}
+        reservationForms={reservationForms}
         handleSubmitReservation={handleSubmitReservation}
       />
     ),
   };
-
-  useEffect(() => {
-    // const getData = async () => {
-    //   const payload = {
-    //     TenMonAn: "a",
-    //     DonGia: 25000,
-    //   };
-    //   const hello = await api.postDishes(payload);
-    //   console.log("hello: ", hello);
-    // };
-    // getData();
-  }, []);
 
   return (
     <div className="add-wedding">

@@ -4,6 +4,16 @@ import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { api } from "../../api/api";
 
 import "./informationForm.scss";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
+const range = (start, end) => {
+  const result = [];
+  for (let i = start; i < end; i++) {
+    result.push(i);
+  }
+  return result;
+};
 
 const InformationForm = ({
   prev,
@@ -16,6 +26,17 @@ const InformationForm = ({
   const [form] = Form.useForm();
   const [shifts, setShifts] = useState([]);
   const [halls, setHalls] = useState([]);
+  // eslint-disable-next-line arrow-body-style
+  const disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current < dayjs().endOf("day");
+  };
+  const disabledDateTime = () => ({
+    disabledHours: () => range(0, 24).splice(4, 20),
+    disabledMinutes: () => range(30, 60),
+    disabledSeconds: () => [55, 56],
+  });
+
   const onFinish = (values) => {
     formRef.current = { info: values };
     next();
@@ -24,7 +45,7 @@ const InformationForm = ({
     // console.log(`selected ${value}`);
   };
   const onChange = (date, dateString) => {
-    // console.log(date, dateString);
+    console.log(date, dateString);
   };
   const getData = async () => {
     // shifts
@@ -118,6 +139,9 @@ const InformationForm = ({
             }}
           >
             <DatePicker
+              disabledDate={disabledDate}
+              disabledTime={disabledDateTime}
+              format="YYYY-MM-DD"
               onChange={onChange}
               style={{
                 width: "100%",
