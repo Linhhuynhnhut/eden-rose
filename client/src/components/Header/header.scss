@@ -2,7 +2,7 @@
 
 .header {
   text-align: left;
-  margin-left: 20px;
+  // margin-left: 20px;
   margin-bottom: 30px;
   width: fit-content;
   .title{
@@ -38,4 +38,8 @@
       right: 0;
     }
   }
+}
+
+.page_header {
+  margin-left: 30px;
 }

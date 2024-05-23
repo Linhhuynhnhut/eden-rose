@@ -83,7 +83,10 @@ const Weddings = () => {
   return (
     <div className="wedding_page">
       {console.log(showEditForm)}
-      {!showNoHeader && <Header title="Weddings Management" />}
+      <div className="page_header">
+        {!showNoHeader && <Header title="Weddings Management" />}
+      </div>
+
       {!showNoHeader && (
         <div className="btn_new_wedding">
           <Link to="/management/new-wedding">

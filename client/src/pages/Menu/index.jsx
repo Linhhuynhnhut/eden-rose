@@ -138,7 +138,9 @@ const Menu = () => {
 
   return (
     <div className="menu_page">
-      <Header title="Menu Management" />
+      <div className="page_header">
+        <Header title="Menu Management" />
+      </div>
       <div className="btn_new_dish">
         <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
           New Dish

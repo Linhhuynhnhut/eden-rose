@@ -80,15 +80,8 @@ const Services = () => {
 
   const handleUpdateService = async (payload) => {
     try {
-      const {
-        key,
-        name,
-        status,
-        price,
-        imageUrl,
-        isDeleted = false,
-      } = payload;
-      console.log("payload before: ", payload)
+      const { key, name, status, price, imageUrl, isDeleted = false } = payload;
+      console.log("payload before: ", payload);
       const statusId = statuses.find((i) => {
         return i?.name === status;
       });
@@ -113,7 +106,9 @@ const Services = () => {
   }, []);
   return (
     <div className="services_page">
-      <Header title="Services Management" />
+      <div className="page_header">
+        <Header title="Services Management" />
+      </div>
       <div className="btn_new_service">
         <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
           New Service

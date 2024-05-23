@@ -80,8 +80,9 @@ const Halls = () => {
 
   return (
     <div className="hall_page">
-      <Header title="Hall Management" />
-
+      <div className="page_header">
+        <Header title="Hall Management" />
+      </div>
       <div className="btn_new_hall">
         <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
           New Hall
