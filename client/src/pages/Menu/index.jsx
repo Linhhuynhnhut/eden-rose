@@ -51,6 +51,7 @@ const Menu = () => {
         imageUrl,
         isDeleted = "false",
       } = payload;
+      console.log("payload ", payload);
       const typeId = dishTypes.find((i) => {
         return i?.name === dishType;
       });
@@ -59,6 +60,7 @@ const Menu = () => {
         return i?.name === status;
       });
 
+      console.log("check update: ", dishTypes);
       const data = {
         TenMonAn: name,
         MaPhanLoai: typeId.id,

@@ -11,67 +11,143 @@ import { api } from "../../api/api";
 const Halls = () => {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [halls, setHalls] = useState([]);
   const [hallTypes, setHallTypes] = useState([]);
 
   const getData = async () => {
     // get hall type
     const rawDataHallTypes = await api.getHallTypes();
-    const data = rawDataHallTypes.map((item) => {
+    const data1 = rawDataHallTypes.map((item) => {
       return {
         key: item.MaLoaiSanh,
         name: item.TenLoaiSanh,
         MinimumPrice: item.DGBanToiThieu,
       };
     });
-    setHallTypes(data);
+    setHallTypes(data1);
+    console.log("all hall types: ", data1);
+
+    // get hall
+    const rawDataHalls = await api.getHalls();
+    const data = rawDataHalls.map((item) => {
+      const type = data1.find((i) => {
+        return i?.key === item?.MaLoaiSanh;
+      });
+      return {
+        key: item?.MaSanh,
+        name: item?.TenSanh,
+        type: type?.name,
+        tables: item?.SLBanToiDa,
+        imageUrl: item?.Anh,
+        minimumPrice: type?.MinimumPrice,
+      };
+    });
+    setHalls(data);
+    console.log("all hall: ", data);
   };
   useEffect(() => {
     getData();
   }, []);
 
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      type: "Luxury Hall",
-      tables: 32,
-      price: 10000000,
-      imageUrl: image1,
-    },
-    {
-      key: "2",
-      name: "Joe Black",
-      type: "Luxury Hall",
-      tables: 42,
-      price: 10000000,
-      imageUrl: image1,
-    },
-    {
-      key: "3",
-      name: "Jim Green",
-      type: "Basic Hall",
-      tables: 32,
-      price: 20000000,
-      imageUrl: image1,
-    },
-    {
-      key: "4",
-      name: "Jim Red",
-      type: "Premium Hall",
-      tables: 32,
-      price: 40000000,
-      imageUrl: image1,
-    },
-  ];
+  // const data = [
+  //   {
+  //     key: "1",
+  //     name: "John Brown",
+  //     type: "Luxury Hall",
+  //     tables: 32,
+  //     minimumPrice: 10000000,
+  //     imageUrl: image1,
+  //   },
+  //   {
+  //     key: "2",
+  //     name: "Joe Black",
+  //     type: "Luxury Hall",
+  //     tables: 42,
+  //     minimumPrice: 10000000,
+  //     imageUrl: image1,
+  //   },
+  //   {
+  //     key: "3",
+  //     name: "Jim Green",
+  //     type: "Basic Hall",
+  //     tables: 32,
+  //     minimumPrice: 20000000,
+  //     imageUrl: image1,
+  //   },
+  //   {
+  //     key: "4",
+  //     name: "Jim Red",
+  //     type: "Premium Hall",
+  //     tables: 32,
+  //     minimumPrice: 40000000,
+  //     imageUrl: image1,
+  //   },
+  // ];
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
   const handleOk = async () => {
-    const values = await form?.validateFields();
-    console.log("values", values);
-    setIsModalOpen(false);
+    try {
+      const values = await form?.validateFields();
+      console.log("values", values);
+      const type = hallTypes.find((i) => {
+        return i?.key === values?.hallType;
+      });
+      console.log("type", type);
+      const data = {
+        TenSanh: values?.name,
+        MaLoaiSanh: type?.key,
+        SLBanToiDa: +values?.maximumTable,
+        Anh: values?.image,
+        isDeleted: false,
+      };
+      const res = await api.postHall(data);
+      if (res != null) {
+        getData();
+        console.log("res ", res);
+      }
+      form?.resetFields();
+      setIsModalOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdateDish = async (payload) => {
+    console.log("payload: ", payload);
+    try {
+      const {
+        key,
+        name,
+        hallType,
+        maximumTable,
+        image,
+        isDeleted = "false",
+      } = payload;
+
+      // const type = hallTypes.find((i) => {
+      //   return i?.name === hallType;
+      // });
+
+      const data = {
+        TenSanh: name,
+        MaLoaiSanh: hallType,
+        SLBanToiDa: +maximumTable,
+        GhiChu: "",
+        Anh: image,
+        isDeleted: isDeleted,
+      };
+      console.log("data put: ", data);
+      const res = await api.putHall(key, data);
+      if (res != null) {
+        getData();
+        console.log("res hall update: ", res);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCancel = () => {
@@ -96,11 +172,15 @@ const Halls = () => {
           onCancel={handleCancel}
           okText="Save"
         >
-          <HallForm form={form} />
+          <HallForm form={form} hallTypes={hallTypes} />
         </Modal>
       </div>
       <div className="table_hall">
-        <TableHall data={data} />
+        <TableHall
+          data={halls}
+          hallTypes={hallTypes}
+          update={handleUpdateDish}
+        />
       </div>
     </div>
   );

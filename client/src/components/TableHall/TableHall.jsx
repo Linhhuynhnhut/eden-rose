@@ -1,6 +1,15 @@
 import React, { useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Popconfirm, message } from "antd";
+import {
+  Button,
+  Input,
+  Space,
+  Table,
+  Popconfirm,
+  message,
+  Image,
+  Form,
+} from "antd";
 import Highlighter from "react-highlight-words";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
@@ -10,23 +19,34 @@ import { Tooltip } from "antd";
 
 import "./TableHall.scss";
 
-const TableHall = ({ data }) => {
+const TableHall = ({ data, hallTypes, update }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [rowData, setRowData] = useState(null);
   const searchInput = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tableData, setTableData] = useState(data);
+  const [form] = Form.useForm();
 
   const cancel = (e) => {
     console.log(e);
   };
-  const showModal = () => {
+  const showModal = (record) => {
+    setRowData(record);
+    console.log("record hall: ", record);
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const handleOk = async () => {
+    try {
+      const values = await form?.validateFields();
+      if (!values.image) values.image = rowData?.image;
+      setIsModalOpen(false);
+      form?.resetFields();
+      update({ ...values, key: rowData.key });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleCancel = () => {
@@ -50,20 +70,20 @@ const TableHall = ({ data }) => {
     onChange: onSelectChange,
   };
   const hasSelected = selectedRowKeys.length > 0;
-  const handleDelete = (id) => {
-    const newData = tableData.filter((item) => item.key !== id);
-    setTableData(newData);
-  };
-  const handleDeleteSelectedItems = (selectedKeys) => {
-    message.success("You have deleted selected halls");
-    const newData = tableData.filter(
-      (item) => !selectedKeys.includes(item.key)
-    );
-    // Update the state with the new data
-    setTableData(newData);
-    // Clear the selectedRowKeys state
-    setSelectedRowKeys([]);
-  };
+  // const handleDelete = (id) => {
+  //   const newData = tableData.filter((item) => item.key !== id);
+  //   setTableData(newData);
+  // };
+  // const handleDeleteSelectedItems = (selectedKeys) => {
+  //   message.success("You have deleted selected halls");
+  //   const newData = tableData.filter(
+  //     (item) => !selectedKeys.includes(item.key)
+  //   );
+  //   // Update the state with the new data
+  //   setTableData(newData);
+  //   // Clear the selectedRowKeys state
+  //   setSelectedRowKeys([]);
+  // };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -174,8 +194,8 @@ const TableHall = ({ data }) => {
       width: "30%",
       ...getColumnSearchProps("name"),
       render: (text, record) => (
-        <div className="image_name">
-          <img src={record.imageUrl} alt={text} className="image_in_table" />
+        <div className="image_name_hall">
+          <Image src={record.imageUrl} alt={text} className="image_in_table" />
           {text}
         </div>
       ),
@@ -185,28 +205,12 @@ const TableHall = ({ data }) => {
       dataIndex: "type",
       key: "type",
       width: "20%",
-      filters: [
-        {
-          text: "Luxury Hall",
-          value: "Luxury Hall",
-        },
-        {
-          text: "Premium Hall",
-          value: "Premium Hall",
-        },
-        {
-          text: "High Hall",
-          value: "High Hall",
-        },
-        {
-          text: "Standard Hall",
-          value: "Standard Hall",
-        },
-        {
-          text: "Basic Hall",
-          value: "Basic Hall",
-        },
-      ],
+      filters: hallTypes.map((item) => {
+        return {
+          text: item.name,
+          value: item.name,
+        };
+      }),
       filterMode: "tree",
       // filterSearch: true,
       onFilter: (value, record) => record.type.startsWith(value),
@@ -221,10 +225,10 @@ const TableHall = ({ data }) => {
     },
     {
       title: "Minimum Price",
-      dataIndex: "price",
-      key: "price",
+      dataIndex: "minimumPrice",
+      key: "minimumPrice",
       width: "20%",
-      sorter: (a, b) => a.price - b.price,
+      sorter: (a, b) => a.minimumPrice - b.minimumPrice,
       sortDirections: ["descend", "ascend"],
     },
     {
@@ -235,12 +239,12 @@ const TableHall = ({ data }) => {
       render: (_, record) => (
         <Space>
           <Tooltip title="Edit">
-            <FaEdit onClick={showModal} />
+            <FaEdit onClick={() => showModal(record)} />
           </Tooltip>
           <Popconfirm
             title="Delete the hall"
             description="Are you sure to delete this hall?"
-            onConfirm={() => handleDelete(record.key)}
+            // onConfirm={() => handleDelete(record.key)}
             onCancel={cancel}
             okText="Yes"
             cancelText="No"
@@ -262,7 +266,7 @@ const TableHall = ({ data }) => {
             <Popconfirm
               title="Delete the hall"
               description="Are you sure to delete these halls?"
-              onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
+              // onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
               onCancel={cancel}
               okText="Yes"
               cancelText="No"
@@ -276,7 +280,7 @@ const TableHall = ({ data }) => {
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={tableData}
+          dataSource={data}
         />
       </div>
       <div>
@@ -287,7 +291,7 @@ const TableHall = ({ data }) => {
           onCancel={handleCancel}
           okText="Save"
         >
-          <HallForm />
+          <HallForm form={form} hallTypes={hallTypes} rawData={rowData} />
         </Modal>
       </div>
     </>

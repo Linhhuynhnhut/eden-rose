@@ -19,13 +19,10 @@ const search = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const { TenSanh, MaLoaiSanh, SLBanToiDa, GhiChu } = req.body;
+    const { TenSanh, MaLoaiSanh, SLBanToiDa, GhiChu, Anh, isDeleted } =
+      req.body;
 
-    //         TenSanh: DataTypes.STRING,
-    //   MaLoaiSanh: DataTypes.STRING,
-    //   SLBanToiDa: DataTypes.INTEGER,
-    //   GhiChu: DataTypes.STRING
-    if (!TenSanh || !MaLoaiSanh || !SLBanToiDa) {
+    if (!TenSanh || !MaLoaiSanh || !SLBanToiDa || !Anh) {
       responseHandler.error(res);
       return;
     }
@@ -35,6 +32,8 @@ const create = async (req, res) => {
       MaLoaiSanh,
       SLBanToiDa,
       GhiChu,
+      Anh,
+      isDeleted,
     });
 
     responseHandler.ok(res, newHall);
@@ -44,4 +43,31 @@ const create = async (req, res) => {
   }
 };
 
-export default { search, create };
+const update = async (req, res) => {
+  const { MaSanh } = req.params;
+  const { TenSanh, MaLoaiSanh, SLBanToiDa, GhiChu, Anh, isDeleted } = req.body;
+
+  try {
+    const hall = await Sanh.findByPk(MaSanh);
+
+    if (!hall) {
+      return res.status(404).json({ message: "Hall not found" });
+    }
+
+    hall.TenSanh = TenSanh || hall.TenSanh;
+    hall.MaLoaiSanh = MaLoaiSanh || hall.MaLoaiSanh;
+    hall.SLBanToiDa = SLBanToiDa || hall.SLBanToiDa;
+    hall.GhiChu = GhiChu || hall.GhiChu;
+    hall.Anh = Anh || hall.Anh;
+    hall.isDeleted = isDeleted || hall.isDeleted;
+
+    await hall.save();
+    console.log("test: ", hall);
+
+    return res.status(200).json({ message: "Hall updated successfully", hall });
+  } catch (error) {
+    return res.status(500).json({ message: "Error updating Sanh", error });
+  }
+};
+
+export default { search, create, update };

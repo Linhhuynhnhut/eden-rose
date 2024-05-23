@@ -1,25 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, Form, Input, DatePicker, Button, InputNumber } from "antd";
 import { RightOutlined, LeftOutlined } from "@ant-design/icons";
+import { api } from "../../api/api";
 
 import "./informationForm.scss";
 
-const options = [
-  {
-    value: "morning",
-    label: "Morning",
-  },
-  {
-    value: "night",
-    label: "Night",
-  },
-
-  {
-    value: "disabled",
-    label: "Disabled",
-    disabled: true,
-  },
-];
 const InformationForm = ({
   prev,
   next,
@@ -28,6 +13,9 @@ const InformationForm = ({
   numberOfSteps,
   isReadOnly = false,
 }) => {
+  const [form] = Form.useForm();
+  const [shifts, setShifts] = useState([]);
+  const [halls, setHalls] = useState([]);
   const onFinish = (values) => {
     formRef.current = { info: values };
     next();
@@ -38,7 +26,30 @@ const InformationForm = ({
   const onChange = (date, dateString) => {
     // console.log(date, dateString);
   };
-  const [form] = Form.useForm();
+  const getData = async () => {
+    // shifts
+    const rawDataShifts = await api.getShifts();
+    const shifts = rawDataShifts.map((item) => {
+      return {
+        value: item.MaCa,
+        label: item.TenCa,
+      };
+    });
+    setShifts(shifts);
+
+    // halls
+    const rawDataHalls = await api.getHalls();
+    const data = rawDataHalls.map((item) => {
+      return {
+        value: item?.MaSanh,
+        label: item?.TenSanh,
+      };
+    });
+    setHalls(data);
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   useEffect(() => {
     form.setFieldsValue(formRef.current?.info);
   }, [form]);
@@ -47,7 +58,7 @@ const InformationForm = ({
       <Form
         disabled={isReadOnly}
         form={form}
-        initialValues={{ hall: "morning", shift: "morning" }}
+        initialValues={{ hall: 1, shift: 1 }}
         layout="vertical"
         style={{ width: 1100 }}
         onFinish={onFinish}
@@ -129,7 +140,7 @@ const InformationForm = ({
                 width: 120,
               }}
               onChange={handleChange}
-              options={options}
+              options={shifts}
             />
           </Form.Item>
         </Form.Item>
@@ -150,7 +161,7 @@ const InformationForm = ({
                 width: "100%",
               }}
               onChange={handleChange}
-              options={options}
+              options={halls}
             />
           </Form.Item>
           <Form.Item
@@ -166,7 +177,7 @@ const InformationForm = ({
           >
             <InputNumber
               formatter={(value) =>
-                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
               parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
               suffix="VND"

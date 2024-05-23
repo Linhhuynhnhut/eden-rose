@@ -24,7 +24,7 @@ const Services = () => {
       TenDichVu: values.name,
       MaTinhTrang: +values.status,
       DonGia: +values.price,
-      // Anh: values.imageUrl,
+      Anh: values.imageUrl,
       isDeleted: false,
     };
 
@@ -83,7 +83,7 @@ const Services = () => {
       const { key, name, status, price, imageUrl, isDeleted = false } = payload;
       console.log("payload before: ", payload);
       const statusId = statuses.find((i) => {
-        return i?.name === status;
+        return i?.id === +status;
       });
       const data = {
         TenDichVu: name,

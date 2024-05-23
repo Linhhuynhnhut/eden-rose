@@ -10,6 +10,14 @@ export const api = {
     const url = "dish-type";
     return axiosClient.get(url, params);
   },
+  getHalls: (params) => {
+    const url = "hall";
+    return axiosClient.get(url, params);
+  },
+  getShifts: (params) => {
+    const url = "shift";
+    return axiosClient.get(url, params);
+  },
   getHallTypes: (params) => {
     const url = "hall-type";
     return axiosClient.get(url, params);
@@ -22,8 +30,16 @@ export const api = {
     const url = "service";
     return axiosClient.get(url, params);
   },
+  getReservations: (params) => {
+    const url = "reservationForm";
+    return axiosClient.get(url, params);
+  },
 
   //POST******************************************************
+  postHall: (payload) => {
+    const url = "hall";
+    return axiosClient.post(url, payload);
+  },
   postHallType: (payload) => {
     const url = "hall-type";
     return axiosClient.post(url, payload);
@@ -46,6 +62,10 @@ export const api = {
   },
 
   //PUT***************************
+  putHall: (id, payload) => {
+    const url = "hall/" + String(id);
+    return axiosClient.put(url, payload);
+  },
   putHallType: (id, payload) => {
     const url = "hall-type/" + String(id);
     return axiosClient.put(url, payload);
@@ -66,7 +86,7 @@ export const api = {
     const url = "dish/" + String(id);
     return axiosClient.put(url, payload);
   },
-  putService:(id, payload) => {
+  putService: (id, payload) => {
     const url = "service/" + String(id);
     return axiosClient.put(url, payload);
   },
