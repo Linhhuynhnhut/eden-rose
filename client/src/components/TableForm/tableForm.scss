@@ -7,6 +7,15 @@
   flex-direction: column;
   width: 100%;
 
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #5e7249;
+    font-weight: 700;
+    font-size: 25px;
+  }
   .none {
     visibility: hidden;
   }
