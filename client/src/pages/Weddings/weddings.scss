@@ -1,32 +1,28 @@
-.wedding_page{
-    width: 1200px;
-    
-    .btn_new_wedding{
-        display: flex;
-        justify-content: right;
-        margin-right: 70px;
-        margin-bottom: 10px;
-        button{
-            background-color: #5E7249;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
-        }
-        .ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover{
-            background-color: #5E7249;
-            opacity: 0.9;
-        }
-        
+.wedding_page {
+  width: 1200px;
+  .btn_new_wedding {
+    display: flex;
+    justify-content: right;
+    margin-right: 70px;
+    margin-bottom: 10px;
+    button {
+      background-color: #5e7249;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
     }
+    .ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+      background-color: #5e7249;
+      opacity: 0.9;
+    }
+  }
 
-    .wedding_table{
-        display: flex;
-        justify-content: center;
-        .ant-table-wrapper {
-            width: 1000px;
-        }
-        .input:active {
-            color: #5E7249;
-        }
-      
+  .wedding_table {
+    display: flex;
+    justify-content: center;
+    .ant-table-wrapper {
+      width: 1050px;
     }
-    
+    .input:active {
+      color: #5e7249;
+    }
+  }
 }

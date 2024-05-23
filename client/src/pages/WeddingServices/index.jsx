@@ -106,7 +106,9 @@ const Services = () => {
   }, []);
   return (
     <div className="services_page">
-      <Header title="Services Management" />
+      <div className="page_header">
+        <Header title="Services Management" />
+      </div>
       <div className="btn_new_service">
         <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
           New Service
