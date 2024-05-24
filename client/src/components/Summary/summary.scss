@@ -1,6 +1,14 @@
 @use "../../scss/" as *;
 
 .summary {
+  .ant-picker,
+  .ant-picker-disabled,
+  .ant-picker-input > input,
+  .ant-select-selection-item,
+  .ant-input,
+  .ant-input-number-disabled {
+    color: black !important;
+  }
   .edit-form-btn {
     position: relative;
     left: 550px;

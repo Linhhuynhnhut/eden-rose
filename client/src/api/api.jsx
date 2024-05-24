@@ -34,6 +34,10 @@ export const api = {
     const url = "reservationForm";
     return axiosClient.get(url, params);
   },
+  getParams: (params) => {
+    const url = "param";
+    return axiosClient.get(url, params);
+  },
 
   //POST******************************************************
   postHall: (payload) => {
@@ -56,9 +60,21 @@ export const api = {
     const url = "dish";
     return axiosClient.post(url, payload);
   },
+  postDishDetail: (payload) => {
+    const url = "dish-detail";
+    return axiosClient.post(url, payload);
+  },
   postService: (payload) => {
     const url = "service";
     return axiosClient.post(url, payload);
+  },
+  postServiceDetail: (payload) => {
+    const url = "service-detail";
+    return axiosClient.post(url, payload);
+  },
+  postReservations: (params) => {
+    const url = "reservationForm";
+    return axiosClient.post(url, params);
   },
 
   //PUT***************************

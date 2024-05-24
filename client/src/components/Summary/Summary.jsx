@@ -25,8 +25,9 @@ const Summary = ({
   numberOfSteps,
   menu,
   services,
-  handleSubmitReservation,
   halls,
+  reservationForms,
+  handleSubmitReservation,
 }) => {
   const [api, contextHolder] = notification.useNotification();
   const [selectedMenu, setSelectedMenu] = useState([]);
@@ -136,7 +137,7 @@ const Summary = ({
       key: "price",
       width: "25%",
       render: (text) =>
-        `${text.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
+        `${text?.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
     },
     // {
     //   title: "Status",
@@ -144,6 +145,12 @@ const Summary = ({
     //   key: "status",
     // },
   ];
+
+  const parseDateObj = (date) => {
+    const offset = date.getTimezoneOffset();
+    date = new Date(date.getTime() - offset * 60 * 1000);
+    return date.toISOString().split("T")[0];
+  };
 
   const validateMenuPrice = () => {
     const hall = halls.find((i) => {
@@ -156,11 +163,44 @@ const Summary = ({
 
     const uniqueTypes = [...new Set(selectedMenu.map((item) => item.type))];
 
+    const today = new Date();
+    const planningDate = formRef[0].current.info.planningDate;
+    // console.log("test planningDate", planningDate.format("YYYY-MM-DD"));
+    // console.log("today", parseDateObj(today));
+    // console.log("compare", today < planningDate);
+    // console.log("reservationForms", reservationForms);
+
+    const test = reservationForms.find((item) => {
+      return (
+        item?.MaCa === formRef[0].current.info.shift &&
+        item?.MaSanh === formRef[0].current.info.hall &&
+        item?.NgayDaiTiec ===
+          formRef[0].current.info.planningDate.format("YYYY-MM-DD")
+      );
+    });
+
     if (minimumPrice <= tablePrice) {
       if (hall.tables >= totalTables) {
         if (uniqueTypes.length >= 4) {
-          return true;
-          // check trùng ca - sảnh - ngày
+          if (today < planningDate) {
+            if (!test) {
+              return true;
+            } else {
+              openNotificationWithIcon(
+                "warning",
+                "Planning Date is not valid",
+                `Planning Date has already existed`
+              );
+              return false;
+            }
+          } else {
+            openNotificationWithIcon(
+              "warning",
+              "Planning Date is not valid",
+              `Planning Date must be larger today`
+            );
+            return false;
+          }
         } else {
           openNotificationWithIcon(
             "warning",

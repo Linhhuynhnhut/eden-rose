@@ -64,19 +64,29 @@ const TableForm = ({
     setSelectedItems(formRef?.current?.selectedItems || []);
     setType("all");
   }, [content]);
-  // useEffect(() => {
-  //   // setSelectedItems(formRef.current[tableName]);
-  //   // console.log(formRef?.current);
-  //   // try {
-  //   //   if (formRef.current) setSelectedItems(formRef.current?.selectedItems);
-  //   //   else setSelectedItems([]);
-  //   // } catch (error) {
-  //   //   console.log(error);
-  //   // }
-  //   // setSelectedItems([]);
-  // }, [formRef]);
+
   return (
     <div className="table-form">
+      <div className="btn-container">
+        {currentStep > 0 && (
+          <Button
+            className="prev-btn"
+            type="primary"
+            icon={<LeftOutlined />}
+            onClick={handleBack}
+          />
+        )}
+        <span className="title">Choose {tableName} </span>
+        {currentStep < numberOfSteps - 1 && (
+          <Button
+            className="next-btn"
+            type="primary"
+            htmlType="submit"
+            icon={<RightOutlined />}
+            onClick={handleSubmit}
+          />
+        )}
+      </div>
       <Flex
         gap="small"
         align="flex-start"

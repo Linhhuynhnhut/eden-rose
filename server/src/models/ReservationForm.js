@@ -35,7 +35,7 @@ const PhieuDatTC = sequelize.define(
     TongTienBan: DataTypes.FLOAT,
     TongTienDichVu: DataTypes.FLOAT,
     TongTienPhieuDatTC: DataTypes.FLOAT,
-    TinhTrangThanhToan: DataTypes.STRING,
+    TinhTrangThanhToan: DataTypes.BOOLEAN,
     isDeleted: DataTypes.BOOLEAN,
   },
   {
