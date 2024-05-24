@@ -31,14 +31,17 @@
       display: flex;
       align-items: center;
       .image_in_table {
-        height: 100px;
-        width: 100px;
+        height: 70px;
+        width: 70px;
         border-radius: 5px;
         margin-right: 20px;
+        object-fit: cover;
+        border-radius: 5px;
       }
       .ant-image-mask {
-        height: 100px;
-        width: 100px;
+        height: 70px;
+        width: 70px;
+        border-radius: 5px;
       }
     }
 

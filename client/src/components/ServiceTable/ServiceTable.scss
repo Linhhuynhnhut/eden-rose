@@ -61,8 +61,14 @@
     display: flex;
     align-items: center;
     .image_in_table{
-        height: 50px;
-        width: 50px;
+        height: 70px;
+        width: 70px;
+        object-fit: cover;
         border-radius: 5px;
+        margin-right: 10px;
+    }
+    .ant-image-mask{
+        height: 70px;
+        width: 70px;
     }
 }

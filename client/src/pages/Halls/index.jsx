@@ -49,41 +49,6 @@ const Halls = () => {
     getData();
   }, []);
 
-  // const data = [
-  //   {
-  //     key: "1",
-  //     name: "John Brown",
-  //     type: "Luxury Hall",
-  //     tables: 32,
-  //     minimumPrice: 10000000,
-  //     imageUrl: image1,
-  //   },
-  //   {
-  //     key: "2",
-  //     name: "Joe Black",
-  //     type: "Luxury Hall",
-  //     tables: 42,
-  //     minimumPrice: 10000000,
-  //     imageUrl: image1,
-  //   },
-  //   {
-  //     key: "3",
-  //     name: "Jim Green",
-  //     type: "Basic Hall",
-  //     tables: 32,
-  //     minimumPrice: 20000000,
-  //     imageUrl: image1,
-  //   },
-  //   {
-  //     key: "4",
-  //     name: "Jim Red",
-  //     type: "Premium Hall",
-  //     tables: 32,
-  //     minimumPrice: 40000000,
-  //     imageUrl: image1,
-  //   },
-  // ];
-
   const showModal = () => {
     setIsModalOpen(true);
   };

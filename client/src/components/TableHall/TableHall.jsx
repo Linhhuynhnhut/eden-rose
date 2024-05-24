@@ -6,7 +6,6 @@ import {
   Space,
   Table,
   Popconfirm,
-  message,
   Image,
   Form,
 } from "antd";
