@@ -9,9 +9,10 @@ const HoaDon = sequelize.define('HoaDon', {
     SoTienPhaiTra: DataTypes.FLOAT,
     SoNgayTre: DataTypes.INTEGER,
     TienPhat: DataTypes.FLOAT,
+    isDeleted: DataTypes.BOOLEAN
 }, {
     timestamps: false,
     tableName: 'HoaDon'
 });
 
-module.exports = HoaDon;
+export default HoaDon;
