@@ -161,6 +161,7 @@ export const services = [
     status: "available",
     price: "100000",
     img: imgService,
+    NgayThem:"2024-05-23"
   },
   {
     id: 1,
@@ -168,6 +169,7 @@ export const services = [
     status: "unavailable",
     price: "100000",
     img: imgService,
+    NgayThem:"2024-05-23"
   },
   {
     id: 2,
@@ -176,6 +178,7 @@ export const services = [
     status: "available",
     price: "100000",
     img: imgService,
+    NgayThem:"2024-02-23"
   },
 
   {
@@ -184,6 +187,7 @@ export const services = [
     status: "available",
     price: "100000",
     img: imgService,
+    NgayThem:"2024-06-23"
   },
   {
     id: 15,
@@ -191,5 +195,6 @@ export const services = [
     status: "available",
     price: "100000",
     img: imgService,
+    NgayThem:"2024-04-23"
   },
 ];
