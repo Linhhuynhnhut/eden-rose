@@ -3,46 +3,30 @@ import Header from "../../components/Header/Header";
 import ServiceTable from "../../components/ServiceTable/ServiceTable";
 import { PlusOutlined } from "@ant-design/icons";
 import "./services.scss";
-import { Button, Modal, Form } from "antd";
+import { Button, Modal, Form, notification } from "antd";
 import ServiceForm from "../../components/ServiceForm/ServiceForm";
-import image1 from "../../assets/services/service1.jpg";
-import { api } from "../../api/api";
+import { api as API } from "../../api/api";
 
 const Services = () => {
+  const [api, contextHolder] = notification.useNotification();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [data, setData] = useState([]);
+  const [services, setServices] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [form] = Form.useForm();
+  const openNotificationWithIcon = (type, mess, descr) => {
+    api[type]({
+      message: mess,
+      description: descr,
+    });
+  };
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = async () => {
-    const values = await form?.validateFields();
-    const data = {
-      TenDichVu: values.name,
-      MaTinhTrang: +values.status,
-      DonGia: +values.price,
-      Anh: values.imageUrl,
-      isDeleted: false,
-    };
-
-    console.log(data);
-    const res = await api.postService(data);
-    if (res != null) {
-      getData();
-    }
-    form?.resetFields();
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   const getData = async () => {
     try {
-      const response = await api.getServices();
+      const response = await API.getServices();
       const formattedData = response.map((item) => {
         return {
           key: item.MaDichVu,
@@ -50,10 +34,12 @@ const Services = () => {
           status: item.MaTinhTrang,
           price: item.DonGia,
           imageUrl: item.Anh,
+          isDeleted: item.isDeleted,
         };
       });
-      setData(formattedData);
-      const rawDataStatuses = await api.getStatuses();
+      setServices(formattedData.filter((item) => !item?.isDeleted));
+
+      const rawDataStatuses = await API.getStatuses();
       const statuses = rawDataStatuses.map((item) => {
         return {
           id: item.MaTinhTrang,
@@ -64,6 +50,50 @@ const Services = () => {
     } catch (err) {
       console.error("Error fetching data: ", err);
     }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const checkAlreadyExisted = (array, value) => {
+    const isExisted = array.find((i) => i?.name === value);
+
+    return !!isExisted;
+  };
+
+  const handleOk = async () => {
+    const values = await form?.validateFields();
+    const statusId = statuses.find((i) => {
+      return i?.name === values.status;
+    });
+    const data = {
+      TenDichVu: values.name,
+      MaTinhTrang: statusId.id,
+      DonGia: +values.price,
+      Anh: values.imageUrl,
+      isDeleted: false,
+    };
+
+    if (checkAlreadyExisted(services, values.name)) {
+      openNotificationWithIcon(
+        "warning",
+        "New Service is not valid",
+        `This Service has already existed`
+      );
+    } else {
+      const res = await API.postService(data);
+      if (res != null) {
+        getData();
+      }
+    }
+
+    form?.resetFields();
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   const mapData = (data) => {
@@ -83,7 +113,7 @@ const Services = () => {
       const { key, name, status, price, imageUrl, isDeleted = false } = payload;
       console.log("payload before: ", payload);
       const statusId = statuses.find((i) => {
-        return i?.id === +status;
+        return i?.name === status;
       });
       const data = {
         TenDichVu: name,
@@ -92,20 +122,26 @@ const Services = () => {
         Anh: imageUrl,
         isDeleted,
       };
-      console.log(data);
-      const res = await api.putService(key, data);
-      if (res != null) {
-        getData();
+      if (checkAlreadyExisted(services, name)) {
+        openNotificationWithIcon(
+          "warning",
+          "Name Service is not valid",
+          `This Service has already existed`
+        );
+      } else {
+        const res = await API.putService(key, data);
+        if (res != null) {
+          getData();
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
-  useEffect(() => {
-    getData();
-  }, []);
+
   return (
     <div className="services_page">
+      {contextHolder}
       <div className="page_header">
         <Header title="Services Management" />
       </div>
@@ -127,7 +163,7 @@ const Services = () => {
       </div>
       <div className="services_table">
         <ServiceTable
-          data={mapData(data)}
+          data={mapData(services)}
           statuses={statuses}
           update={handleUpdateService}
         />

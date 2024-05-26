@@ -14,7 +14,6 @@ import {
 // import { services } from "../../constants";
 
 import "./summary.scss";
-import { api as API } from "../../api/api";
 const { Title } = Typography;
 
 const Summary = ({
@@ -71,6 +70,7 @@ const Summary = ({
       title: "Image",
       dataIndex: "img",
       key: "img",
+      width: "15%",
       render: (img) => (
         <div className="image_name_summary">
           <Image src={img} alt={"image"} className="image_in_table" />
@@ -84,16 +84,19 @@ const Summary = ({
       title: "Name",
       dataIndex: "name",
       key: "name",
+      width: "35%",
     },
     {
       title: "Type",
       dataIndex: "type",
       key: "type",
+      width: "25%",
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      width: "25%",
       render: (text) =>
         `${text.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
     },
@@ -108,6 +111,7 @@ const Summary = ({
       title: "Image",
       dataIndex: "img",
       key: "img",
+      width: "15%",
       render: (img) => (
         <div className="image_name_summary">
           <Image src={img} alt={"image"} className="image_in_table" />
@@ -118,16 +122,19 @@ const Summary = ({
       title: "Name",
       dataIndex: "name",
       key: "name",
+      width: "35%",
     },
     {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
+      width: "25%",
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      width: "25%",
       render: (text) =>
         `${text?.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
     },
@@ -162,7 +169,20 @@ const Summary = ({
     // console.log("compare", today < planningDate);
     // console.log("reservationForms", reservationForms);
 
+    console.log("reservationForms: ", reservationForms);
     const test = reservationForms.find((item) => {
+      // console.log("Dai: ", item?.NgayDaiTiec);
+      // console.log(
+      //   "planning: ",
+      //   formRef[0].current.info.planningDate.format("YYYY-MM-DD")
+      // );
+      // console.log(
+      //   "check ",
+      //   item?.MaCa === formRef[0].current.info.shift &&
+      //     item?.MaSanh === formRef[0].current.info.hall &&
+      //     item?.NgayDaiTiec ===
+      //       formRef[0].current.info.planningDate.format("YYYY-MM-DD")
+      // );
       return (
         item?.MaCa === formRef[0].current.info.shift &&
         item?.MaSanh === formRef[0].current.info.hall &&
@@ -170,6 +190,7 @@ const Summary = ({
           formRef[0].current.info.planningDate.format("YYYY-MM-DD")
       );
     });
+    console.log("test: ", test);
 
     if (minimumPrice <= tablePrice) {
       if (hall.tables >= totalTables) {

@@ -34,6 +34,18 @@ export const api = {
     const url = "reservationForm";
     return axiosClient.get(url, params);
   },
+  getParams: (params) => {
+    const url = "param";
+    return axiosClient.get(url, params);
+  },
+  getFoodDetails: (params) => {
+    const url = "dish-detail";
+    return axiosClient.get(url, params);
+  },
+  getServiceDetails: (params) => {
+    const url = "service-detail";
+    return axiosClient.get(url, params);
+  },
 
   //POST******************************************************
   postHall: (payload) => {
@@ -104,8 +116,24 @@ export const api = {
   },
 
   //DELETE*****************************
-  deleteSubject: (id) => {
-    const url = "subject/" + String(id);
+  deleteShift: (id) => {
+    const url = "shift/" + String(id);
+    return axiosClient.delete(url);
+  },
+  deleteHall: (id) => {
+    const url = "hall/" + String(id);
+    return axiosClient.delete(url);
+  },
+  deleteHallType: (id) => {
+    const url = "hall-type/" + String(id);
+    return axiosClient.delete(url);
+  },
+  deleteDish: (id) => {
+    const url = "dish/" + String(id);
+    return axiosClient.delete(url);
+  },
+  deleteDishType: (id) => {
+    const url = "dish-type/" + String(id);
     return axiosClient.delete(url);
   },
 };

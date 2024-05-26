@@ -59,7 +59,7 @@ const update = async (req, res) => {
     hall.SLBanToiDa = SLBanToiDa || hall.SLBanToiDa;
     hall.GhiChu = GhiChu || hall.GhiChu;
     hall.Anh = Anh || hall.Anh;
-    hall.isDeleted = isDeleted || hall.isDeleted;
+    hall.isDeleted = isDeleted;
 
     await hall.save();
     console.log("test: ", hall);
@@ -70,4 +70,21 @@ const update = async (req, res) => {
   }
 };
 
-export default { search, create, update };
+const remove = async (req, res) => {
+  const { MaSanh } = req.params;
+  try {
+    const hall = await Sanh.findByPk(MaSanh);
+    if (hall) {
+      await hall.update({
+        isDeleted: true,
+      });
+      res.status(200).json({ message: "hall soft deleted successfully" });
+    } else {
+      res.status(404).json({ error: "hall not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default { search, create, update, remove };

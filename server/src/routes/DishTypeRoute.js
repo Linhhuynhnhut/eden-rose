@@ -13,6 +13,6 @@ dishTypeRouter.post("/", dishTypeController.create);
 dishTypeRouter.put("/:MaPhanLoai", dishTypeController.update);
 
 // // delete 1 type
-// dishTypeRouter.delete("/:id", dishTypeController.remove);
+dishTypeRouter.delete("/:MaPhanLoai", dishTypeController.remove);
 
 export default dishTypeRouter;

@@ -9,15 +9,14 @@ import {
   Row,
   Typography,
   Table,
+  Image,
 } from "antd";
-import {
-  FileSearchOutlined,
-} from "@ant-design/icons";
+import { FileSearchOutlined } from "@ant-design/icons";
 
 import Header from "../../components/Header/Header";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import { menu, services } from "../../constants";
-
+import { useParams } from "react-router-dom";
 import "./payment.scss";
 import Label from "../../components/Label/Label";
 import { api } from "../../api/api";
@@ -61,23 +60,31 @@ const columns1 = [
     title: "Image",
     dataIndex: "img",
     key: "img",
-    render: (img) => <img src={img} className="img-table-item" alt="img" />,
+    width: "15%",
+    render: (img) => (
+      <div className="image_name_summary">
+        <Image src={img} alt={"image"} className="image_in_table" />
+      </div>
+    ),
   },
   {
     title: "Name",
     dataIndex: "name",
     key: "name",
+    width: "35%",
   },
   {
     title: "Amount",
     dataIndex: "amount",
     key: "amount",
+    width: "25%",
     render: () => <div>1</div>,
   },
   {
     title: "Price",
     dataIndex: "price",
     key: "price",
+    width: "25%",
   },
 ];
 const columnsService = [
@@ -127,22 +134,22 @@ const Payment = () => {
   const [selectedHall, setSelectedHall] = useState(null);
   const [reservationForms, setreservationForms] = useState([]);
   const [isData, setIsData] = useState(false);
-  const [hall, setHall]=useState();
-  const [tyleHall, setTypeHall]=useState();
-  const [priceTable, setPriceTable]=useState();
+  const [hall, setHall] = useState();
+  const [tyleHall, setTypeHall] = useState();
+  const [priceTable, setPriceTable] = useState();
   const [today, setToday] = useState("");
 
   const getData = async () => {
     const rawDataReservationForms = await api.getReservations();
     console.log("rawDataReservationForms", rawDataReservationForms);
 
-    const allHall= await api.getHalls();
+    const allHall = await api.getHalls();
     setHall(allHall);
-    console.log("allHall",allHall);
+    console.log("allHall", allHall);
     const tyleOfHall = await api.getHallTypes();
     // return rawDataReservationForms;
     setTypeHall(tyleOfHall);
-    console.log('tyleOfHall',tyleOfHall);
+    console.log("tyleOfHall", tyleOfHall);
     setreservationForms(rawDataReservationForms);
   };
   const filterData = () => {
@@ -162,21 +169,16 @@ const Payment = () => {
     filterPriceTable();
   };
   const filterPriceTable = () => {
-    
-    if (filteredReservations.length>0) {
+    if (filteredReservations.length > 0) {
       const filterHall = hall.find((item) => {
-        return (
-          item.MaSanh === filteredReservations[0].MaSanh
-        );
+        return item.MaSanh === filteredReservations[0].MaSanh;
       });
       console.log("filterHall", filterHall);
-      if(filterHall){
+      if (filterHall) {
         const filterTyleHall = tyleHall.find((item) => {
-          return (
-            item.MaLoaiSanh === filterHall.MaLoaiSanh
-          );
+          return item.MaLoaiSanh === filterHall.MaLoaiSanh;
         });
-        if(filterTyleHall){
+        if (filterTyleHall) {
           setPriceTable(filterTyleHall.DGBanToiThieu);
         }
       }
@@ -187,35 +189,32 @@ const Payment = () => {
     const getToday = () => {
       const today = new Date();
       const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0');
-      const day = String(today.getDate()).padStart(2, '0');
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const day = String(today.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
     };
 
     setToday(getToday());
-    
   };
-  
+
   const calculateDaysDifference = () => {
     if (filteredReservations.length > 0) {
-     
       const today = new Date();
       const eventDate = new Date(filteredReservations[0].NgayDaiTiec);
-      if(today>eventDate){
+      if (today > eventDate) {
         const timeDifference = eventDate - today;
         const dayDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
         return dayDifference;
       }
       return 0;
-     
     }
     return 0;
   };
 
   useEffect(() => {
     getData();
-  
-    console.log('isdata',isData);
+
+    console.log("isdata", isData);
   }, []);
 
   useEffect(() => {
@@ -224,14 +223,15 @@ const Payment = () => {
     } else {
       setIsData(false);
     }
-    console.log("filteredReservations",filteredReservations);
-
+    console.log("filteredReservations", filteredReservations);
   }, [filteredReservations]);
   // useEffect(() => {
   //   filterData();
 
   // }, [selectedDate, selectedShift, selectedHall]);
 
+  let { id } = useParams();
+  console.log("id: ", id);
   return (
     <div className="payment">
       <Header title="Payment" />
@@ -313,7 +313,13 @@ const Payment = () => {
                     <Title level={5} className="payment-item-title">
                       Number of tables
                     </Title>
-                    <Input disabled value={filteredReservations[0].SLBan + filteredReservations[0].SLBanDuTru } />
+                    <Input
+                      disabled
+                      value={
+                        filteredReservations[0].SLBan +
+                        filteredReservations[0].SLBanDuTru
+                      }
+                    />
                   </div>
                 </Col>
                 <Col span={6}>
@@ -340,7 +346,10 @@ const Payment = () => {
                     <Title level={5} className="payment-item-title">
                       Banquet Date
                     </Title>
-                    <Input disabled value={filteredReservations[0].NgayDaiTiec} />
+                    <Input
+                      disabled
+                      value={filteredReservations[0].NgayDaiTiec}
+                    />
                   </div>
                 </Col>
                 <Col span={6}>

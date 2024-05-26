@@ -7,9 +7,10 @@ const BaoCaoThang = sequelize.define('BaoCaoThang', {
     Nam: DataTypes.INTEGER,
     TongDoanhThu: DataTypes.FLOAT,
     MaSanh: DataTypes.STRING,
+    isDeleted: DataTypes.BOOLEAN
 }, {
     timestamps: false,
     tableName: 'BaoCaoThang'
 });
 
-module.exports = BaoCaoThang;
+export default BaoCaoThang;

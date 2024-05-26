@@ -3,14 +3,16 @@ import Header from "../../components/Header/Header";
 import Label from "../../components/Label/Label";
 import InformationForm from "../../components/InformationForm/InformationForm";
 import TableForm from "../../components/TableForm/TableForm";
-import { stepsAddWedding as steps, services } from "../../constants";
+import { stepsAddWedding as steps } from "../../constants";
 import { Steps, theme } from "antd";
 import { api } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 import "./newWedding.scss";
 import Summary from "../../components/Summary/Summary";
 
 const NewWedding = ({ isWeddingEdit }) => {
+  const navigate = useNavigate();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [menu, setMenu] = useState(0);
@@ -19,6 +21,7 @@ const NewWedding = ({ isWeddingEdit }) => {
   const [statuses, setStatuses] = useState([]);
   const [hallTypes, setHallTypes] = useState([]);
   const [halls, setHalls] = useState([]);
+  const [shifts, setShifts] = useState([]);
   const [reservationForms, setreservationForms] = useState([]);
   const step1Ref = useRef();
   const step2Ref = useRef();
@@ -36,15 +39,27 @@ const NewWedding = ({ isWeddingEdit }) => {
     // });
     setreservationForms(rawDataReservationForms);
 
+    // shifts
+    const rawDataShifts = await api.getShifts();
+    const shifts = rawDataShifts.map((item) => {
+      return {
+        value: item.MaCa,
+        label: item.TenCa,
+        isDeleted: item.isDeleted,
+      };
+    });
+    setShifts(shifts.filter((item) => !item?.isDeleted));
+
     // get dish type
     const rawDataDishTypes = await api.getDishTypes();
     const data = rawDataDishTypes.map((item) => {
       return {
         id: item.MaPhanLoai,
         name: item.PhanLoai,
+        isDeleted: item.isDeleted,
       };
     });
-    setDishTypes(data);
+    setDishTypes(data.filter((item) => !item?.isDeleted));
 
     // get status
     const rawDataStatuses = await api.getStatuses();
@@ -52,9 +67,10 @@ const NewWedding = ({ isWeddingEdit }) => {
       return {
         id: item.MaTinhTrang,
         name: item.TinhTrang,
+        isDeleted: item.isDeleted,
       };
     });
-    setStatuses(data1);
+    setStatuses(data1.filter((item) => !item?.isDeleted));
 
     // get hall type
     const rawDataHallTypes = await api.getHallTypes();
@@ -63,9 +79,10 @@ const NewWedding = ({ isWeddingEdit }) => {
         id: item.MaLoaiSanh,
         name: item.TenLoaiSanh,
         minimumPrice: item.DGBanToiThieu,
+        isDeleted: item.isDeleted,
       };
     });
-    setHallTypes(mapHallTypes);
+    setHallTypes(mapHallTypes.filter((item) => !item?.isDeleted));
 
     // get hall
     const rawDataHalls = await api.getHalls();
@@ -80,9 +97,11 @@ const NewWedding = ({ isWeddingEdit }) => {
         tables: item?.SLBanToiDa,
         imageUrl: item?.Anh,
         minimumPrice: type?.minimumPrice,
+        isDeleted: item?.isDeleted,
       };
     });
-    setHalls(mapHalls);
+    setHalls(mapHalls.filter((item) => !item?.isDeleted));
+    console.log(mapHalls.filter((item) => !item?.isDeleted));
 
     // get menu
     const rawDataMenu = await api.getMenu();
@@ -94,9 +113,10 @@ const NewWedding = ({ isWeddingEdit }) => {
         status: item.MaTinhTrang,
         price: item.DonGia,
         img: item.Anh,
+        isDeleted: item.isDeleted,
       };
     });
-    setMenu(data2);
+    setMenu(data2.filter((item) => !item?.isDeleted));
 
     // get services
     const rawDataServices = await api.getServices();
@@ -107,6 +127,7 @@ const NewWedding = ({ isWeddingEdit }) => {
         status: item.MaTinhTrang,
         price: item.DonGia,
         img: item.Anh,
+        isDeleted: item.isDeleted,
       };
     });
 
@@ -121,7 +142,7 @@ const NewWedding = ({ isWeddingEdit }) => {
     });
     // console.log("all services: ", newData);
 
-    setServices(newData);
+    setServices(newData.filter((item) => !item?.isDeleted));
   };
 
   const mapData = (data) => {
@@ -163,6 +184,12 @@ const NewWedding = ({ isWeddingEdit }) => {
     console.log("prev step3: ", step3Ref);
   };
 
+  const parseDateObj = (date) => {
+    const offset = date.getTimezoneOffset();
+    date = new Date(date.getTime() - offset * 60 * 1000);
+    return date.toISOString().split("T")[0];
+  };
+
   const handleSubmitReservation = async (content) => {
     console.log("reservation: ", content);
     const {
@@ -175,10 +202,10 @@ const NewWedding = ({ isWeddingEdit }) => {
     const rawInfo = infor.info;
     const planningDate = rawInfo.planningDate;
     const today = new Date();
-    console.log("planningDate", planningDate.date);
-    console.log("today", today);
-    console.log("planningDate ...", planningDate.toString());
-    console.log("today ...", today.toISOString());
+    // console.log("planningDate", planningDate.date);
+    // console.log("today", today);
+    console.log("planningDate ...", planningDate.format("YYYY-MM-DD"));
+    console.log("today ...", parseDateObj(today));
     // console.log("compare", today <= newDate);
     const totalTablePrice =
       tablePrice *
@@ -188,8 +215,8 @@ const NewWedding = ({ isWeddingEdit }) => {
       TenChuRe: rawInfo.groomName,
       TenCoDau: rawInfo.brideName,
       DienThoai: rawInfo.phoneNumber,
-      NgayDatTiec: today,
-      NgayDaiTiec: planningDate,
+      NgayDatTiec: parseDateObj(today),
+      NgayDaiTiec: planningDate.format("YYYY-MM-DD"),
       MaCa: rawInfo.shift,
       MaSanh: rawInfo.hall,
       TienCoc: rawInfo.deposit,
@@ -238,8 +265,12 @@ const NewWedding = ({ isWeddingEdit }) => {
           MaSanh: rawInfo.hall,
         });
         temp.forEach((item) => {
-          if (item?.NgayDaiTiec === planningDate) MaPhieu = item?.MaPhieuDatTC;
+          if (item?.NgayDaiTiec === planningDate.format("YYYY-MM-DD"))
+            MaPhieu = item?.MaPhieuDatTC;
         });
+
+        // console.log("res: ", res);
+        // console.log("MaPhieu: ", MaPhieu);
 
         mapMenu.forEach(async (dish) => {
           await api.postDishDetail({ MaPhieuDatTC: MaPhieu, ...dish });
@@ -248,8 +279,8 @@ const NewWedding = ({ isWeddingEdit }) => {
           await api.postServiceDetail({ MaPhieuDatTC: MaPhieu, ...service });
         });
       }
-      // form?.resetFields();
-      // setIsModalOpen(false);
+      getData();
+      navigate("/management/weddings");
     } catch (error) {
       console.log(error);
     }
@@ -275,6 +306,8 @@ const NewWedding = ({ isWeddingEdit }) => {
         currentStep={current}
         numberOfSteps={4}
         isReadOnly={false}
+        halls={halls}
+        shifts={shifts}
       />
     ),
     compB: (

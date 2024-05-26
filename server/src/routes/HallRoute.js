@@ -11,4 +11,7 @@ hallRouter.post("/", hallController.create);
 // update hall
 hallRouter.put("/:MaSanh", hallController.update);
 
+// delete hall
+hallRouter.delete("/:MaSanh", hallController.remove);
+
 export default hallRouter;

@@ -18,7 +18,7 @@ import { Modal } from "antd";
 import { Tooltip } from "antd";
 import "./MenuTable.scss";
 
-const MenuTable = ({ data, dishTypes, statuses, update }) => {
+const MenuTable = ({ data, dishTypes, statuses, update, handleDelete }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -29,7 +29,9 @@ const MenuTable = ({ data, dishTypes, statuses, update }) => {
 
   const cancel = (e) => {
     console.log(e);
+    message.error("Click on No");
   };
+
   const showModal = (record) => {
     setRowData(record);
     setIsModalOpen(true);
@@ -70,21 +72,14 @@ const MenuTable = ({ data, dishTypes, statuses, update }) => {
     onChange: onSelectChange,
   };
   const hasSelected = selectedRowKeys.length > 0;
-  // const handleDelete = (id) => {
-  //   const newData = tableData.filter((item) => item.key !== id);
-  //   setTableData(newData);
-  //   message.success("You have deleted a dish");
-  // };
-  // const handleDeleteSelectedItems = (selectedKeys) => {
-  //   message.success("You have deleted selected dishes");
-  //   const newData = tableData.filter(
-  //     (item) => !selectedKeys.includes(item.key)
-  //   );
-  //   // Update the state with the new data
-  //   setTableData(newData);
-  //   // Clear the selectedRowKeys state
-  //   setSelectedRowKeys([]);
-  // };
+  const handleDeleteItem = (id) => {
+    handleDelete([id]);
+    setSelectedRowKeys([]);
+  };
+  const handleDeleteSelectedItems = () => {
+    handleDelete(selectedRowKeys);
+    setSelectedRowKeys([]);
+  };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -223,6 +218,8 @@ const MenuTable = ({ data, dishTypes, statuses, update }) => {
       width: "20%",
       sorter: (a, b) => a.price - b.price,
       sortDirections: ["descend", "ascend"],
+      render: (text) =>
+        `${text?.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
     },
     {
       title: "Status",
@@ -252,7 +249,7 @@ const MenuTable = ({ data, dishTypes, statuses, update }) => {
           <Popconfirm
             title="Delete the dish"
             description="Are you sure to delete this dish?"
-            // onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDeleteItem(record.key)}
             onCancel={cancel}
             okText="Yes"
             cancelText="No"
@@ -274,7 +271,7 @@ const MenuTable = ({ data, dishTypes, statuses, update }) => {
             <Popconfirm
               title="Delete the dish"
               description="Are you sure to delete these dishes?"
-              // onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
+              onConfirm={() => handleDeleteSelectedItems()}
               onCancel={cancel}
               okText="Yes"
               cancelText="No"

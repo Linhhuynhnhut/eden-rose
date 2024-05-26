@@ -3,20 +3,25 @@ import TableHall from "../../components/TableHall/TableHall";
 import HallForm from "../../components/FormHall/HallForm";
 import Header from "../../components/Header/Header";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Modal, Form } from "antd";
-import image1 from "../../assets/halls/hall1.jpg";
+import { Button, Modal, Form, notification } from "antd";
 import "./halls.scss";
-import { api } from "../../api/api";
+import { api as API } from "../../api/api";
 
 const Halls = () => {
+  const [api, contextHolder] = notification.useNotification();
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [halls, setHalls] = useState([]);
   const [hallTypes, setHallTypes] = useState([]);
-
+  const openNotificationWithIcon = (type, mess, descr) => {
+    api[type]({
+      message: mess,
+      description: descr,
+    });
+  };
   const getData = async () => {
     // get hall type
-    const rawDataHallTypes = await api.getHallTypes();
+    const rawDataHallTypes = await API.getHallTypes();
     const data1 = rawDataHallTypes.map((item) => {
       return {
         key: item.MaLoaiSanh,
@@ -25,10 +30,10 @@ const Halls = () => {
       };
     });
     setHallTypes(data1);
-    console.log("all hall types: ", data1);
+    // console.log("all hall types: ", data1);
 
     // get hall
-    const rawDataHalls = await api.getHalls();
+    const rawDataHalls = await API.getHalls();
     const data = rawDataHalls.map((item) => {
       const type = data1.find((i) => {
         return i?.key === item?.MaLoaiSanh;
@@ -40,62 +45,33 @@ const Halls = () => {
         tables: item?.SLBanToiDa,
         imageUrl: item?.Anh,
         minimumPrice: type?.MinimumPrice,
+        isDeleted: item.isDeleted,
       };
     });
-    setHalls(data);
-    console.log("all hall: ", data);
+    setHalls(data.filter((item) => !item?.isDeleted));
   };
   useEffect(() => {
     getData();
   }, []);
 
-  // const data = [
-  //   {
-  //     key: "1",
-  //     name: "John Brown",
-  //     type: "Luxury Hall",
-  //     tables: 32,
-  //     minimumPrice: 10000000,
-  //     imageUrl: image1,
-  //   },
-  //   {
-  //     key: "2",
-  //     name: "Joe Black",
-  //     type: "Luxury Hall",
-  //     tables: 42,
-  //     minimumPrice: 10000000,
-  //     imageUrl: image1,
-  //   },
-  //   {
-  //     key: "3",
-  //     name: "Jim Green",
-  //     type: "Basic Hall",
-  //     tables: 32,
-  //     minimumPrice: 20000000,
-  //     imageUrl: image1,
-  //   },
-  //   {
-  //     key: "4",
-  //     name: "Jim Red",
-  //     type: "Premium Hall",
-  //     tables: 32,
-  //     minimumPrice: 40000000,
-  //     imageUrl: image1,
-  //   },
-  // ];
-
   const showModal = () => {
     setIsModalOpen(true);
+  };
+
+  const checkAlreadyExisted = (array, value) => {
+    const isExisted = array.find((i) => i?.name === value);
+
+    return !!isExisted;
   };
 
   const handleOk = async () => {
     try {
       const values = await form?.validateFields();
-      console.log("values", values);
+      // console.log("values", values);
       const type = hallTypes.find((i) => {
         return i?.key === values?.hallType;
       });
-      console.log("type", type);
+      // console.log("type", type);
       const data = {
         TenSanh: values?.name,
         MaLoaiSanh: type?.key,
@@ -103,11 +79,21 @@ const Halls = () => {
         Anh: values?.image,
         isDeleted: false,
       };
-      const res = await api.postHall(data);
-      if (res != null) {
-        getData();
-        console.log("res ", res);
+
+      if (checkAlreadyExisted(halls, values.name)) {
+        openNotificationWithIcon(
+          "warning",
+          "New Hall is not valid",
+          `This Hall has already existed`
+        );
+      } else {
+        const res = await API.postHall(data);
+        if (res != null) {
+          getData();
+          console.log("res ", res);
+        }
       }
+
       form?.resetFields();
       setIsModalOpen(false);
     } catch (error) {
@@ -116,7 +102,7 @@ const Halls = () => {
   };
 
   const handleUpdateDish = async (payload) => {
-    console.log("payload: ", payload);
+    // console.log("payload: ", payload);
     try {
       const {
         key,
@@ -127,10 +113,6 @@ const Halls = () => {
         isDeleted = "false",
       } = payload;
 
-      // const type = hallTypes.find((i) => {
-      //   return i?.name === hallType;
-      // });
-
       const data = {
         TenSanh: name,
         MaLoaiSanh: hallType,
@@ -139,12 +121,31 @@ const Halls = () => {
         Anh: image,
         isDeleted: isDeleted,
       };
-      console.log("data put: ", data);
-      const res = await api.putHall(key, data);
-      if (res != null) {
-        getData();
-        console.log("res hall update: ", res);
+      if (checkAlreadyExisted(halls, name)) {
+        openNotificationWithIcon(
+          "warning",
+          "Name Hall is not valid",
+          `This Hall has already existed`
+        );
+      } else {
+        const res = await API.putHall(key, data);
+        if (res != null) {
+          getData();
+          console.log("res hall update: ", res);
+        }
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteHall = async (payload) => {
+    try {
+      // console.log(payload);
+      payload.forEach(async (hallId) => {
+        await API.deleteHall(hallId);
+      });
+      setTimeout(getData, 500);
     } catch (error) {
       console.log(error);
     }
@@ -156,6 +157,7 @@ const Halls = () => {
 
   return (
     <div className="hall_page">
+      {contextHolder}
       <div className="page_header">
         <Header title="Hall Management" />
       </div>
@@ -180,6 +182,7 @@ const Halls = () => {
           data={halls}
           hallTypes={hallTypes}
           update={handleUpdateDish}
+          handleDelete={handleDeleteHall}
         />
       </div>
     </div>

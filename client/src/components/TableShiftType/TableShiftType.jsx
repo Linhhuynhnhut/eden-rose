@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import { Button, Space, Table, Form } from "antd";
+import { Button, Space, Table, Form, message, Popconfirm } from "antd";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import FormShiftType from "../FormShiftType/FormShiftType";
 import { Modal } from "antd";
 import "./TableShiftType.scss";
-function TableShiftType({ data, update, name }) {
+function TableShiftType({ data, update, name, handleDelete }) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [tableData, setTableData] = useState(data);
   const [rowData, setRowData] = useState(null);
   const [form] = Form.useForm();
+
+  const cancel = (e) => {
+    console.log(e);
+    message.error("Click on No");
+  };
 
   const showModal = (record) => {
     setIsModalOpen(true);
@@ -28,7 +32,7 @@ function TableShiftType({ data, update, name }) {
     setIsModalOpen(false);
   };
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    // console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
@@ -36,15 +40,14 @@ function TableShiftType({ data, update, name }) {
     onChange: onSelectChange,
   };
   const hasSelected = selectedRowKeys.length > 0;
-  // const handleDelete = (id) => {
-  //   const newData = tableData.filter((item) => item.key !== id);
-  //   setTableData(newData);
-  // };
-  // const handleDeleteSelectedItems = (selectedKeys) => {
-  //   const newData = tableData.filter((item) => !selectedKeys.includes(item.key));
-  //   setTableData(newData);
-  //   setSelectedRowKeys([]);
-  // };
+  const handleDeleteItem = (id) => {
+    handleDelete([id]);
+    setSelectedRowKeys([]);
+  };
+  const handleDeleteSelectedItems = () => {
+    handleDelete(selectedRowKeys);
+    setSelectedRowKeys([]);
+  };
 
   const columns = [
     {
@@ -60,7 +63,19 @@ function TableShiftType({ data, update, name }) {
       width: "30%",
       render: (_, record) => (
         <Space>
-          <MdDeleteForever onClick={() => {}} />
+          <Popconfirm
+            title="Delete the shift"
+            description="Are you sure to delete this shift?"
+            onConfirm={() => {
+              handleDeleteItem(record.key);
+            }}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <MdDeleteForever />
+          </Popconfirm>
+
           <FaEdit onClick={() => showModal(record)} />
         </Space>
       ),
@@ -72,9 +87,18 @@ function TableShiftType({ data, update, name }) {
       <div>
         {hasSelected && (
           <div className="delete_button_wrapper">
-            <Button className="delete_button">
-              Delete Selected ({selectedRowKeys.length})
-            </Button>
+            <Popconfirm
+              title="Delete the selected shifts"
+              description="Are you sure to delete this selected shifts?"
+              onConfirm={() => handleDeleteSelectedItems()}
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button className="delete_button">
+                Delete Selected ({selectedRowKeys.length})
+              </Button>
+            </Popconfirm>
           </div>
         )}
 

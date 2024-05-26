@@ -1,20 +1,24 @@
 import React, { useState } from "react";
 // import { SearchOutlined } from "@ant-design/icons";
-import { Button, Form, Space, Table } from "antd";
+import { Button, Form, Space, Table, message, Popconfirm } from "antd";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import FormHallType from "../FormHallType/FormHallType";
 import { Modal } from "antd";
 import "./TableHallType.scss";
-function TableHallType({ data, update }) {
+function TableHallType({ data, update, handleDelete }) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [tableData, setTableData] = useState(data);
   const [rowData, setRowData] = useState(null);
   const [form] = Form.useForm();
   const showModal = (record) => {
     setRowData(record);
     setIsModalOpen(true);
+  };
+
+  const cancel = (e) => {
+    console.log(e);
+    message.error("Click on No");
   };
 
   const handleUpdateHallType = async () => {
@@ -36,18 +40,12 @@ function TableHallType({ data, update }) {
     onChange: onSelectChange,
   };
   const hasSelected = selectedRowKeys.length > 0;
-  const handleDelete = (id) => {
-    // const newData = tableData.filter((item) => item.key !== id);
-    // setTableData(newData);
+  const handleDeleteItem = (id) => {
+    handleDelete([id]);
+    setSelectedRowKeys([]);
   };
-  const handleDeleteSelectedItems = (selectedKeys) => {
-    // Filter out the deleted records
-    // const newData = tableData.filter(
-    //   (item) => !selectedKeys.includes(item.key)
-    // );
-    // Update the state with the new data
-    // setTableData(newData);
-    // Clear the selectedRowKeys state
+  const handleDeleteSelectedItems = () => {
+    handleDelete(selectedRowKeys);
     setSelectedRowKeys([]);
   };
 
@@ -68,12 +66,22 @@ function TableHallType({ data, update }) {
     },
     {
       title: "Action",
-      // dataIndex: 'address',
       key: "action",
       width: "20%",
       render: (_, record) => (
         <Space>
-          <MdDeleteForever onClick={() => handleDelete(record.key)} />
+          <Popconfirm
+            title="Delete the hall type"
+            description="Are you sure to delete this hall type?"
+            onConfirm={() => {
+              handleDeleteItem(record.key);
+            }}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <MdDeleteForever />
+          </Popconfirm>{" "}
           <FaEdit onClick={() => showModal(record)} />
         </Space>
       ),
@@ -85,12 +93,18 @@ function TableHallType({ data, update }) {
       <div>
         {hasSelected && (
           <div className="delete_button_wrapper">
-            <Button
-              className="delete_button"
-              onClick={handleDeleteSelectedItems}
+            <Popconfirm
+              title="Delete the selected shifts"
+              description="Are you sure to delete this selected shifts?"
+              onConfirm={() => handleDeleteSelectedItems()}
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
             >
-              Delete Selected ({selectedRowKeys.length})
-            </Button>
+              <Button className="delete_button">
+                Delete Selected ({selectedRowKeys.length})
+              </Button>
+            </Popconfirm>
           </div>
         )}
 
