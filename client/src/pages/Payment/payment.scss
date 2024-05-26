@@ -68,3 +68,23 @@
     }
   }
 }
+.PaymentNoData{
+  width: 100%;
+  align-items: center;
+  justify-items: center;
+  height: 100%;
+  margin-top: 10%;
+  
+}
+.PaymentNoDataInfo{
+  text-align: center;
+  h2{
+    font-size: 30px;
+    color: #3b564d !important;
+  }
+  .PaymentIconNoData{
+    font-size: 100px;
+    color: #3b564d !important;
+  }
+
+}
