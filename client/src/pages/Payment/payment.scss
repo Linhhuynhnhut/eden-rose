@@ -62,9 +62,22 @@
         width: 80%;
       }
     }
-    .img-table-item {
-      width: 100px;
-      height: 100px;
+    .image_name_summary {
+      display: flex;
+      align-items: center;
+      .image_in_table {
+        height: 70px;
+        width: 70px;
+        border-radius: 5px;
+        margin-right: 20px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+      .ant-image-mask {
+        height: 70px;
+        width: 70px;
+        border-radius: 5px;
+      }
     }
   }
 }

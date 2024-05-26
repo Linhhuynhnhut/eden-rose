@@ -70,6 +70,7 @@ const Summary = ({
       title: "Image",
       dataIndex: "img",
       key: "img",
+      width: "15%",
       render: (img) => (
         <div className="image_name_summary">
           <Image src={img} alt={"image"} className="image_in_table" />
@@ -83,16 +84,19 @@ const Summary = ({
       title: "Name",
       dataIndex: "name",
       key: "name",
+      width: "35%",
     },
     {
       title: "Type",
       dataIndex: "type",
       key: "type",
+      width: "25%",
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      width: "25%",
       render: (text) =>
         `${text.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
     },
@@ -107,6 +111,7 @@ const Summary = ({
       title: "Image",
       dataIndex: "img",
       key: "img",
+      width: "15%",
       render: (img) => (
         <div className="image_name_summary">
           <Image src={img} alt={"image"} className="image_in_table" />
@@ -117,16 +122,19 @@ const Summary = ({
       title: "Name",
       dataIndex: "name",
       key: "name",
+      width: "35%",
     },
     {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
+      width: "25%",
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      width: "25%",
       render: (text) =>
         `${text?.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
     },

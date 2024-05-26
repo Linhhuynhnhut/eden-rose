@@ -9,6 +9,7 @@ import {
   Row,
   Typography,
   Table,
+  Image
 } from "antd";
 import Header from "../../components/Header/Header";
 import { ClockCircleOutlined } from "@ant-design/icons";
@@ -33,23 +34,31 @@ const columns1 = [
     title: "Image",
     dataIndex: "img",
     key: "img",
-    render: (img) => <img src={img} className="img-table-item" alt="img" />,
+    width:"15%",
+    render: (img) => (
+      <div className="image_name_summary">
+        <Image src={img} alt={"image"} className="image_in_table" />
+      </div>
+    ),
   },
   {
     title: "Name",
     dataIndex: "name",
     key: "name",
+    width:"35%",
   },
   {
     title: "Amount",
     dataIndex: "amount",
     key: "amount",
+    width:"25%",
     render: () => <div>1</div>,
   },
   {
     title: "Price",
     dataIndex: "price",
     key: "price",
+    width:"25%",
   },
 ];
 const Payment = () => {

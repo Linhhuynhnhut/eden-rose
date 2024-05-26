@@ -5,12 +5,13 @@ import Highlighter from "react-highlight-words";
 import { MdCancelPresentation } from "react-icons/md";
 import { MdPayment } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-import { Tooltip } from "antd";
+import { Tooltip, Drawer, Image } from "antd";
 import NewWedding from "../../pages/NewWedding/index";
 import Payment from "../../pages/Payment";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoChevronBack } from "react-icons/io5";
 import { IoArrowBack } from "react-icons/io5";
+import { api } from "../../api/api";
 
 import "./WeddingTable.scss";
 
@@ -20,11 +21,79 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
   const searchInput = useRef(null);
   const [isWeddingEdit, setIsWeddingEdit] = useState(false);
   const [isPayment, setIsPayment] = useState(false);
-  const [tableData, setTableData] = useState(data);
+  const [tableData, setTableData] = useState();
+  const [open, setOpen] = useState(false);
+  const [foodDetailTable, setFoodDetailTable] = useState([]);
+  const [serviceDetailTable, setServiceDetailTable] = useState([]);
+  const [dishTypes, setDishTypes] = useState([]);
+  const showDrawer = (record) => {
+    getDetail(record);
+    setOpen(true);
+  };
+  const onClose = () => {
+    setFoodDetailTable([]);
+    setServiceDetailTable([]);
+    setOpen(false);
+  };
 
-  // useEffect(() => {
-  //   setIsWeddingEdit(showEdit);
-  // }, [showEdit]);
+  const getDetail = async (record) => {
+    const rawFoodDetails = await api.getFoodDetails();
+    const rawFoods = await api.getMenu();
+    const rawDataDishTypes = await api.getDishTypes();
+    const dishTypeData = rawDataDishTypes.map((item) => {
+      return {
+        id: item.MaPhanLoai,
+        name: item.PhanLoai,
+      };
+    });
+    setDishTypes(dishTypeData);
+    const FoodDetails = rawFoodDetails.filter((i) => {
+      return i?.MaPhieuDatTC === record.key;
+    });
+    const foodOfWedding = FoodDetails.map((item) => {
+      const food = rawFoods.find((i) => {
+        return item?.MaMonAn === i.MaMonAn;
+      });
+      return {
+        name: food.TenMonAn,
+        type: food.MaPhanLoai,
+        price: food.DonGia,
+        imageUrl: food.Anh,
+      };
+    });
+    setFoodDetailTable(foodOfWedding);
+    const rawServiceDetails = await api.getServiceDetails();
+    const rawServices = await api.getServices();
+    const ServiceDetails = rawServiceDetails.filter((i) => {
+      return i?.MaPhieuDatTC === record.key;
+    });
+    const serviceOfWedding = ServiceDetails.map((item) => {
+      const service = rawServices.find((i) => {
+        return item?.MaDichVu === i.MaDichVu;
+      });
+
+      return {
+        name: service.TenDichVu,
+        amount: item.SoLuong,
+        price: service.DonGia,
+        imageUrl: service.Anh,
+      };
+    });
+    setServiceDetailTable(serviceOfWedding);
+  };
+
+  const mapData = (data) => {
+    return data.map((item) => {
+      const type = dishTypes.find((i) => {
+        return i?.id === item?.type;
+      });
+      console.log(data);
+      return {
+        ...item,
+        type: type?.name,
+      };
+    });
+  };
 
   const showWeddingEdit = (record) => {
     setIsWeddingEdit(true);
@@ -49,7 +118,7 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
   };
 
   const handleCancelWedding = (id) => {
-    const newData = tableData.map((item) => {
+    const newData = data.map((item) => {
       if (item.key === id && item.status === "Unpaid") {
         return { ...item, status: "Cancelled" };
       }
@@ -236,6 +305,72 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
       ),
     },
   ];
+  const columnsOfFood = [
+    {
+      title: "Image",
+      dataIndex: "imageUrl",
+      key: "img",
+      width: "15%",
+      render: (img) => (
+        <div className="image_detail_table">
+          <Image src={img} alt={"image"} className="image_in_table" />
+        </div>
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      width: "40",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+      width: "20%",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      width: "25%",
+      render: (text) =>
+        `${text.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
+    },
+  ];
+  const columnsOfService = [
+    {
+      title: "Image",
+      dataIndex: "imageUrl",
+      key: "img",
+      width: "15%",
+      render: (img) => (
+        <div className="image_detail_table">
+          <Image src={img} alt={"image"} className="image_in_table" />
+        </div>
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      width: "45%",
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+      width: "15%",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      width: "25%",
+      render: (text) =>
+        `${text?.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
+    },
+  ];
 
   return (
     <>
@@ -275,26 +410,64 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
         <div>
           <Table
             columns={columns}
-            dataSource={tableData}
+            dataSource={data}
             expandable={{
               expandedRowRender: (record) => (
-                <div className="wedding_detail">
-                  <div className="left_wedding_detail">
-                    <p>Wedding Date: {record.weddingDate}</p>
-                    <p>Booking Date: {record.bookingDate}</p>
+                <div>
+                  <div className="wedding_detail">
+                    <div className="left_wedding_detail">
+                      <p>Wedding Date: {record.weddingDate}</p>
+                      <p>Booking Date: {record.bookingDate}</p>
+                    </div>
+                    <div className="left_wedding_detail">
+                      <p>Shift: {record.shift}</p>
+                      <p>Number of table: {record.tableNum}</p>
+                    </div>
+                    <div className="left_wedding_detail">
+                      <p>Deposit: {record.deposit}</p>
+                      <p>ServicesTotal: {record.servicesTotal}</p>
+                    </div>
+                    <div className="left_wedding_detail">
+                      <p>Foods Total: {record.foodsTotal}</p>
+                      <p>Bill Total: {record.billTotal}</p>
+                    </div>
                   </div>
-                  <div className="left_wedding_detail">
-                    <p>Shift: {record.shift}</p>
-                    <p>Number of table: {record.tableNum}</p>
+                  <div className="btn_food_service_detail">
+                    <Button type="primary" onClick={() => showDrawer(record)}>
+                      Menu/Service Detail
+                    </Button>
                   </div>
-                  <div className="left_wedding_detail">
-                    <p>Deposit: {record.deposit}</p>
-                    <p>ServicesTotal: {record.servicesTotal}</p>
-                  </div>
-                  <div className="left_wedding_detail">
-                    <p>Foods Total: {record.foodsTotal}</p>
-                    <p>Bill Total: {record.billTotal}</p>
-                  </div>
+                  <Drawer
+                    title="MENU AND SERVICE DETAILS"
+                    width={700}
+                    onClose={onClose}
+                    open={open}
+                  >
+                    <div className="detail_table-menu">
+                      <div className="name-list">
+                        <span>Menu Details</span>
+                      </div>
+                      <Table
+                        className="table-list-item"
+                        columns={columnsOfFood}
+                        dataSource={mapData(foodDetailTable)}
+                        pagination={false}
+                        scroll={{ y: 400 }}
+                      />
+                    </div>
+                    <div className="detail_table-service" >
+                      <div className="name-list">
+                        <span>Service Details</span>
+                      </div>
+                      <Table
+                        className="table-list-item"
+                        columns={columnsOfService}
+                        dataSource={serviceDetailTable}
+                        pagination={false}
+                        scroll={{ y: 400 }}
+                      />
+                    </div>
+                  </Drawer>
                 </div>
               ),
               rowExpandable: (record) => record.name !== "Not Expandable",
