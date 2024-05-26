@@ -6,6 +6,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import "./weddings.scss";
 import { Button } from "antd";
 import { api } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 const Weddings = () => {
   const [showNoHeader, setShowNoHeader] = useState(false);
@@ -14,26 +15,27 @@ const Weddings = () => {
   const [reservationsData, setReservationsData] = useState([]);
   const [halls, setHalls] = useState([]);
   const [shifts, setShifts] = useState([]);
+  const navigate = useNavigate();
 
   const handleEditForm = (isVisible) => {
     setShowNoHeader(isVisible);
   };
   const getData = async () => {
     const rawHalls = await api.getHalls();
-    const hallData = rawHalls.map((item)=>{
+    const hallData = rawHalls.map((item) => {
       return {
         id: item?.MaSanh,
         name: item?.TenSanh,
-      }
-    })
+      };
+    });
     setHalls(hallData);
     const rawShifts = await api.getShifts();
-    const shiftData = rawShifts.map((item)=>{
+    const shiftData = rawShifts.map((item) => {
       return {
         id: item?.MaCa,
         name: item?.TenCa,
-      }
-    })
+      };
+    });
     setShifts(shiftData);
     const rawDataReservations = await api.getReservations();
     const dataReservations = rawDataReservations.map((item) => {
@@ -58,21 +60,26 @@ const Weddings = () => {
     setReservationsData(dataReservations);
   };
 
-  const mapData = (data) =>{
+  const mapData = (data) => {
     return data.map((item) => {
-      const hallName =  halls.find((i)=>{
+      const hallName = halls.find((i) => {
         return i?.id === item?.hall;
       });
-      const shiftName = shifts.find((i)=>{
+      const shiftName = shifts.find((i) => {
         return i?.id === item?.shift;
-      })
+      });
       return {
         ...item,
         hall: hallName.name,
         shift: shiftName.name,
-      }
-    })
-  }
+      };
+    });
+  };
+
+  const handlePayment = (id) => {
+    console.log("navigate");
+    navigate("/payment");
+  };
 
   useEffect(() => {
     getData();
@@ -99,6 +106,7 @@ const Weddings = () => {
           onEdit={(record) => console.log("Editing", record)}
           onEditClick={handleEditForm}
           // showEdit={showEditForm}
+          handlePayment={handlePayment}
         />
       </div>
     </div>
