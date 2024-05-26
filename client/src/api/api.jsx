@@ -108,8 +108,24 @@ export const api = {
   },
 
   //DELETE*****************************
-  deleteSubject: (id) => {
-    const url = "subject/" + String(id);
+  deleteShift: (id) => {
+    const url = "shift/" + String(id);
+    return axiosClient.delete(url);
+  },
+  deleteHall: (id) => {
+    const url = "hall/" + String(id);
+    return axiosClient.delete(url);
+  },
+  deleteHallType: (id) => {
+    const url = "hall-type/" + String(id);
+    return axiosClient.delete(url);
+  },
+  deleteDish: (id) => {
+    const url = "dish/" + String(id);
+    return axiosClient.delete(url);
+  },
+  deleteDishType: (id) => {
+    const url = "dish-type/" + String(id);
     return axiosClient.delete(url);
   },
 };

@@ -60,13 +60,21 @@ const update = async (req, res) => {
   }
 };
 
-// const remove = async (req, res) => {
-//   try {
-//     await PhanLoai.findByIdAndDelete(req.params.id);
-//     res.status(200).json("Deleted successfully!");
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// };
+const remove = async (req, res) => {
+  const { MaPhanLoai } = req.params;
+  try {
+    const dishType = await PhanLoai.findByPk(MaPhanLoai);
+    if (dishType) {
+      await dishType.update({
+        isDeleted: true,
+      });
+      res.status(200).json({ message: "dishType soft deleted successfully" });
+    } else {
+      res.status(404).json({ error: "dishType not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
-export default { search, create, update };
+export default { search, create, update, remove };

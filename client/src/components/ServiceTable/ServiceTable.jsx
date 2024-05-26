@@ -13,7 +13,7 @@ import Highlighter from "react-highlight-words";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import ServiceForm from "../ServiceForm/ServiceForm";
-import { Modal, Form } from "antd";
+import { Modal, Form, Image } from "antd";
 
 import "./ServiceTable.scss";
 
@@ -80,6 +80,7 @@ const ServiceTable = ({ data, statuses, update }) => {
     const newData = data.filter((item) => !selectedKeys.includes(item.key));
     // Update the state with the new data
     setTableData(newData);
+
     // Clear the selectedRowKeys state
     setSelectedRowKeys([]);
   };
@@ -193,8 +194,8 @@ const ServiceTable = ({ data, statuses, update }) => {
       width: "50%",
       ...getColumnSearchProps("name"),
       render: (text, record) => (
-        <div className="image_name">
-          <img src={record.imageUrl} alt={text} className="image_in_table" />
+        <div className="image_name_service">
+          <Image src={record.imageUrl} alt={text} className="image_in_table" />
           {text}
         </div>
       ),
@@ -206,6 +207,8 @@ const ServiceTable = ({ data, statuses, update }) => {
       width: "20%",
       sorter: (a, b) => a.price - b.price,
       sortDirections: ["descend", "ascend"],
+      render: (text) =>
+        `${text?.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
     },
     {
       title: "Status",
@@ -216,7 +219,7 @@ const ServiceTable = ({ data, statuses, update }) => {
         return {
           text: item.name,
           value: item.name,
-        }
+        };
       }),
       filterMode: "tree",
       // filterSearch: true,

@@ -11,4 +11,7 @@ shiftRouter.post("/", shiftController.create);
 // put shift
 shiftRouter.put("/:MaCa", shiftController.update);
 
+// del
+shiftRouter.delete("/:MaCa", shiftController.remove);
+
 export default shiftRouter;
