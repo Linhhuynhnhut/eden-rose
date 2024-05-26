@@ -9,12 +9,12 @@ import {
   Row,
   Typography,
   Table,
-  Image
+  Image,
 } from "antd";
 import Header from "../../components/Header/Header";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import { menu, services } from "../../constants";
-
+import { useParams } from "react-router-dom";
 import "./payment.scss";
 import Label from "../../components/Label/Label";
 
@@ -34,7 +34,7 @@ const columns1 = [
     title: "Image",
     dataIndex: "img",
     key: "img",
-    width:"15%",
+    width: "15%",
     render: (img) => (
       <div className="image_name_summary">
         <Image src={img} alt={"image"} className="image_in_table" />
@@ -45,23 +45,26 @@ const columns1 = [
     title: "Name",
     dataIndex: "name",
     key: "name",
-    width:"35%",
+    width: "35%",
   },
   {
     title: "Amount",
     dataIndex: "amount",
     key: "amount",
-    width:"25%",
+    width: "25%",
     render: () => <div>1</div>,
   },
   {
     title: "Price",
     dataIndex: "price",
     key: "price",
-    width:"25%",
+    width: "25%",
   },
 ];
+
 const Payment = () => {
+  let { id } = useParams();
+  console.log("id: ", id);
   return (
     <div className="payment">
       <Header title="Payment" />

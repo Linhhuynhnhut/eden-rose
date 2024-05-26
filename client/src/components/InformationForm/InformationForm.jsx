@@ -21,11 +21,13 @@ const InformationForm = ({
   formRef,
   currentStep,
   numberOfSteps,
+  halls,
+  shifts,
   isReadOnly = false,
 }) => {
   const [form] = Form.useForm();
-  const [shifts, setShifts] = useState([]);
-  const [halls, setHalls] = useState([]);
+  // const [shifts, setShifts] = useState([]);
+  // const [halls, setHalls] = useState([]);
   // eslint-disable-next-line arrow-body-style
   const disabledDate = (current) => {
     // Can not select days before today and today
@@ -48,25 +50,24 @@ const InformationForm = ({
     console.log(date, dateString);
   };
   const getData = async () => {
-    // shifts
-    const rawDataShifts = await api.getShifts();
-    const shifts = rawDataShifts.map((item) => {
-      return {
-        value: item.MaCa,
-        label: item.TenCa,
-      };
-    });
-    setShifts(shifts);
-
+    // // shifts
+    // const rawDataShifts = await api.getShifts();
+    // const shifts = rawDataShifts.map((item) => {
+    //   return {
+    //     value: item.MaCa,
+    //     label: item.TenCa,
+    //   };
+    // });
+    // setShifts(shifts);
     // halls
-    const rawDataHalls = await api.getHalls();
-    const data = rawDataHalls.map((item) => {
-      return {
-        value: item?.MaSanh,
-        label: item?.TenSanh,
-      };
-    });
-    setHalls(data);
+    // const rawDataHalls = await api.getHalls();
+    // const data = rawDataHalls.map((item) => {
+    //   return {
+    //     value: item?.MaSanh,
+    //     label: item?.TenSanh,
+    //   };
+    // });
+    // setHalls(data);
   };
   useEffect(() => {
     getData();
@@ -185,7 +186,12 @@ const InformationForm = ({
                 width: "100%",
               }}
               onChange={handleChange}
-              options={halls}
+              options={halls.map((item) => {
+                return {
+                  value: item?.key,
+                  label: item?.name,
+                };
+              })}
             />
           </Form.Item>
           <Form.Item
