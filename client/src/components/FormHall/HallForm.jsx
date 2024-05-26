@@ -28,13 +28,17 @@ const hallTypes = [
 ];
 
 const HallForm = ({ form, hallTypes, rawData }) => {
+
   useEffect(() => {
     try {
       const type = hallTypes.find((i) => {
         return i?.name === rawData?.type;
       });
       console.log("type price: ", type);
-      form?.setFieldValue("minimumPrice", type.MinimumPrice);
+      form?.setFieldValue("minimumPrice", type.MinimumPrice.slice(0, -3).replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        ","
+      ));
       form.setFieldsValue({
         name: rawData?.name,
         maximumTable: rawData?.tables,
@@ -42,6 +46,9 @@ const HallForm = ({ form, hallTypes, rawData }) => {
         status: rawData?.status,
         image: rawData?.imageUrl,
       });
+  
+      console.log("rawData?.imageUrl", rawData?.imageUrl);
+      console.log("type.MinimumPrice",type.MinimumPrice);
     } catch (error) {
       console.log(error);
     }
@@ -60,6 +67,7 @@ const HallForm = ({ form, hallTypes, rawData }) => {
       .then((res) => {
         console.log(res);
         console.log("url ảnh>>>>", res.data.secure_url);
+        
         // setImageLink(res?.data?.secure_url);
         const { setFieldValue } = form;
         setFieldValue("image", res?.data?.secure_url);
@@ -134,9 +142,10 @@ const HallForm = ({ form, hallTypes, rawData }) => {
             }}
             // showUploadList={false}
           >
+
             <button style={{ border: 0, background: "none" }} type="button">
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
             </button>
           </Upload>
         </Form.Item>

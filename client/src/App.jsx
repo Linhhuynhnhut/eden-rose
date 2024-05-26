@@ -9,6 +9,7 @@ function App() {
       <BrowserRouter>
         <Sidebar />
         <div className="main">
+    
           <div className="virtual-sidebar"></div>
           <RoutesConfig />
         </div>

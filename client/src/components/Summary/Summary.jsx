@@ -25,6 +25,7 @@ const Summary = ({
   menu,
   services,
   halls,
+  shifts,
   reservationForms,
   handleSubmitReservation,
 }) => {
@@ -155,6 +156,7 @@ const Summary = ({
     const hall = halls.find((i) => {
       return i?.key === formRef[0].current.info.hall;
     });
+    console.log("hall",hall);
     const minimumPrice = hall.minimumPrice;
     const totalTables =
       Number(formRef[0].current.info.numberOfSpareTables) +
@@ -231,10 +233,15 @@ const Summary = ({
         return false;
       }
     } else {
+      console.log('minimumPrice',minimumPrice);
+      console.log('tablePrice',tablePrice);
       openNotificationWithIcon(
         "warning",
         "Table Price is not valid",
-        `Table Price must be larger ${minimumPrice} VND`
+        `Table Price must be larger ${minimumPrice.slice(0, -3).replace(
+          /\B(?=(\d{3})+(?!\d))/g,
+          ","
+        )} VND`
       );
       return false;
     }
@@ -263,6 +270,8 @@ const Summary = ({
         currentStep={currentStep}
         numberOfSteps={numberOfSteps}
         isReadOnly={true}
+        halls={halls}
+        shifts={shifts}
       />
       <Tooltip title="Edit">
         <Button

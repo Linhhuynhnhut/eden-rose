@@ -122,17 +122,21 @@ const Services = () => {
         Anh: imageUrl,
         isDeleted,
       };
-      if (checkAlreadyExisted(services, name)) {
-        openNotificationWithIcon(
-          "warning",
-          "Name Service is not valid",
-          `This Service has already existed`
-        );
-      } else {
-        const res = await API.putService(key, data);
-        if (res != null) {
-          getData();
-        }
+      // if (checkAlreadyExisted(services, name)) {
+      //   openNotificationWithIcon(
+      //     "warning",
+      //     "Name Service is not valid",
+      //     `This Service has already existed`
+      //   );
+      // } else {
+      //   const res = await API.putService(key, data);
+      //   if (res != null) {
+      //     getData();
+      //   }
+      // }
+      const res = await API.putService(key, data);
+      if (res != null) {
+        getData();
       }
     } catch (error) {
       console.log(error);

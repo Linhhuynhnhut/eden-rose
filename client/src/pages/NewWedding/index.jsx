@@ -7,6 +7,10 @@ import { stepsAddWedding as steps } from "../../constants";
 import { Steps, theme } from "antd";
 import { api } from "../../api/api";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { FaExclamationTriangle } from 'react-icons/fa';
 
 import "./newWedding.scss";
 import Summary from "../../components/Summary/Summary";
@@ -171,10 +175,23 @@ const NewWedding = ({ isWeddingEdit }) => {
   }, []);
 
   const next = () => {
-    setCurrent(current + 1);
-    console.log("prev step1: ", step1Ref);
-    console.log("prev step2: ", step2Ref);
-    console.log("prev step3: ", step3Ref);
+    console.log('current',current);
+    if (current === 1) {
+      if (step2Ref.current.selectedItems && step2Ref.current.selectedItems.length >= 1) {
+        setCurrent(current + 1);
+      } else {
+        toast.warn("You must select a menu before proceeding to choose services.", {
+          icon: <FaExclamationTriangle />,
+          className: 'custom-toast',
+        });
+      }
+    } else {
+      // Không cần kiểm tra, chỉ chuyển bước
+      setCurrent(current + 1);
+      console.log("prev step1: ", step1Ref);
+      console.log("prev step2: ", step2Ref);
+      console.log("prev step3: ", step3Ref);
+    }
   };
 
   const prev = (step = current - 1) => {
@@ -345,6 +362,7 @@ const NewWedding = ({ isWeddingEdit }) => {
         menu={mapData(menu)}
         services={services}
         halls={halls}
+        shifts={shifts}
         reservationForms={reservationForms}
         handleSubmitReservation={handleSubmitReservation}
       />
@@ -355,6 +373,7 @@ const NewWedding = ({ isWeddingEdit }) => {
     <div className="add-wedding">
       <Header title={isWeddingEdit ? "Edit Wedding" : "New wedding"} />
       <Label name={steps[current].title} />
+      <ToastContainer />
       <div>
         <div style={contentStyle}>{mapper[steps[current].content]}</div>
         <Steps current={current} items={items} />
