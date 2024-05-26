@@ -13,7 +13,7 @@ import Highlighter from "react-highlight-words";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import ServiceForm from "../ServiceForm/ServiceForm";
-import { Modal, Form } from "antd";
+import { Modal, Form, Image } from "antd";
 
 import "./ServiceTable.scss";
 
@@ -194,7 +194,7 @@ const ServiceTable = ({ data, statuses, update }) => {
       ...getColumnSearchProps("name"),
       render: (text, record) => (
         <div className="image_name">
-          <img src={record.imageUrl} alt={text} className="image_in_table" />
+          <Image src={record.imageUrl} alt={text} className="image_in_table" />
           {text}
         </div>
       ),

@@ -38,6 +38,14 @@ export const api = {
     const url = "param";
     return axiosClient.get(url, params);
   },
+  getFoodDetails: (params) => {
+    const url = "dish-detail";
+    return axiosClient.get(url, params);
+  },
+  getServiceDetails: (params) => {
+    const url = "service-detail";
+    return axiosClient.get(url, params);
+  },
 
   //POST******************************************************
   postHall: (payload) => {
