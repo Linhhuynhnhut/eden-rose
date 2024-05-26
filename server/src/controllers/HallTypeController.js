@@ -42,7 +42,7 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   const { MaLoaiSanh } = req.params;
-  const { TenLoaiSanh, DGBanToiThieu, GhiChu } = req.body;
+  const { TenLoaiSanh, DGBanToiThieu, GhiChu, isDeleted } = req.body;
 
   try {
     const hallType = await LoaiSanh.findByPk(MaLoaiSanh);
@@ -54,6 +54,7 @@ const update = async (req, res) => {
     hallType.TenLoaiSanh = TenLoaiSanh || hallType.TenLoaiSanh;
     hallType.DGBanToiThieu = DGBanToiThieu || hallType.DGBanToiThieu;
     hallType.GhiChu = GhiChu || hallType.GhiChu;
+    hallType.isDeleted = isDeleted;
 
     await hallType.save();
 
@@ -65,4 +66,21 @@ const update = async (req, res) => {
   }
 };
 
-export default { search, create, update };
+const remove = async (req, res) => {
+  const { MaLoaiSanh } = req.params;
+  try {
+    const hallType = await LoaiSanh.findByPk(MaLoaiSanh);
+    if (hallType) {
+      await hallType.update({
+        isDeleted: true,
+      });
+      res.status(200).json({ message: "hallType soft deleted successfully" });
+    } else {
+      res.status(404).json({ error: "hallType not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default { search, create, update, remove };

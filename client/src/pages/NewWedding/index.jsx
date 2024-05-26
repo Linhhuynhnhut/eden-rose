@@ -3,14 +3,16 @@ import Header from "../../components/Header/Header";
 import Label from "../../components/Label/Label";
 import InformationForm from "../../components/InformationForm/InformationForm";
 import TableForm from "../../components/TableForm/TableForm";
-import { stepsAddWedding as steps, services } from "../../constants";
+import { stepsAddWedding as steps } from "../../constants";
 import { Steps, theme } from "antd";
 import { api } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 import "./newWedding.scss";
 import Summary from "../../components/Summary/Summary";
 
 const NewWedding = ({ isWeddingEdit }) => {
+  const navigate = useNavigate();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [menu, setMenu] = useState(0);
@@ -163,6 +165,12 @@ const NewWedding = ({ isWeddingEdit }) => {
     console.log("prev step3: ", step3Ref);
   };
 
+  const parseDateObj = (date) => {
+    const offset = date.getTimezoneOffset();
+    date = new Date(date.getTime() - offset * 60 * 1000);
+    return date.toISOString().split("T")[0];
+  };
+
   const handleSubmitReservation = async (content) => {
     console.log("reservation: ", content);
     const {
@@ -175,10 +183,10 @@ const NewWedding = ({ isWeddingEdit }) => {
     const rawInfo = infor.info;
     const planningDate = rawInfo.planningDate;
     const today = new Date();
-    console.log("planningDate", planningDate.date);
-    console.log("today", today);
-    console.log("planningDate ...", planningDate.toString());
-    console.log("today ...", today.toISOString());
+    // console.log("planningDate", planningDate.date);
+    // console.log("today", today);
+    console.log("planningDate ...", planningDate.format("YYYY-MM-DD"));
+    console.log("today ...", parseDateObj(today));
     // console.log("compare", today <= newDate);
     const totalTablePrice =
       tablePrice *
@@ -188,8 +196,8 @@ const NewWedding = ({ isWeddingEdit }) => {
       TenChuRe: rawInfo.groomName,
       TenCoDau: rawInfo.brideName,
       DienThoai: rawInfo.phoneNumber,
-      NgayDatTiec: today,
-      NgayDaiTiec: planningDate,
+      NgayDatTiec: parseDateObj(today),
+      NgayDaiTiec: planningDate.format("YYYY-MM-DD"),
       MaCa: rawInfo.shift,
       MaSanh: rawInfo.hall,
       TienCoc: rawInfo.deposit,
@@ -238,8 +246,12 @@ const NewWedding = ({ isWeddingEdit }) => {
           MaSanh: rawInfo.hall,
         });
         temp.forEach((item) => {
-          if (item?.NgayDaiTiec === planningDate) MaPhieu = item?.MaPhieuDatTC;
+          if (item?.NgayDaiTiec === planningDate.format("YYYY-MM-DD"))
+            MaPhieu = item?.MaPhieuDatTC;
         });
+
+        // console.log("res: ", res);
+        // console.log("MaPhieu: ", MaPhieu);
 
         mapMenu.forEach(async (dish) => {
           await api.postDishDetail({ MaPhieuDatTC: MaPhieu, ...dish });
@@ -248,8 +260,8 @@ const NewWedding = ({ isWeddingEdit }) => {
           await api.postServiceDetail({ MaPhieuDatTC: MaPhieu, ...service });
         });
       }
-      // form?.resetFields();
-      // setIsModalOpen(false);
+      getData();
+      navigate("/management/weddings");
     } catch (error) {
       console.log(error);
     }

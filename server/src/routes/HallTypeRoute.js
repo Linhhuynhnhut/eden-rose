@@ -13,6 +13,6 @@ hallTypeRouter.post("/", hallTypeController.create);
 hallTypeRouter.put("/:MaLoaiSanh", hallTypeController.update);
 
 // // delete 1 type
-// hallTypeRouter.delete("/:id", hallTypeController.remove);
+hallTypeRouter.delete("/:MaLoaiSanh", hallTypeController.remove);
 
 export default hallTypeRouter;

@@ -60,7 +60,7 @@ const update = async (req, res) => {
     monAn.DonGia = DonGia || monAn.DonGia;
     monAn.MaTinhTrang = MaTinhTrang || monAn.MaTinhTrang;
     monAn.Anh = Anh || monAn.Anh;
-    monAn.isDeleted = isDeleted || monAn.isDeleted;
+    monAn.isDeleted = isDeleted;
 
     await monAn.save();
 
@@ -74,19 +74,18 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   const { MaMonAn } = req.params;
-
   try {
-    const monAn = await MonAn.findByPk(MaMonAn);
-
-    if (!monAn) {
-      return res.status(404).json({ message: "MonAn not found" });
+    const dish = await MonAn.findByPk(MaMonAn);
+    if (dish) {
+      await dish.update({
+        isDeleted: true,
+      });
+      res.status(200).json({ message: "dish soft deleted successfully" });
+    } else {
+      res.status(404).json({ error: "dish not found" });
     }
-
-    await monAn.destroy();
-
-    return res.status(200).json({ message: "MonAn deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ message: "Error deleting MonAn", error });
+    res.status(500).json({ error: error.message });
   }
 };
 

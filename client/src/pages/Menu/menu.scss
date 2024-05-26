@@ -1,31 +1,34 @@
-.menu_page{
-    width: 1200px;
-    
-    .btn_new_dish{
-        display: flex;
-        justify-content: right;
-        margin-right: 70px;
-        margin-bottom: 10px;
-        button{
-            background-color: #5E7249;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
-        }
-        .ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover{
-            background-color: #5E7249;
-            opacity: 0.9;
-        }
-        
-    }
+.menu_page {
+  width: 1200px;
 
-    .menu_table{
-        display: flex;
-        justify-content: center;
-        .ant-table-wrapper {
-            width: 1000px;
-        }
-        .input:active {
-            color: #5E7249;
-        }
-      
+  .btn_new_dish {
+    display: flex;
+    justify-content: right;
+    margin-right: 70px;
+    margin-bottom: 10px;
+    button {
+      background-color: #5e7249;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
     }
+    .ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+      background-color: #5e7249;
+      opacity: 0.9;
+    }
+  }
+
+  .menu_table {
+    display: flex;
+    justify-content: center;
+    .ant-table-wrapper {
+      width: 1000px;
+    }
+    .input:active {
+      color: #5e7249;
+    }
+  }
+
+  .ant-pagination-jump-next.ant-pagination-jump-next-custom-icon {
+    display: flex;
+    align-items: center;
+  }
 }

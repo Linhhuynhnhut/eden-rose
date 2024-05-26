@@ -3,36 +3,129 @@ import Header from "../../components/Header/Header";
 import MenuTable from "../../components/MenuTable/MenuTable";
 import { PlusOutlined } from "@ant-design/icons";
 import "./menu.scss";
-import { Button, Modal, Form } from "antd";
+import { Button, Modal, Form, notification } from "antd";
 import MenuForm from "../../components/MenuForm/MenuForm";
-import { api } from "../../api/api";
+import { api as API } from "../../api/api";
 
 const Menu = () => {
+  const [api, contextHolder] = notification.useNotification();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [menu, setMenu] = useState([]);
   const [dishTypes, setDishTypes] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [form] = Form.useForm();
 
+  const openNotificationWithIcon = (type, mess, descr) => {
+    api[type]({
+      message: mess,
+      description: descr,
+    });
+  };
+
   const showModal = () => {
     setIsModalOpen(true);
   };
 
+  const checkAlreadyExisted = (array, value) => {
+    console.log(value);
+    const isExisted = array.find((i) => i?.name === value);
+
+    return !!isExisted;
+  };
+
+  const getData = async () => {
+    // get dish type
+    const rawDataDishTypes = await API.getDishTypes();
+    const data = rawDataDishTypes.map((item) => {
+      return {
+        id: item.MaPhanLoai,
+        name: item.PhanLoai,
+        isDeleted: item.isDeleted,
+      };
+    });
+    setDishTypes(data.filter((item) => !item?.isDeleted));
+
+    // get status
+    const rawDataStatuses = await API.getStatuses();
+    const data1 = rawDataStatuses.map((item) => {
+      return {
+        id: item.MaTinhTrang,
+        name: item.TinhTrang,
+      };
+    });
+    setStatuses(data1);
+
+    // get menu
+    const rawDataMenu = await API.getMenu();
+    const data2 = rawDataMenu.map((item) => {
+      return {
+        key: item.MaMonAn,
+        name: item.TenMonAn,
+        type: item.MaPhanLoai,
+        status: item.MaTinhTrang,
+        price: item.DonGia,
+        imageUrl: item.Anh,
+        isDeleted: item.isDeleted,
+      };
+    });
+    setMenu(data2.filter((item) => !item?.isDeleted));
+  };
+
+  const mapData = (data) => {
+    return data.map((item) => {
+      const type = dishTypes.find((i) => {
+        return i?.id === item?.type;
+      });
+
+      const status = statuses.find((i) => {
+        return i?.id === item?.status;
+      });
+      return {
+        ...item,
+        type: type.name,
+        status: status.name,
+      };
+    });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   const handleOk = async () => {
     try {
       const values = await form?.validateFields();
+      const typeId = dishTypes.find((i) => {
+        return i?.name === values.dishType;
+      });
+
+      const statusId = statuses.find((i) => {
+        return i?.name === values.status;
+      });
+
       const data = {
         TenMonAn: values.name,
-        MaPhanLoai: +values.dishType,
+        MaPhanLoai: typeId.id,
         DonGia: +values.price,
-        MaTinhTrang: +values.status,
+        MaTinhTrang: statusId.id,
         Anh: values.imageUrl,
         isDeleted: false,
       };
-      const res = await api.postDish(data);
-      if (res != null) {
-        getData();
+
+      if (checkAlreadyExisted(menu, values.name)) {
+        openNotificationWithIcon(
+          "warning",
+          "New Dish is not valid",
+          `This Dish has already existed`
+        );
+      } else {
+        const res = await API.postDish(data);
+        if (res != null) {
+          getData();
+        }
       }
+
       form?.resetFields();
       setIsModalOpen(false);
     } catch (e) {
@@ -60,7 +153,7 @@ const Menu = () => {
         return i?.name === status;
       });
 
-      console.log("check update: ", dishTypes);
+      // console.log("check update: ", dishTypes);
       const data = {
         TenMonAn: name,
         MaPhanLoai: typeId.id,
@@ -69,10 +162,31 @@ const Menu = () => {
         Anh: imageUrl,
         isDeleted,
       };
-      const res = await api.putDish(key, data);
-      if (res != null) {
-        getData();
+
+      if (checkAlreadyExisted(menu, name)) {
+        openNotificationWithIcon(
+          "warning",
+          "Name Dish is not valid",
+          `This Dish has already existed`
+        );
+      } else {
+        const res = await API.putDish(key, data);
+        if (res != null) {
+          getData();
+        }
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteDish = async (payload) => {
+    try {
+      console.log(payload);
+      payload.forEach(async (dishId) => {
+        await API.deleteDish(dishId);
+      });
+      setTimeout(getData, 500);
     } catch (error) {
       console.log(error);
     }
@@ -81,65 +195,11 @@ const Menu = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const getData = async () => {
-    // get dish type
-    const rawDataDishTypes = await api.getDishTypes();
-    const data = rawDataDishTypes.map((item) => {
-      return {
-        id: item.MaPhanLoai,
-        name: item.PhanLoai,
-      };
-    });
-    setDishTypes(data);
-
-    // get status
-    const rawDataStatuses = await api.getStatuses();
-    const data1 = rawDataStatuses.map((item) => {
-      return {
-        id: item.MaTinhTrang,
-        name: item.TinhTrang,
-      };
-    });
-    setStatuses(data1);
-
-    // get menu
-    const rawDataMenu = await api.getMenu();
-    const data2 = rawDataMenu.map((item) => {
-      return {
-        key: item.MaMonAn,
-        name: item.TenMonAn,
-        type: item.MaPhanLoai,
-        status: item.MaTinhTrang,
-        price: item.DonGia,
-        imageUrl: item.Anh,
-      };
-    });
-    setMenu(data2);
-  };
-
-  const mapData = (data) => {
-    return data.map((item) => {
-      const type = dishTypes.find((i) => {
-        return i?.id === item?.type;
-      });
-
-      const status = statuses.find((i) => {
-        return i?.id === item?.status;
-      });
-      return {
-        ...item,
-        type: type.name,
-        status: status.name,
-      };
-    });
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   return (
     <div className="menu_page">
+      {contextHolder}
+
       <div className="page_header">
         <Header title="Menu Management" />
       </div>
@@ -165,6 +225,7 @@ const Menu = () => {
           dishTypes={dishTypes}
           statuses={statuses}
           update={handleUpdateDish}
+          handleDelete={handleDeleteDish}
         />
       </div>
     </div>

@@ -43,15 +43,15 @@ const ServiceForm = ({ form, statuses, rowData }) => {
     <>
       <Form form={form} layout="vertical" style={{ maxWidth: 600 }}>
         <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-          <Input placeholder={rowData?.name}/>
+          <Input placeholder={rowData?.name} />
         </Form.Item>
         <Form.Item name="price" label="Price" rules={[{ required: true }]}>
-          <Input placeholder={rowData?.price}/>
+          <Input placeholder={rowData?.price} />
         </Form.Item>
         <Form.Item name="status" label="Status" rules={[{ required: true }]}>
           <Select defaultValue={rowData?.status}>
             {statuses.map((status, index) => (
-              <Select.Option key={status.id} value={status.key}>
+              <Select.Option key={status.id} value={status.name}>
                 {status.name}
               </Select.Option>
             ))}

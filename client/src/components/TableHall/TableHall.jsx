@@ -18,7 +18,7 @@ import { Tooltip } from "antd";
 
 import "./TableHall.scss";
 
-const TableHall = ({ data, hallTypes, update }) => {
+const TableHall = ({ data, hallTypes, update, handleDelete }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -29,6 +29,7 @@ const TableHall = ({ data, hallTypes, update }) => {
 
   const cancel = (e) => {
     console.log(e);
+    message.error("Click on No");
   };
   const showModal = (record) => {
     setRowData(record);
@@ -69,20 +70,15 @@ const TableHall = ({ data, hallTypes, update }) => {
     onChange: onSelectChange,
   };
   const hasSelected = selectedRowKeys.length > 0;
-  // const handleDelete = (id) => {
-  //   const newData = tableData.filter((item) => item.key !== id);
-  //   setTableData(newData);
-  // };
-  // const handleDeleteSelectedItems = (selectedKeys) => {
-  //   message.success("You have deleted selected halls");
-  //   const newData = tableData.filter(
-  //     (item) => !selectedKeys.includes(item.key)
-  //   );
-  //   // Update the state with the new data
-  //   setTableData(newData);
-  //   // Clear the selectedRowKeys state
-  //   setSelectedRowKeys([]);
-  // };
+  const handleDeleteItem = (id) => {
+    handleDelete([id]);
+    setSelectedRowKeys([]);
+  };
+  const handleDeleteSelectedItems = () => {
+    handleDelete(selectedRowKeys);
+    setSelectedRowKeys([]);
+  };
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -229,6 +225,8 @@ const TableHall = ({ data, hallTypes, update }) => {
       width: "20%",
       sorter: (a, b) => a.minimumPrice - b.minimumPrice,
       sortDirections: ["descend", "ascend"],
+      render: (text) =>
+        `${text?.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
     },
     {
       title: "Action",
@@ -243,7 +241,7 @@ const TableHall = ({ data, hallTypes, update }) => {
           <Popconfirm
             title="Delete the hall"
             description="Are you sure to delete this hall?"
-            // onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDeleteItem(record.key)}
             onCancel={cancel}
             okText="Yes"
             cancelText="No"
@@ -265,7 +263,7 @@ const TableHall = ({ data, hallTypes, update }) => {
             <Popconfirm
               title="Delete the hall"
               description="Are you sure to delete these halls?"
-              // onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
+              onConfirm={() => handleDeleteSelectedItems()}
               onCancel={cancel}
               okText="Yes"
               cancelText="No"

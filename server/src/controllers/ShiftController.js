@@ -60,4 +60,21 @@ const update = async (req, res) => {
   }
 };
 
-export default { search, create, update };
+const remove = async (req, res) => {
+  const { MaCa } = req.params;
+  try {
+    const shift = await Ca.findByPk(MaCa);
+    if (shift) {
+      await shift.update({
+        isDeleted: true,
+      });
+      res.status(200).json({ message: "shift soft deleted successfully" });
+    } else {
+      res.status(404).json({ error: "shift not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default { search, create, update, remove };

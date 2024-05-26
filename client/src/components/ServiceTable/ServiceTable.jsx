@@ -80,6 +80,7 @@ const ServiceTable = ({ data, statuses, update }) => {
     const newData = data.filter((item) => !selectedKeys.includes(item.key));
     // Update the state with the new data
     setTableData(newData);
+
     // Clear the selectedRowKeys state
     setSelectedRowKeys([]);
   };
@@ -193,7 +194,7 @@ const ServiceTable = ({ data, statuses, update }) => {
       width: "50%",
       ...getColumnSearchProps("name"),
       render: (text, record) => (
-        <div className="image_name">
+        <div className="image_name_service">
           <Image src={record.imageUrl} alt={text} className="image_in_table" />
           {text}
         </div>
@@ -206,6 +207,8 @@ const ServiceTable = ({ data, statuses, update }) => {
       width: "20%",
       sorter: (a, b) => a.price - b.price,
       sortDirections: ["descend", "ascend"],
+      render: (text) =>
+        `${text?.slice(0, -3)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND",
     },
     {
       title: "Status",
@@ -216,7 +219,7 @@ const ServiceTable = ({ data, statuses, update }) => {
         return {
           text: item.name,
           value: item.name,
-        }
+        };
       }),
       filterMode: "tree",
       // filterSearch: true,
