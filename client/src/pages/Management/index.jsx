@@ -125,6 +125,7 @@ const Management = () => {
           </div>
           <div className="management_hall_text">
             <div className="management_hall_top">
+            {/* <Header title="Wedding" /> */}
               <h2>Wedding</h2>
               <img src={img_Header} />
             </div>
