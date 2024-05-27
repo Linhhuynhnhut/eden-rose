@@ -6,3 +6,15 @@
   flex-direction: column;
   flex: 1;
 }
+.custom-toast {
+  background-color: #FF0000 !important;
+  color: white !important;
+}
+
+.custom-toast .Toastify__toast-icon {
+  color: white !important;
+}
+
+.custom-toast .Toastify__close-button {
+  color: white !important;
+}

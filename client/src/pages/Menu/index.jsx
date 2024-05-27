@@ -163,17 +163,21 @@ const Menu = () => {
         isDeleted,
       };
 
-      if (checkAlreadyExisted(menu, name)) {
-        openNotificationWithIcon(
-          "warning",
-          "Name Dish is not valid",
-          `This Dish has already existed`
-        );
-      } else {
-        const res = await API.putDish(key, data);
-        if (res != null) {
-          getData();
-        }
+      // if (checkAlreadyExisted(menu, name)) {
+      //   openNotificationWithIcon(
+      //     "warning",
+      //     "Name Dish is not valid",
+      //     `This Dish has already existed`
+      //   );
+      // } else {
+      //   const res = await API.putDish(key, data);
+      //   if (res != null) {
+      //     getData();
+      //   }
+      // }
+      const res = await API.putDish(key, data);
+      if (res != null) {
+        getData();
       }
     } catch (error) {
       console.log(error);
