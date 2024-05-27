@@ -11,6 +11,9 @@ import Payment from "../../pages/Payment";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoChevronBack } from "react-icons/io5";
 import { IoArrowBack } from "react-icons/io5";
+import { FaExclamationTriangle } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { api } from "../../api/api";
 
 import "./WeddingTable.scss";
@@ -29,6 +32,7 @@ const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
   const [rowData, setRowData] = useState([]);
 
   const showDrawer = (record) => {
+    console.log("record: ", record);
     getDetail(record);
     setOpen(true);
   };
@@ -108,7 +112,12 @@ const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
     // onEdit(record);
     // onEditClick(true);
     // console.log("record pay: ", record.key);
-    handlePayment(record.key);
+    if (record.status === "Completed")
+      toast.warn("This wedding has been paid.", {
+        icon: <FaExclamationTriangle />,
+        className: "custom-toast",
+      });
+    else handlePayment(record.key);
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -260,7 +269,7 @@ const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
       dataIndex: "hall",
       key: "hall",
       width: "20%",
-      filters: halls.map((i)=>{
+      filters: halls.map((i) => {
         return {
           text: i.name,
           value: i.name,
@@ -386,9 +395,10 @@ const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
 
   return (
     <>
+      <ToastContainer />
       {isWeddingEdit && (
         <div>
-          <NewWedding isWeddingEdit={true} rowData = {rowData} />
+          <NewWedding isWeddingEdit={true} rowData={rowData} />
           <div className="btn_cancel_changes">
             <Button
               type="primary"
@@ -436,7 +446,7 @@ const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
                       <p>Number of spare tables: {record.reservedTableNum}</p>
                     </div>
                     <div className="left_wedding_detail">
-                    <p>Shift: {record.shift}</p>
+                      <p>Shift: {record.shift}</p>
                       <p>Deposit: {record.deposit}</p>
                     </div>
                     <div className="left_wedding_detail">
