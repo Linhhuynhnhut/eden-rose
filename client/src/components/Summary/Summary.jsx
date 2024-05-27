@@ -27,6 +27,9 @@ const Summary = ({
   halls,
   reservationForms,
   handleSubmitReservation,
+  handleUpdateReservation,
+  isWeddingEdit,
+  rowData,
 }) => {
   const [api, contextHolder] = notification.useNotification();
   const [selectedMenu, setSelectedMenu] = useState([]);
@@ -253,6 +256,17 @@ const Summary = ({
       console.log("try again");
     }
   };
+  const handleUpdate = async () => {
+    const payload = {
+      infor: formRef[0].current,
+      menu: selectedMenu,
+      services: selectedServices,
+      tablePrice: tablePrice,
+      servicePrice: servicePrice,
+    };
+    handleUpdateReservation(payload.infor.info, rowData.key);
+    isWeddingEdit = false;
+  }
   return (
     <div className="summary">
       {contextHolder}
@@ -355,7 +369,7 @@ const Summary = ({
             className="next-btn"
             type="primary"
             htmlType="submit"
-            onClick={() => handleSubmit()}
+            onClick={() => isWeddingEdit ? handleUpdate() : handleSubmit()}
           >
             Save
           </Button>

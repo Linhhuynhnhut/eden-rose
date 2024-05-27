@@ -15,7 +15,7 @@ import { api } from "../../api/api";
 
 import "./WeddingTable.scss";
 
-const WeddingTable = ({ data, onEdit, onEditClick }) => {
+const WeddingTable = ({ data, onEdit, onEditClick, halls }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -26,6 +26,8 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
   const [foodDetailTable, setFoodDetailTable] = useState([]);
   const [serviceDetailTable, setServiceDetailTable] = useState([]);
   const [dishTypes, setDishTypes] = useState([]);
+  const [rowData, setRowData] = useState([]);
+
   const showDrawer = (record) => {
     getDetail(record);
     setOpen(true);
@@ -87,7 +89,6 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
       const type = dishTypes.find((i) => {
         return i?.id === item?.type;
       });
-      console.log(data);
       return {
         ...item,
         type: type?.name,
@@ -99,6 +100,7 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
     setIsWeddingEdit(true);
     onEdit(record);
     onEditClick(true);
+    setRowData(record);
   };
 
   const handlePay = (record) => {
@@ -256,7 +258,15 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
       dataIndex: "hall",
       key: "hall",
       width: "20%",
-      ...getColumnSearchProps("hall"),
+      filters: halls.map((i)=>{
+        return {
+          text: i.name,
+          value: i.name,
+        };
+      }),
+      filterMode: "tree",
+      // filterSearch: true,
+      onFilter: (value, record) => record.hall.startsWith(value),
     },
     {
       title: "Status",
@@ -265,12 +275,12 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
       width: "15%",
       filters: [
         {
-          text: "Available",
-          value: "Available",
+          text: "Unpaid",
+          value: "Unpaid",
         },
         {
-          text: "Unavailable",
-          value: "Unavailable",
+          text: "Completed",
+          value: "Completed",
         },
       ],
       filterMode: "tree",
@@ -376,7 +386,7 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
     <>
       {isWeddingEdit && (
         <div>
-          <NewWedding isWeddingEdit={true} />
+          <NewWedding isWeddingEdit={true} rowData = {rowData} />
           <div className="btn_cancel_changes">
             <Button
               type="primary"
@@ -420,16 +430,16 @@ const WeddingTable = ({ data, onEdit, onEditClick }) => {
                       <p>Booking Date: {record.bookingDate}</p>
                     </div>
                     <div className="left_wedding_detail">
-                      <p>Shift: {record.shift}</p>
-                      <p>Number of table: {record.tableNum}</p>
+                      <p>Number of tables: {record.tableNum}</p>
+                      <p>Number of spare tables: {record.reservedTableNum}</p>
                     </div>
                     <div className="left_wedding_detail">
+                    <p>Shift: {record.shift}</p>
                       <p>Deposit: {record.deposit}</p>
-                      <p>ServicesTotal: {record.servicesTotal}</p>
                     </div>
                     <div className="left_wedding_detail">
                       <p>Foods Total: {record.foodsTotal}</p>
-                      <p>Bill Total: {record.billTotal}</p>
+                      <p>ServicesTotal: {record.servicesTotal}</p>
                     </div>
                   </div>
                   <div className="btn_food_service_detail">

@@ -114,6 +114,10 @@ export const api = {
     const url = "service/" + String(id);
     return axiosClient.put(url, payload);
   },
+  putReservationForm:(id, payload) => {
+    const url = "reservationForm/" + String(id);
+    return axiosClient.put(url, payload);
+  },
 
   //DELETE*****************************
   deleteShift: (id) => {
