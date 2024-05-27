@@ -27,7 +27,7 @@ const TableItem = ({
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [selectedItems]);
   return (
     <div className="card">
       {item?.img && (

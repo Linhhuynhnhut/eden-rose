@@ -43,8 +43,37 @@ const create = async (req, res) => {
   }
 };
 
+const update = async (req, res) => {
+  const { MaDichVu, MaPhieuDatTC, DonGia, NgayThem, SoLuong } = req.body;
+
+  try {
+    const dichVu = await CT_DichVu.findOne({
+      where: {
+        MaDichVu: MaDichVu,
+        MaPhieuDatTC: MaPhieuDatTC,
+      },
+    });
+
+    if (!dichVu) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+
+    dichVu.DonGia = DonGia || dichVu.DonGia;
+    dichVu.NgayThem = NgayThem || dichVu.NgayThem;
+    dichVu.SoLuong = SoLuong || dichVu.SoLuong;
+
+    await dichVu.save();
+    console.log("success ");
+    return res
+      .status(200)
+      .json({ message: "Service updated successfully", dichVu });
+  } catch (error) {
+    return res.status(500).json({ message: "Error updating Service", error });
+  }
+};
+
 const remove = async (req, res) => {
-  const { MaPhieuDatTC, MaDichVu } = req.body;
+  const { MaPhieuDatTC, MaDichVu } = req.params;
 
   try {
     const serviceDetail = await CT_DichVu.findOne({
@@ -70,4 +99,4 @@ const remove = async (req, res) => {
   }
 };
 
-export default { search, create, remove };
+export default { search, create, update, remove };

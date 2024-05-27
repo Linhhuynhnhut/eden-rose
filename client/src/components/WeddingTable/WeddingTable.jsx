@@ -18,7 +18,14 @@ import { api } from "../../api/api";
 
 import "./WeddingTable.scss";
 
-const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
+const WeddingTable = ({
+  data,
+  onEdit,
+  onEditClick,
+  handlePayment,
+  halls,
+  handleDelete,
+}) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -101,17 +108,20 @@ const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
   };
 
   const showWeddingEdit = (record) => {
-    setIsWeddingEdit(true);
-    onEdit(record);
-    onEditClick(true);
-    setRowData(record);
+    if (record.status === "Completed")
+      toast.warn("This wedding has been paid.", {
+        icon: <FaExclamationTriangle />,
+        className: "custom-toast",
+      });
+    else {
+      setIsWeddingEdit(true);
+      onEdit(record);
+      onEditClick(true);
+      setRowData(record);
+    }
   };
 
   const handlePay = (record) => {
-    // setIsPayment(true);
-    // onEdit(record);
-    // onEditClick(true);
-    // console.log("record pay: ", record.key);
     if (record.status === "Completed")
       toast.warn("This wedding has been paid.", {
         icon: <FaExclamationTriangle />,
@@ -125,21 +135,16 @@ const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
 
-  const handleCancelWedding = (id) => {
-    const newData = data.map((item) => {
-      if (item.key === id && item.status === "Unpaid") {
-        return { ...item, status: "Cancelled" };
-      }
-      return item;
-    });
-    setTableData(newData);
-    message.success("You have successfully cancelled a wedding");
+  const handleCancelWedding = async (record) => {
+    handleDelete(record);
   };
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -242,6 +247,7 @@ const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
         text
       ),
   });
+
   const columns = [
     {
       title: "Groom",
@@ -314,7 +320,7 @@ const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
           <Popconfirm
             title="Cancel the wedding"
             description="Are you sure to cancel this wedding?"
-            onConfirm={() => handleCancelWedding(record.key)}
+            onConfirm={() => handleCancelWedding(record)}
             okText="Yes"
             cancelText="No"
           >

@@ -181,7 +181,7 @@ const update = async (req, res) => {
         TongTienPhieuDatTC || reservationForm.TongTienPhieuDatTC),
       (reservationForm.TinhTrangThanhToan =
         TinhTrangThanhToan || reservationForm.TinhTrangThanhToan),
-      (reservationForm.isDeleted = isDeleted || reservationForm.isDeleted),
+      (reservationForm.isDeleted = isDeleted),
       await reservationForm.save();
 
     return res.status(200).json({

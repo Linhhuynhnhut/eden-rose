@@ -6,6 +6,11 @@ serviceDetailRouter.get("/", serviceDetailController.search);
 
 serviceDetailRouter.post("/", serviceDetailController.create);
 
-serviceDetailRouter.delete("/", serviceDetailController.remove);
+serviceDetailRouter.put("/", serviceDetailController.update);
+
+serviceDetailRouter.delete(
+  "/:MaDichVu/:MaPhieuDatTC",
+  serviceDetailController.remove
+);
 
 export default serviceDetailRouter;

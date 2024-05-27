@@ -50,41 +50,41 @@ const InformationForm = ({
   const onChange = (date, dateString) => {
     console.log(date, dateString);
   };
-  const getData = async () => {
-    // // shifts
-    // const rawDataShifts = await api.getShifts();
-    // const shifts = rawDataShifts.map((item) => {
-    //   return {
-    //     value: item.MaCa,
-    //     label: item.TenCa,
-    //   };
-    // });
-    // setShifts(shifts);
-    // halls
-    // const rawDataHalls = await api.getHalls();
-    // const data = rawDataHalls.map((item) => {
-    //   return {
-    //     value: item?.MaSanh,
-    //     label: item?.TenSanh,
-    //   };
-    // });
-    // setHalls(data);
-  };
-  useEffect(() => {
-    getData();
-  }, []);
+  // const getData = async () => {
+  //   // // shifts
+  //   // const rawDataShifts = await api.getShifts();
+  //   // const shifts = rawDataShifts.map((item) => {
+  //   //   return {
+  //   //     value: item.MaCa,
+  //   //     label: item.TenCa,
+  //   //   };
+  //   // });
+  //   // setShifts(shifts);
+  //   // halls
+  //   // const rawDataHalls = await api.getHalls();
+  //   // const data = rawDataHalls.map((item) => {
+  //   //   return {
+  //   //     value: item?.MaSanh,
+  //   //     label: item?.TenSanh,
+  //   //   };
+  //   // });
+  //   // setHalls(data);
+  // };
+  // useEffect(() => {
+  //   getData();
+  // }, []);
   useEffect(() => {
     form.setFieldsValue({
-          groomName: rowData?.groomName,
-          brideName: rowData?.brideName,
-          phoneNumber: rowData?.phone,
-          hall: rowData?.hall,
-          planningDate: dayjs(rowData?.weddingDate),
-          shift: rowData?.shift,
-          deposit: rowData?.deposit,
-          numberOfTables: rowData?.tableNum,
-          numberOfSpareTables: rowData?.reservedTableNum,
-        });
+      groomName: rowData?.groomName,
+      brideName: rowData?.brideName,
+      phoneNumber: rowData?.phone,
+      hall: rowData?.hall,
+      planningDate: dayjs(rowData?.weddingDate),
+      shift: rowData?.shift,
+      deposit: rowData?.deposit,
+      numberOfTables: rowData?.tableNum,
+      numberOfSpareTables: rowData?.reservedTableNum,
+    });
     form.setFieldsValue(formRef.current?.info);
   }, [form]);
   // useEffect(() => {
@@ -100,6 +100,7 @@ const InformationForm = ({
   //     numberOfSpareTables: rowData?.reservedTableNum,
   //   });
   // }, [rowData]);
+  // console.log("raw data111: ", dayjs(rowData?.weddingDate));
   return (
     <div className="information-form">
       <Form
@@ -177,6 +178,7 @@ const InformationForm = ({
           <Form.Item
             name="shift"
             //default value là id, ko phải value hiển thị
+            rules={[{ required: true }]}
             label="Shift"
             style={{
               display: "inline-block",
@@ -198,6 +200,7 @@ const InformationForm = ({
           <Form.Item
             name="hall"
             label="Hall"
+            rules={[{ required: true }]}
             style={{
               display: "inline-block",
               width: 200,

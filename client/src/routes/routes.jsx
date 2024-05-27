@@ -26,7 +26,8 @@ const RoutesConfig = () => {
       <Route path="/payment/newpayment/:id" element={<NewPayment />} />
       <Route path="/payment" element={<Payment />} />
       <Route path="/setting" element={<Setting />} />
-      <Route path="/" exact element={<HomePage />} />
+      <Route path="/report" exact element={<HomePage />} />
+      <Route path="/" exact element={<Management />} />
     </Routes>
   );
 };

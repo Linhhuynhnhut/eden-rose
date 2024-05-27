@@ -7,6 +7,6 @@ dishDetailRouter.get("/", dishDetailController.search);
 
 dishDetailRouter.post("/", dishDetailController.create);
 
-dishDetailRouter.delete("/", dishDetailController.remove);
+dishDetailRouter.delete("/:MaMonAn/:MaPhieuDatTC", dishDetailController.remove);
 
 export default dishDetailRouter;

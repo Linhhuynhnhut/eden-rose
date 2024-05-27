@@ -7,10 +7,10 @@ import { stepsAddWedding as steps } from "../../constants";
 import { Steps, theme } from "antd";
 import { api } from "../../api/api";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import { FaExclamationTriangle } from 'react-icons/fa';
+import { FaExclamationTriangle } from "react-icons/fa";
 
 import "./newWedding.scss";
 import Summary from "../../components/Summary/Summary";
@@ -19,8 +19,10 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
   const navigate = useNavigate();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
-  const [menu, setMenu] = useState(0);
-  const [services, setServices] = useState(0);
+  const [menu, setMenu] = useState([]);
+  const [services, setServices] = useState([]);
+  const [menuDetail, setMenuDetail] = useState([]);
+  const [servicesDetail, setServicesDetail] = useState([]);
   const [dishTypes, setDishTypes] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [hallTypes, setHallTypes] = useState([]);
@@ -147,21 +149,45 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
     // console.log("all services: ", newData);
 
     setServices(newData.filter((item) => !item?.isDeleted));
-    const rawFoodDetails = await api.getFoodDetails();
-    const FoodDetails = rawFoodDetails.filter((i) => {
-      return i?.MaPhieuDatTC === rowData.key;
-    });
-    const rawServiceDetails = await api.getServiceDetails();
-    const ServiceDetails = rawServiceDetails.filter((i) => {
-      return i?.MaPhieuDatTC === rowData.key;
-    });
-    console.log("foods: ", ServiceDetails);
+
+    if (rowData?.key) {
+      const rawFoodDetails = await api.getFoodDetails();
+      const FoodDetails = rawFoodDetails?.filter((i) => {
+        return i?.MaPhieuDatTC === rowData.key;
+      });
+      const mapMenuDetails = FoodDetails.map((item) => {
+        return {
+          id: item.MaMonAn,
+          amount: 1,
+        };
+      });
+      console.log("foods: ", FoodDetails);
+      setMenuDetail(mapMenuDetails);
+      step2Ref.current = {
+        selectedItems: mapMenuDetails,
+      };
+      const rawServiceDetails = await api.getServiceDetails();
+      const ServiceDetails = rawServiceDetails?.filter((i) => {
+        return i?.MaPhieuDatTC === rowData.key;
+      });
+      const mapServicesDetails = ServiceDetails.map((item) => {
+        return {
+          id: item.MaDichVu,
+          amount: item.SoLuong,
+        };
+      });
+      console.log("service: ", mapServicesDetails);
+      setServicesDetail(mapServicesDetails);
+      step3Ref.current = {
+        selectedItems: mapServicesDetails,
+      };
+    }
   };
 
   const mapData = (data) => {
     try {
       return data.map((item) => {
-        const type = dishTypes.find((i) => {
+        const type = dishTypes?.find((i) => {
           return i?.id === item?.type;
         });
 
@@ -184,15 +210,21 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
   }, []);
 
   const next = () => {
-    console.log('current',current);
+    console.log("current", current);
     if (current === 1) {
-      if (step2Ref.current.selectedItems && step2Ref.current.selectedItems.length >= 1) {
+      if (
+        step2Ref.current.selectedItems &&
+        step2Ref.current.selectedItems.length >= 1
+      ) {
         setCurrent(current + 1);
       } else {
-        toast.warn("You must select a menu before proceeding to choose services.", {
-          icon: <FaExclamationTriangle />,
-          className: 'custom-toast',
-        });
+        toast.warn(
+          "You must select a menu before proceeding to choose services.",
+          {
+            icon: <FaExclamationTriangle />,
+            className: "custom-toast",
+          }
+        );
       }
     } else {
       // Không cần kiểm tra, chỉ chuyển bước
@@ -322,6 +354,7 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         numberOfTables,
         numberOfSpareTables,
         deposit,
+        planningDate,
       } = payload;
       const data = {
         TenChuRe: groomName,
@@ -330,12 +363,126 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         SLBan: numberOfTables,
         TienCoc: deposit,
         DienThoai: phoneNumber,
+        NgayDaiTiec: planningDate.format("YYYY-MM-DD"),
       };
+      // console.log("data update: ", data);
+      // console.log("menu detail : ", menuDetail);
+      // console.log("menu detail update: ", step2Ref.current.selectedItems);
+
+      const newArrRemove = menuDetail.filter((item1) => {
+        // Check if the 'x' property of item1 is not present in any item of arr2
+        return !step2Ref.current.selectedItems.some(
+          (item2) => item2.id === item1.id
+        );
+      });
+      const newArrAdd = step2Ref.current.selectedItems.filter((item1) => {
+        // Check if the 'x' property of item1 is not present in any item of arr2
+        return !menuDetail.some((item2) => item2.id === item1.id);
+      });
+
+      console.log("newArrRemove: ", newArrRemove);
+      console.log("newArrAdd: ", newArrAdd);
+      const mapMenu = newArrAdd.map((item) => {
+        const dish = menu.find((i) => {
+          return i?.id === item?.id;
+        });
+        return {
+          MaMonAn: item?.id,
+          DonGia: Number(dish?.price),
+          GhiChu: "",
+        };
+      });
+      console.log("mapMenu ", mapMenu);
+
+      // console.log("data update: ", data);
+      // console.log("menu detail : ", menuDetail);
+      // console.log("menu detail update: ", step2Ref.current.selectedItems);
+
+      const newItems = step3Ref.current.selectedItems.filter(
+        (item2) => !servicesDetail.some((item1) => item1.id === item2.id)
+      );
+
+      const lostItems = servicesDetail.filter(
+        (item1) =>
+          !step3Ref.current.selectedItems.some((item2) => item2.id === item1.id)
+      );
+
+      const changedItems = servicesDetail
+        .filter((item1) => {
+          const correspondingItem = step3Ref.current.selectedItems.find(
+            (item2) => item2.id === item1.id
+          );
+          return correspondingItem && correspondingItem.amount !== item1.amount;
+        })
+        .map((item1) => {
+          const correspondingItem = step3Ref.current.selectedItems.find(
+            (item2) => item2.id === item1.id
+          );
+          return {
+            id: item1.id,
+            amount: correspondingItem.amount,
+          };
+        });
+
+      console.log("New Items:", newItems);
+      console.log("Lost Items:", lostItems);
+      console.log("Changed Items:", changedItems);
+
+      const today = new Date();
+
+      const mapServices = newItems.map((item) => {
+        const service = services.find((i) => {
+          return i?.id === item?.id;
+        });
+        return {
+          MaDichVu: item?.id,
+          DonGia: Number(service?.price),
+          SoLuong: Number(item?.amount),
+          NgayThem: today,
+        };
+      });
+
+      const mapUpdateServices = changedItems.map((item) => {
+        const service = services.find((i) => {
+          return i?.id === item?.id;
+        });
+        return {
+          MaDichVu: item?.id,
+          DonGia: Number(service?.price),
+          SoLuong: Number(item?.amount),
+        };
+      });
 
       const res = await api.putReservationForm(key, data);
       if (res != null) {
-        getData();
+        // getData();
+        newArrRemove.forEach(async (item) => {
+          await api.deleteDishDetail(item.id, key);
+        });
+        mapMenu.forEach(async (item) => {
+          await api.postDishDetail({
+            MaPhieuDatTC: key,
+            ...item,
+          });
+        });
+
+        lostItems.forEach(async (item) => {
+          await api.deleteServiceDetail(item.id, key);
+        });
+        mapServices.forEach(async (item) => {
+          await api.postServiceDetail({
+            MaPhieuDatTC: key,
+            ...item,
+          });
+        });
+        mapUpdateServices.forEach(async (item) => {
+          await api.putServiceDetail(key, {
+            MaPhieuDatTC: key,
+            ...item,
+          });
+        });
       }
+      navigate(0);
     } catch (error) {
       console.log(error);
     }
