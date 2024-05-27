@@ -453,11 +453,11 @@ const WeddingTable = ({
                     </div>
                     <div className="left_wedding_detail">
                       <p>Shift: {record.shift}</p>
-                      <p>Deposit: {record.deposit}</p>
+                      <p>Deposit: {record.deposit ? record.deposit.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""} VND</p>
                     </div>
                     <div className="left_wedding_detail">
-                      <p>Foods Total: {record.foodsTotal}</p>
-                      <p>ServicesTotal: {record.servicesTotal}</p>
+                      <p>Foods Total: {record.foodsTotal ? record.foodsTotal.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""} VND</p>
+                      <p>ServicesTotal: {record.servicesTotal ? record.servicesTotal.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""} VND</p>
                     </div>
                   </div>
                   <div className="btn_food_service_detail">

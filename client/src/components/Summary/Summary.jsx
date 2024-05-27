@@ -271,11 +271,12 @@ const Summary = ({
       tablePrice: tablePrice,
       servicePrice: servicePrice,
     };
-    handleUpdateReservation(payload.infor.info, rowData.key);
+    handleUpdateReservation(payload.infor.info, rowData.key, payload.servicePrice, payload.tablePrice);
     isWeddingEdit = false;
   }
   return (
     <div className="summary">
+      {console.log("servicePrice", servicePrice, " tablePrice ", tablePrice)}
       {contextHolder}
       <InformationForm
         prev={prev}
