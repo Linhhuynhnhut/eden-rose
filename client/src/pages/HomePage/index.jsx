@@ -171,7 +171,6 @@ const HomePage = () => {
       </div> */}
       <h1 className="Home_statistics_h1">Sales statistics</h1>
       <div className="Home_statistics">
-        <div className="Home_statistics_header"></div>
         <div className="TableRevenue">
           <TableRevenue
             bills={bills}

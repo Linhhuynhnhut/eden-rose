@@ -63,6 +63,7 @@ function TableHallType({ data, update, handleDelete }) {
       width: "40%",
       sorter: (a, b) => a.MinimumPrice - b.MinimumPrice,
       sortDirections: ["descend", "ascend"],
+      render: (text) => text.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ","),
     },
     {
       title: "Action",
