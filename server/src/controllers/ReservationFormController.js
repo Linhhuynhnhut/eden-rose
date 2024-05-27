@@ -48,6 +48,28 @@ const search = async (req, res) => {
   }
 };
 
+const searchById = async (req, res) => {
+  try {
+    const { MaPhieuDatTC } = req.params;
+    if (MaPhieuDatTC) {
+      const reservationForm = await PhieuDatTC.findOne({
+        where: {
+          MaPhieuDatTC: MaPhieuDatTC,
+        },
+      });
+      if (!reservationForm || reservationForm.length === 0) {
+        responseHandler.notfound(res);
+        return;
+      }
+
+      responseHandler.ok(res, reservationForm);
+    }
+  } catch (error) {
+    console.error("Error fetching status:", error);
+    responseHandler.error(res);
+  }
+};
+
 const create = async (req, res) => {
   try {
     const {
@@ -190,4 +212,4 @@ const remove = async (req, res) => {
     return res.status(500).json({ message: "Error deleting Status", error });
   }
 };
-export default { search, create, update, remove };
+export default { search, searchById, create, update, remove };
