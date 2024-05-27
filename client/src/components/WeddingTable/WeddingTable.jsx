@@ -15,7 +15,7 @@ import { api } from "../../api/api";
 
 import "./WeddingTable.scss";
 
-const WeddingTable = ({ data, onEdit, onEditClick, halls }) => {
+const WeddingTable = ({ data, onEdit, onEditClick, handlePayment, halls }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -104,9 +104,11 @@ const WeddingTable = ({ data, onEdit, onEditClick, halls }) => {
   };
 
   const handlePay = (record) => {
-    setIsPayment(true);
-    onEdit(record);
-    onEditClick(true);
+    // setIsPayment(true);
+    // onEdit(record);
+    // onEditClick(true);
+    // console.log("record pay: ", record.key);
+    handlePayment(record.key);
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -465,7 +467,7 @@ const WeddingTable = ({ data, onEdit, onEditClick, halls }) => {
                         scroll={{ y: 400 }}
                       />
                     </div>
-                    <div className="detail_table-service" >
+                    <div className="detail_table-service">
                       <div className="name-list">
                         <span>Service Details</span>
                       </div>

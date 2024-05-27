@@ -21,6 +21,7 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
   const [statuses, setStatuses] = useState([]);
   const [hallTypes, setHallTypes] = useState([]);
   const [halls, setHalls] = useState([]);
+  const [shifts, setShifts] = useState([]);
   const [reservationForms, setreservationForms] = useState([]);
   const step1Ref = useRef();
   const step2Ref = useRef();
@@ -38,15 +39,27 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
     // });
     setreservationForms(rawDataReservationForms);
 
+    // shifts
+    const rawDataShifts = await api.getShifts();
+    const shifts = rawDataShifts.map((item) => {
+      return {
+        value: item.MaCa,
+        label: item.TenCa,
+        isDeleted: item.isDeleted,
+      };
+    });
+    setShifts(shifts.filter((item) => !item?.isDeleted));
+
     // get dish type
     const rawDataDishTypes = await api.getDishTypes();
     const data = rawDataDishTypes.map((item) => {
       return {
         id: item.MaPhanLoai,
         name: item.PhanLoai,
+        isDeleted: item.isDeleted,
       };
     });
-    setDishTypes(data);
+    setDishTypes(data.filter((item) => !item?.isDeleted));
 
     // get status
     const rawDataStatuses = await api.getStatuses();
@@ -54,9 +67,10 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
       return {
         id: item.MaTinhTrang,
         name: item.TinhTrang,
+        isDeleted: item.isDeleted,
       };
     });
-    setStatuses(data1);
+    setStatuses(data1.filter((item) => !item?.isDeleted));
 
     // get hall type
     const rawDataHallTypes = await api.getHallTypes();
@@ -65,9 +79,10 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         id: item.MaLoaiSanh,
         name: item.TenLoaiSanh,
         minimumPrice: item.DGBanToiThieu,
+        isDeleted: item.isDeleted,
       };
     });
-    setHallTypes(mapHallTypes);
+    setHallTypes(mapHallTypes.filter((item) => !item?.isDeleted));
 
     // get hall
     const rawDataHalls = await api.getHalls();
@@ -82,9 +97,11 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         tables: item?.SLBanToiDa,
         imageUrl: item?.Anh,
         minimumPrice: type?.minimumPrice,
+        isDeleted: item?.isDeleted,
       };
     });
-    setHalls(mapHalls);
+    setHalls(mapHalls.filter((item) => !item?.isDeleted));
+    console.log(mapHalls.filter((item) => !item?.isDeleted));
 
     // get menu
     const rawDataMenu = await api.getMenu();
@@ -96,9 +113,10 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         status: item.MaTinhTrang,
         price: item.DonGia,
         img: item.Anh,
+        isDeleted: item.isDeleted,
       };
     });
-    setMenu(data2);
+    setMenu(data2.filter((item) => !item?.isDeleted));
 
     // get services
     const rawDataServices = await api.getServices();
@@ -109,6 +127,7 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         status: item.MaTinhTrang,
         price: item.DonGia,
         img: item.Anh,
+        isDeleted: item.isDeleted,
       };
     });
 
@@ -121,7 +140,9 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         status: status.name,
       };
     });
-    setServices(newData);
+    // console.log("all services: ", newData);
+
+    setServices(newData.filter((item) => !item?.isDeleted));
     const rawFoodDetails = await api.getFoodDetails();
     const FoodDetails = rawFoodDetails.filter((i) => {
       return i?.MaPhieuDatTC === rowData.key;
@@ -324,6 +345,8 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         numberOfSteps={4}
         isReadOnly={false}
         rowData={rowData}
+        halls={halls}
+        shifts={shifts}
       />
     ),
     compB: (
