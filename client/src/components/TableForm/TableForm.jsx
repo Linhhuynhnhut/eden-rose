@@ -53,7 +53,7 @@ const TableForm = ({
     }
   };
   const increaseCounter = (value, amount) => {
-    console.log("test item: ", value, " ", amount);
+    // console.log("test item: ", value, " ", amount);
     setSelectedItems([...selectedItems, value]);
   };
   const decreaseCounter = (value, amount) => {
@@ -155,7 +155,7 @@ const TableForm = ({
           {listItems.map((item) => {
             const isSelected = selectedItems.find((tmp) => tmp.id === item?.id);
             // const amount =
-            console.log(" check selected: ", isSelected);
+            // console.log(" check selected: ", isSelected);
             return (
               <Col span={12} key={item?.id}>
                 <TableItem

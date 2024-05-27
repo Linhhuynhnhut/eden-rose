@@ -7,7 +7,7 @@ import {
 } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 
-import { TbHome } from "react-icons/tb";
+import { TbReportAnalytics } from "react-icons/tb";
 import { GiCryptEntrance, GiGlassCelebration } from "react-icons/gi";
 import { FaRegListAlt } from "react-icons/fa";
 import {
@@ -28,7 +28,7 @@ const sidebarNav = [
   },
   {
     display: "HomePage",
-    path: "/",
+    path: "/report",
   },
   {
     display: "Weddings",
@@ -62,6 +62,10 @@ const sidebarNav = [
     display: "Setting",
     path: "/setting",
   },
+  {
+    display: "Management",
+    path: "/",
+  },
 ];
 
 const Sidebar = () => {
@@ -75,7 +79,7 @@ const Sidebar = () => {
             <MenuItem
               style={{ textAlign: "center" }}
               className="sidebar-header"
-              component={<Link to={sidebarNav[1].path}></Link>}
+              component={<Link to={sidebarNav[7].path}></Link>}
             >
               <div className="logotext">
                 <div className="logo_img">
@@ -84,19 +88,15 @@ const Sidebar = () => {
                 <div className="app_name">EDEN ROSE</div>
               </div>
             </MenuItem>
-            <MenuItem
-              active={pathname === sidebarNav[1].path}
-              icon={<TbHome />}
-              component={<Link to={sidebarNav[1].path}></Link>}
-            >
-              Home
-            </MenuItem>
             <SubMenu
               icon={<FaRegListAlt />}
               label="Management"
               defaultOpen={pathname.startsWith("/management")}
               component={<Link to={sidebarNav[7].path}></Link>}
-              active={pathname === sidebarNav[7].path}
+              active={
+                pathname === sidebarNav[7].path ||
+                pathname === sidebarNav[10].path
+              }
             >
               <MenuItem
                 active={pathname === sidebarNav[2].path}
@@ -141,12 +141,20 @@ const Sidebar = () => {
             >
               Payment
             </MenuItem>
-
             <MenuItem
-             active={pathname === sidebarNav[9].path}
+              active={pathname === sidebarNav[1].path}
+              icon={<TbReportAnalytics />}
+              component={<Link to={sidebarNav[1].path}></Link>}
+            >
+              Report
+            </MenuItem>
+            <MenuItem
+              active={pathname === sidebarNav[9].path}
               icon={<BiCog />}
               component={<Link to={sidebarNav[9].path}></Link>}
-            >Settings</MenuItem>
+            >
+              Settings
+            </MenuItem>
           </Menu>
         </ProSidebar>
       </div>

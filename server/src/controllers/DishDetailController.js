@@ -43,7 +43,7 @@ const create = async (req, res) => {
 };
 
 const remove = async (req, res) => {
-  const { MaPhieuDatTC, MaMonAn } = req.body;
+  const { MaPhieuDatTC, MaMonAn } = req.params;
 
   try {
     const dishDetail = await CT_MonAn.findOne({
@@ -56,7 +56,7 @@ const remove = async (req, res) => {
     if (!dishDetail) {
       return res.status(404).json({ message: "dishDetail not found" });
     }
-
+    console.log("ok: ", dishDetail);
     await dishDetail.destroy();
 
     return res.status(200).json({ message: "dishDetail deleted successfully" });

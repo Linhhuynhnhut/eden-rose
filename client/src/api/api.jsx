@@ -126,6 +126,10 @@ export const api = {
     const url = "service/" + String(id);
     return axiosClient.put(url, payload);
   },
+  putServiceDetail: (id, payload) => {
+    const url = "service-detail/";
+    return axiosClient.put(url, payload);
+  },
 
   putReservationForm: (id, payload) => {
     const url = "reservationForm/" + String(id);
@@ -151,6 +155,18 @@ export const api = {
   },
   deleteDishType: (id) => {
     const url = "dish-type/" + String(id);
+    return axiosClient.delete(url);
+  },
+  deleteReservationForm: (id) => {
+    const url = "reservationForm/" + String(id);
+    return axiosClient.delete(url);
+  },
+  deleteDishDetail: (dishId, resId) => {
+    const url = "dish-detail/" + String(dishId) + "/" + String(resId);
+    return axiosClient.delete(url);
+  },
+  deleteServiceDetail: (serviceId, resId) => {
+    const url = "service-detail/" + String(serviceId) + "/" + String(resId);
     return axiosClient.delete(url);
   },
 };

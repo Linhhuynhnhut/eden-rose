@@ -7,7 +7,7 @@
 .Homepage {
   width: 100%;
   margin-left: 30px;
-  color: #3B564D;
+  color: #3b564d;
 }
 
 .Homepage_header {
@@ -18,7 +18,7 @@
 .Homepage_wellcome {
   display: flex;
   width: 60%;
-  background-color: #BDC6B5;
+  background-color: #bdc6b5;
   height: 200px;
   margin-right: 3%;
   margin-top: 2%;
@@ -63,7 +63,7 @@
 }
 
 .RevenueChart_div {
-  background-color: #A3AB94;
+  background-color: #a3ab94;
   height: 420px;
   margin-right: 5%;
   margin-top: 3%;
@@ -80,7 +80,6 @@
   align-items: center;
   justify-content: space-between;
   position: relative;
-
 }
 
 .RevenueChart_top h2 {
@@ -108,10 +107,11 @@
 }
 
 .Home_statistics {
-  background-color: #FBF1DD;
+  background-color: #fbf1dd;
   margin-right: 5%;
   border-radius: 10px;
-  margin-top: 10px;
+  margin: 10px;
+  padding: 10px 0 20px;
 }
 
 .Home_statistics_h1 {
@@ -136,7 +136,7 @@
 
 .filterDate_div {
   flex: 20%;
-  background-color: #E09132;
+  background-color: #e09132;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -146,7 +146,7 @@
 
 .filerBanquet_div {
   flex: 20%;
-  background-color: #E09132;
+  background-color: #e09132;
   margin-left: 5%;
   display: flex;
   justify-content: center;
@@ -164,14 +164,13 @@
 .filerBanquet_div p {
   @include filter;
 }
-.filterDate_div p{
+.filterDate_div p {
   @include filter;
 }
-.TableRevenue{
+.TableRevenue {
   width: 90%;
   margin: auto;
   overflow: hidden;
   border-radius: 10px;
   margin-top: 5px;
-
 }

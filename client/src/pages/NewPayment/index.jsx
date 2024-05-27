@@ -12,13 +12,15 @@ import {
   Image,
 } from "antd";
 import { FileSearchOutlined } from "@ant-design/icons";
-
+import { FaExclamationTriangle } from "react-icons/fa";
 import Header from "../../components/Header/Header";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 import "./newpayment.scss";
 import Label from "../../components/Label/Label";
 import { api } from "../../api/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const { Title } = Typography;
 
@@ -440,14 +442,25 @@ const NewPayment = () => {
       TienPhat,
     };
     try {
-      const res = await api.postBill(payload);
-      if (res != null) {
-        const status = await api.putReservationForm(MaPhieuDatTC, {
-          TinhTrangThanhToan: true,
+      // console.log(
+      //   "compare: ",
+      //   NgayThanhToan >= filteredReservations[0].NgayDaiTiec
+      // );
+      if (NgayThanhToan >= filteredReservations[0].NgayDaiTiec) {
+        const res = await api.postBill(payload);
+        if (res != null) {
+          const status = await api.putReservationForm(MaPhieuDatTC, {
+            TinhTrangThanhToan: true,
+          });
+          console.log("res: ", res);
+          console.log("status: ", status);
+          navigate(`/payment`);
+        }
+      } else {
+        toast.warn("Payment Date must be larger than Wedding Date!", {
+          icon: <FaExclamationTriangle />,
+          className: "custom-toast",
         });
-        console.log("res: ", res);
-        console.log("status: ", status);
-        navigate(`/payment`);
       }
     } catch (error) {
       console.log(error);
@@ -459,6 +472,7 @@ const NewPayment = () => {
   };
   return (
     <div className="new-payment">
+      <ToastContainer />
       <Header title="Payment" />
       <div className="search-bar">
         <div className="search-standards">

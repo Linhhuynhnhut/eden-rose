@@ -1,22 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
-import { Button, Flex, Calendar, Col, Radio, Row, Select, theme, Typography } from 'antd';
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+import {
+  Button,
+  Flex,
+  Calendar,
+  Col,
+  Radio,
+  Row,
+  Select,
+  theme,
+  Typography,
+} from "antd";
 import { GiCryptEntrance, GiGlassCelebration } from "react-icons/gi";
-import dayLocaleData from 'dayjs/plugin/localeData';
-import img_Header from '../../assets/img_header.png';
-import img_Homepage_Header from '../../assets/img_Home_header.png';
-import './HomePage.scss';
-import RevenueChart from '../../components/RevenueChart/RevenueChart';
+import dayLocaleData from "dayjs/plugin/localeData";
+import img_Header from "../../assets/img_header.png";
+import img_Homepage_Header from "../../assets/img_Home_header.png";
+import "./HomePage.scss";
+import RevenueChart from "../../components/RevenueChart/RevenueChart";
 import Header from "../../components/Header/Header";
 import TableRevenue from "../../components/TableRevenue/TableRevenue";
+import { api } from "../../api/api";
 dayjs.extend(dayLocaleData);
 
 const HomePage = () => {
   const { token } = theme.useToken();
+  const [bills, setBills] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(5);
+  const [selectedYear, setSelectedYear] = useState(2024);
+  const getData = async () => {
+    const rawBills = await api.getBill();
+    const data1 = rawBills.map((item) => {
+      return {
+        key: item.MaHoaDon,
+        reservationId: item.MaPhieuDatTC,
+        paymentDate: item?.NgayThanhToan,
+        delay: item?.SoNgayTre,
+        amountToBePaid: item?.SoTienPhaiTra,
+        penaltyFee: item?.TienPhat,
+        totalBill: item?.TongTienHoaDon,
+      };
+    });
+    setBills(data1);
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   const onPanelChange = (value, mode) => {
-    console.log(value.format('YYYY-MM-DD'), mode);
+    // console.log(value.format("YYYY-MM-DD"), mode);
   };
   const wrapperStyle = {
     width: 300,
@@ -54,7 +86,7 @@ const HomePage = () => {
                 monthOptions.push(
                   <Select.Option key={i} value={i} className="month-item">
                     {months[i]}
-                  </Select.Option>,
+                  </Select.Option>
                 );
               }
               const year = value.year();
@@ -64,7 +96,7 @@ const HomePage = () => {
                 options.push(
                   <Select.Option key={i} value={i} className="year-item">
                     {i}
-                  </Select.Option>,
+                  </Select.Option>
                 );
               }
               return (
@@ -73,7 +105,6 @@ const HomePage = () => {
                     padding: 8,
                   }}
                 >
-
                   <Row gutter={8}>
                     <Col>
                       <Radio.Group
@@ -81,14 +112,13 @@ const HomePage = () => {
                         onChange={(e) => onTypeChange(e.target.value)}
                         value={type}
                       >
-                        <Radio.Button value="month">Month</Radio.Button>
-                        <Radio.Button value="year">Year</Radio.Button>
+                        {/* <Radio.Button value="month">Month</Radio.Button> */}
+                        <Radio.Button value="year">Choose Month</Radio.Button>
                       </Radio.Group>
                     </Col>
                     <Col>
                       <Select
                         size="small"
-                        dropdownMatchSelectWidth={false}
                         className="my-year-select"
                         value={year}
                         onChange={(newYear) => {
@@ -99,10 +129,9 @@ const HomePage = () => {
                         {options}
                       </Select>
                     </Col>
-                    <Col>
+                    {/* <Col>
                       <Select
                         size="small"
-                        dropdownMatchSelectWidth={false}
                         value={month}
                         onChange={(newMonth) => {
                           const now = value.clone().month(newMonth);
@@ -111,16 +140,23 @@ const HomePage = () => {
                       >
                         {monthOptions}
                       </Select>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </div>
               );
             }}
             onPanelChange={onPanelChange}
+            onChange={(e) => {
+              const date = new Date(e.format("YYYY-MM-DD"));
+              console.log("month: ", date.getMonth() + 1);
+              console.log("year: ", date.getFullYear());
+              setSelectedMonth(date.getMonth() + 1);
+              setSelectedYear(date.getFullYear());
+            }}
           />
         </div>
       </Flex>
-      <div className="RevenueChart_div">
+      {/* <div className="RevenueChart_div">
         <Flex gap="middle" className="RevenueChart_top">
           <span className="span-line"></span>
           <h2>Revenue Chart</h2>
@@ -132,30 +168,17 @@ const HomePage = () => {
         <div className="RevenueChart_bot">
           <h2>Total revenue: 5000$</h2>
         </div>
-      </div>
+      </div> */}
       <h1 className="Home_statistics_h1">Sales statistics</h1>
       <div className="Home_statistics">
-        <div className="Home_statistics_header">
-          {/* <div className="Home_statistics_text">
-            <h3> Revenue report </h3>
-          </div>
-          <div className="filterDate_div">
-            <p>Filter Date</p>
-
-          </div>
-          <div className="filerBanquet_div">
-            <p>Filter Banquet </p>
-            {<GiCryptEntrance  size={25}/>}
-          </div> */}
-
-        </div>
+        <div className="Home_statistics_header"></div>
         <div className="TableRevenue">
-          <TableRevenue/>
-
+          <TableRevenue
+            bills={bills}
+            month={selectedMonth}
+            year={selectedYear}
+          />
         </div>
-    
-
-
       </div>
     </div>
   );
