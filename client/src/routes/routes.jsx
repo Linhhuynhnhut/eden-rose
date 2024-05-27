@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import React from 'react';
+import React from "react";
 import Login from "../pages/Login";
 import HomePage from "../pages/HomePage";
 import Management from "../pages/Management";
@@ -10,6 +10,7 @@ import Menu from "../pages/Menu";
 import Services from "../pages/WeddingServices";
 import Payment from "../pages/Payment";
 import Setting from "../pages/Setting/Setting";
+import NewPayment from "../pages/NewPayment";
 
 const RoutesConfig = () => {
   return (
@@ -21,7 +22,8 @@ const RoutesConfig = () => {
       <Route path="/management/halls" element={<Halls />} />
       <Route path="/management/menu" element={<Menu />} />
       <Route path="/management/services" element={<Services />} />
-      <Route path="/payment/:id" element={<Payment />} />
+      <Route path="/payment/newpayment" element={<NewPayment />} />
+      <Route path="/payment/newpayment/:id" element={<NewPayment />} />
       <Route path="/payment" element={<Payment />} />
       <Route path="/setting" element={<Setting />} />
       <Route path="/" exact element={<HomePage />} />

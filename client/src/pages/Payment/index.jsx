@@ -11,11 +11,11 @@ import {
   Table,
   Image,
 } from "antd";
-import { FileSearchOutlined } from "@ant-design/icons";
-
+import { PlusOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import PaymentTable from "../../components/PaymentTable/PaymentTable";
 import Header from "../../components/Header/Header";
 import { ClockCircleOutlined } from "@ant-design/icons";
-import { menu, services } from "../../constants";
 import { useParams } from "react-router-dom";
 import "./payment.scss";
 import Label from "../../components/Label/Label";
@@ -31,504 +31,120 @@ const CheckPhatSinh = (date) => {
   return false;
 };
 
-const optionsShift = [
-  {
-    value: "1",
-    label: "Morning",
-  },
-  {
-    value: "2",
-    label: "Night",
-  },
-  {
-    value: "3",
-    label: "afternoon",
-  },
-];
-const optionsHall = [
-  {
-    value: "1",
-    label: "Red Hall",
-  },
-  {
-    value: "2",
-    label: "Rose Hall",
-  },
-];
-const columns1 = [
-  {
-    title: "Image",
-    dataIndex: "img",
-    key: "img",
-    width: "15%",
-    render: (img) => (
-      <div className="image_name_summary">
-        <Image src={img} alt={"image"} className="image_in_table" />
-      </div>
-    ),
-  },
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    width: "35%",
-  },
-  {
-    title: "Amount",
-    dataIndex: "amount",
-    key: "amount",
-    width: "25%",
-    render: () => <div>1</div>,
-  },
-  {
-    title: "Price",
-    dataIndex: "price",
-    key: "price",
-    width: "25%",
-  },
-];
-const columnsService = [
-  {
-    title: "Image",
-    dataIndex: "img",
-    key: "img",
-    render: (img) => <img src={img} className="img-table-item" alt="img" />,
-  },
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Amount",
-    dataIndex: "amount",
-    key: "amount",
-    render: () => <div>1</div>,
-  },
-  {
-    title: "Price",
-    dataIndex: "price",
-    key: "price",
-  },
-  {
-    title: "Status",
-    dataIndex: "NgayThem",
-    key: "NgayThem",
-    render: (NgayThem) => {
-      return CheckPhatSinh(NgayThem) ? "Additional" : " ";
-    },
-    filters: [
-      {
-        text: "Additional",
-        value: ngayDaiTiec,
-      },
-    ],
-    onFilter: (value, record) => record.NgayThem.startsWith(value),
-    filterSearch: true,
-  },
-];
 const Payment = () => {
-  const [filteredReservations, setFilteredReservations] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedShift, setSelectedShift] = useState(null);
-  const [selectedHall, setSelectedHall] = useState(null);
-  const [reservationForms, setreservationForms] = useState([]);
-  const [isData, setIsData] = useState(false);
-  const [hall, setHall] = useState();
-  const [tyleHall, setTypeHall] = useState();
-  const [priceTable, setPriceTable] = useState();
-  const [today, setToday] = useState("");
-
-  const getData = async () => {
-    const rawDataReservationForms = await api.getReservations();
-    console.log("rawDataReservationForms", rawDataReservationForms);
-
-    const allHall = await api.getHalls();
-    setHall(allHall);
-    console.log("allHall", allHall);
-    const tyleOfHall = await api.getHallTypes();
-    // return rawDataReservationForms;
-    setTypeHall(tyleOfHall);
-    console.log("tyleOfHall", tyleOfHall);
-    setreservationForms(rawDataReservationForms);
-  };
-  const filterData = () => {
-    if (selectedDate && selectedShift && selectedHall) {
-      const formattedDate = selectedDate.format("YYYY-MM-DD");
-
-      const filterRes = reservationForms.find((item) => {
-        return (
-          item.MaCa === Number(selectedShift) &&
-          item.MaSanh === Number(selectedHall) &&
-          item.NgayDaiTiec === formattedDate
-        );
-      });
-      console.log("filterRes", filterRes);
-      setFilteredReservations(filterRes ? [filterRes] : []);
-    }
-    filterPriceTable();
-  };
-  const filterPriceTable = () => {
-    if (filteredReservations.length > 0) {
-      const filterHall = hall.find((item) => {
-        return item.MaSanh === filteredReservations[0].MaSanh;
-      });
-      console.log("filterHall", filterHall);
-      if (filterHall) {
-        const filterTyleHall = tyleHall.find((item) => {
-          return item.MaLoaiSanh === filterHall.MaLoaiSanh;
-        });
-        if (filterTyleHall) {
-          setPriceTable(filterTyleHall.DGBanToiThieu);
-        }
-      }
-    }
-  };
-  const handleSearch = async () => {
-    filterData();
-    const getToday = () => {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, "0");
-      const day = String(today.getDate()).padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    };
-
-    setToday(getToday());
-  };
-
-  const calculateDaysDifference = () => {
-    if (filteredReservations.length > 0) {
-      const today = new Date();
-      const eventDate = new Date(filteredReservations[0].NgayDaiTiec);
-      if (today > eventDate) {
-        const timeDifference = eventDate - today;
-        const dayDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
-        return dayDifference;
-      }
-      return 0;
-    }
-    return 0;
-  };
-
+  const [showNoHeader, setShowNoHeader] = useState(false);
+  const [reservationsData, setReservationsData] = useState([]);
+  const [bill, setBill] = useState([]);
+  const [halls, setHalls] = useState([]);
+  const [shifts, setShifts] = useState([]);
   useEffect(() => {
     getData();
-
-    console.log("isdata", isData);
   }, []);
 
-  useEffect(() => {
-    if (filteredReservations.length > 0) {
-      setIsData(true);
-    } else {
-      setIsData(false);
-    }
-    console.log("filteredReservations", filteredReservations);
-  }, [filteredReservations]);
-  // useEffect(() => {
-  //   filterData();
+  const handleEditForm = (isVisible) => {
+    setShowNoHeader(isVisible);
+  };
+  const getData = async () => {
+    const rawHalls = await api.getHalls();
+    const hallData = rawHalls.map((item) => {
+      return {
+        id: item?.MaSanh,
+        name: item?.TenSanh,
+      };
+    });
+    setHalls(hallData);
+    const rawShifts = await api.getShifts();
+    const shiftData = rawShifts.map((item) => {
+      return {
+        id: item?.MaCa,
+        name: item?.TenCa,
+      };
+    });
+    setShifts(shiftData);
+    const rawDataReservations = await api.getReservations();
+    const dataReservations = rawDataReservations.map((item) => {
+      return {
+        key: item.MaPhieuDatTC,
+        groomName: item.TenChuRe,
+        brideName: item.TenCoDau,
+        phone: item.DienThoai,
+        hall: item.MaSanh,
+        status: item.TinhTrangThanhToan,
+        weddingDate: item.NgayDaiTiec,
+        bookingDate: item.NgayDatTiec,
+        shift: item.MaCa,
+        tableNum: item.SLBan + item.SLBanDuTru,
+        reservedTableNum: item.SLBanDuTru,
+        billTotal: item.TongTienPhieuDatTC,
+        deposit: item.TienCoc,
+        servicesTotal: item.TongTienDichVu,
+        foodsTotal: item.TongTienBan,
+      };
+    });
+    setReservationsData(dataReservations);
 
-  // }, [selectedDate, selectedShift, selectedHall]);
+    // get bill
+    const rawBills = await api.getBill();
+    const mapBills = rawBills.map((item) => {
+      const phieuDatTC = dataReservations.find((i) => {
+        return item?.MaPhieuDatTC === i.key;
+      });
+      return {
+        ...phieuDatTC,
+        reservationId: phieuDatTC.key,
+        key: item?.MaHoaDon,
+        paymentDate: item?.NgayThanhToan,
+        delay: item?.SoNgayTre,
+        amountToBePaid: item?.SoTienPhaiTra,
+        penaltyFee: item?.TienPhat,
+        totalBill: item?.TongTienHoaDon,
+      };
+    });
+    console.log("rawBill: ", rawBills);
+    console.log("mapBill: ", mapBills);
+    setBill(mapBills);
+  };
 
-  let { id } = useParams();
-  console.log("id: ", id);
+  const mapData = (data) => {
+    return data.map((item) => {
+      const hallName = halls.find((i) => {
+        return i?.id === item?.hall;
+      });
+      const shiftName = shifts.find((i) => {
+        return i?.id === item?.shift;
+      });
+      return {
+        ...item,
+        hall: hallName.name,
+        shift: shiftName.name,
+      };
+    });
+  };
+
   return (
     <div className="payment">
-      <Header title="Payment" />
-      <div className="search-bar">
-        <div className="search-standards">
-          <div className="date-of-wedding">
-            <Title level={5}>Wedding reception planning date </Title>
-            <DatePicker
-              onChange={(date) => setSelectedDate(date)}
-              style={{
-                width: "100%",
-              }}
-            />
-          </div>
-          <div className="shift">
-            <Title level={5}>Shift</Title>
-            <Select
-              style={{
-                width: "100%",
-              }}
-              suffixIcon={<ClockCircleOutlined />}
-              onChange={(value) => setSelectedShift(value)}
-              options={optionsShift}
-            />
-          </div>
-          <div className="hall">
-            <Title level={5}>Hall</Title>
-
-            <Select
-              style={{
-                width: "100%",
-              }}
-              onChange={(value) => setSelectedHall(value)}
-              options={optionsHall}
-            />
-          </div>
-        </div>
-        <div className="confirm-btn">
-          <Title level={5} style={{ visibility: "hidden" }}>
-            text
-          </Title>
-
-          <Button
-            className="next-btn"
-            type="primary"
-            htmlType="submit"
-            onClick={handleSearch}
-          >
-            Find
-          </Button>
-        </div>
+      <div className="page_header">
+        {!showNoHeader && <Header title="Payment List" />}
       </div>
-      {isData && (
-        <div>
-          <div className="payment-detail">
-            <Label name={"Payment Detail"} />
-            <>
-              <Row gutter={40}>
-                <Col span={12}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Groom's Name
-                    </Title>
-                    <Input disabled value={filteredReservations[0].TenChuRe} />
-                  </div>
-                </Col>
-                <Col span={12}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Bride's Name
-                    </Title>
-                    <Input disabled value={filteredReservations[0].TenCoDau} />
-                  </div>
-                </Col>
-              </Row>
-              <Row gutter={40}>
-                <Col span={6}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Number of tables
-                    </Title>
-                    <Input
-                      disabled
-                      value={
-                        filteredReservations[0].SLBan +
-                        filteredReservations[0].SLBanDuTru
-                      }
-                    />
-                  </div>
-                </Col>
-                <Col span={6}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Table Price
-                    </Title>
-                    <InputNumber
-                      formatter={(value) =>
-                        ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-                      suffix="VND"
-                      style={{
-                        width: "100%",
-                      }}
-                      disabled
-                      value={priceTable}
-                    />
-                  </div>
-                </Col>
-                <Col span={6}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Banquet Date
-                    </Title>
-                    <Input
-                      disabled
-                      value={filteredReservations[0].NgayDaiTiec}
-                    />
-                  </div>
-                </Col>
-                <Col span={6}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Payment Date
-                    </Title>
-                    <Input disabled value={today} />
-                  </div>
-                </Col>
-              </Row>
-              <Row gutter={40}>
-                <Col span={6}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Table Total
-                    </Title>
-                    <InputNumber
-                      formatter={(value) =>
-                        `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-                      suffix="VND"
-                      style={{
-                        width: "100%",
-                      }}
-                      disabled
-                      value={filteredReservations[0].TongTienBan}
-                    />
-                  </div>
-                </Col>
-                <Col span={6}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Service Total
-                    </Title>
-                    <InputNumber
-                      formatter={(value) =>
-                        `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-                      suffix="VND"
-                      style={{
-                        width: "100%",
-                      }}
-                      disabled
-                      value={filteredReservations[0].TongTienDichVu}
-                    />
-                  </div>
-                </Col>
-                <Col span={6}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Delay
-                    </Title>
-                    <Input disabled value={calculateDaysDifference()} />
-                  </div>
-                </Col>
-                <Col span={6}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Penalty Fee
-                    </Title>
-                    <InputNumber
-                      formatter={(value) =>
-                        `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-                      suffix="VND"
-                      style={{
-                        width: "100%",
-                      }}
-                      disabled
-                      value="Bride"
-                    />
-                  </div>
-                </Col>
-              </Row>
-              <Row gutter={40}>
-                <Col span={6}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Bill Total
-                    </Title>
-                    <InputNumber
-                      formatter={(value) =>
-                        `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-                      suffix="VND"
-                      style={{
-                        width: "100%",
-                      }}
-                      disabled
-                      value="Bride"
-                    />
-                  </div>
-                </Col>
-                <Col span={6}>
-                  <div className="payment-item">
-                    <Title level={5} className="payment-item-title">
-                      Deposit
-                    </Title>
-                    <InputNumber
-                      formatter={(value) =>
-                        `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-                      suffix="VND"
-                      style={{
-                        width: "100%",
-                      }}
-                      disabled
-                      value="50000000"
-                    />
-                  </div>
-                </Col>
-              </Row>
-              <Row gutter={40}>
-                <Col span={24} className="amount-container">
-                  <Title level={5} className="amount">
-                    Amount to be paid:
-                  </Title>
-                  <Title level={5} className="number-amount">
-                    50000000 VND
-                  </Title>
-                </Col>
-              </Row>
-            </>
-            <Label name={"Menu"} />
-            <>
-              <Table
-                pagination={false}
-                columns={columns1}
-                dataSource={menu}
-                scroll={{ y: 400 }}
-              />
-              <Row gutter={40}>
-                <Col span={24} className="amount-container">
-                  <Title level={5} className="amount">
-                    Table total:
-                  </Title>
-                  <Title level={5} className="number-amount">
-                    50000000 VND
-                  </Title>
-                </Col>
-              </Row>
-            </>
-            <Label name={"Services"} />
-            <>
-              <Table
-                pagination={false}
-                columns={columnsService}
-                dataSource={services}
-                scroll={{ y: 400 }}
-              />
-              <Row gutter={40}>
-                <Col span={24} className="amount-container">
-                  <Title level={5} className="amount">
-                    Service total:
-                  </Title>
-                  <Title level={5} className="number-amount">
-                    50000000 VND
-                  </Title>
-                </Col>
-              </Row>
-            </>
-          </div>
-        </div>
-      )}
-      {!isData && (
-        <div className="PaymentNoData">
-          <div className="PaymentNoDataInfo">
-            <h2>No Data!</h2>
 
-            <FileSearchOutlined className="PaymentIconNoData" />
-          </div>
+      {!showNoHeader && (
+        <div className="btn_new_payment">
+          <Link to="/payment/newpayment">
+            <Button type="primary" icon={<PlusOutlined />}>
+              New Payment
+            </Button>
+          </Link>
         </div>
       )}
+      <div className="payment_table">
+        <PaymentTable
+          data={mapData(bill)}
+          onEdit={(record) => console.log("Editing", record)}
+          onEditClick={handleEditForm}
+          // showEdit={showEditForm}
+          // handlePayment={handlePayment}
+        />
+      </div>
     </div>
   );
 };

@@ -1,0 +1,152 @@
+@use "../../scss/" as *;
+
+.delete_button_wrapper {
+  margin-bottom: 7px;
+  .delete_button {
+    margin-right: 5px;
+    background-color: #bc4147;
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+    border-color: #bc4147;
+  }
+  .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+    background-color: #bc4147;
+    color: #ffffff;
+    border-color: #bc4147;
+    opacity: 0.8;
+  }
+}
+
+.ant-table-wrapper
+  .ant-table-tbody
+  .ant-table-row.ant-table-row-selected
+  > .ant-table-cell {
+  background: #e1e6dd;
+}
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #3b564d;
+  border-color: #3b564d;
+}
+.ant-checkbox-indeterminate .ant-checkbox-inner:after {
+  background-color: #3b564d;
+}
+.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover
+  .ant-checkbox-checked:not(.ant-checkbox-disabled)
+  .ant-checkbox-inner {
+  background-color: #3b564d;
+  opacity: 0.8;
+}
+.ant-space-item {
+  color: #4f4f4f;
+  font-size: 18px;
+}
+.ant-space-item:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+.ant-table-wrapper .ant-table-thead > tr > th,
+.ant-table-wrapper .ant-table-thead > tr > td {
+  background: #517669;
+  color: #ffffff;
+}
+.ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:hover {
+  background: #517669;
+}
+.ant-table-wrapper .ant-table-column-sorter {
+  color: #ffffff;
+}
+.ant-table-wrapper .ant-table-filter-trigger {
+  color: #ffffff;
+}
+.ant-table-wrapper .ant-table-thead th.ant-table-column-sort {
+  opacity: 0.9;
+  background: #517669;
+}
+
+.image_in_table {
+  height: 50px;
+  width: 50px;
+  border-radius: 5px;
+}
+.wedding_detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 50px;
+}
+.ant-table-expanded-row {
+  background-color: #e1e6dd;
+}
+.btn_cancel_changes {
+  display: flex;
+  justify-content: center;
+  .ant-btn-primary {
+    background-color: #bc4147;
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+    border-color: #bc4147;
+    margin-top: 20px;
+  }
+  .ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+    background-color: #bc4147;
+    color: #ffffff;
+    border-color: #bc4147;
+    opacity: 0.8;
+  }
+}
+
+.btn_back {
+  .ant-btn-primary {
+    margin-left: 40px;
+  }
+}
+.detail_table-service{
+    margin-top: 25px;
+}
+.image_detail_table {
+  display: flex;
+  align-items: center;
+  .image_in_table {
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  .ant-image-mask {
+    height: 50px;
+    width: 50px;
+  }
+}
+.name-list {
+  text-align: left;
+  height: 30px;
+  width: 100%;
+  background-color: $header-color;
+  border-radius: 4px;
+  margin: 0 0 10px;
+  span {
+    color: $primary-color;
+    font-size: 18px;
+    font-weight: 600;
+    font-family: sans-serif;
+    line-height: 32px;
+    padding: 0px 20px;
+  }
+}
+
+.ant-drawer {
+  .ant-drawer-header {
+    background-color: #d7ddd3;
+    color: #3b564d;
+  }
+  .ant-drawer-title {
+    color: #3b564d;
+    font-weight: 700;
+  }
+}
+
+.btn_food_service_detail{
+    display: flex;
+    justify-content: right;
+    margin-right: 30px;
+}

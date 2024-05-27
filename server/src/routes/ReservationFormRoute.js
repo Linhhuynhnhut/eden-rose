@@ -5,6 +5,12 @@ const reservationFormRouter = express.Router({ mergeParams: true });
 // get all status
 reservationFormRouter.get("/", reservationFormController.search);
 
+//get by id
+reservationFormRouter.get(
+  "/:MaPhieuDatTC",
+  reservationFormController.searchById
+);
+
 // create new status
 reservationFormRouter.post("/", reservationFormController.create);
 
