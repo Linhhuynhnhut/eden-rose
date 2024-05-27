@@ -30,7 +30,7 @@ const TableHall = ({ data, hallTypes, update, handleDelete }) => {
 
   const cancel = (e) => {
     console.log(e);
-    message.error("Click on No");
+    // message.error("Click on No");
   };
   const showModal = (record) => {
     setRowData(record);

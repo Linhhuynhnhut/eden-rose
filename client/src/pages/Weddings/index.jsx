@@ -45,11 +45,11 @@ const Weddings = () => {
         brideName: item.TenCoDau,
         phone: item.DienThoai,
         hall: item.MaSanh,
-        status: item.TinhTrangThanhToan,
+        status: item.TinhTrangThanhToan ? "Completed" : "Unpaid",
         weddingDate: item.NgayDaiTiec,
         bookingDate: item.NgayDatTiec,
         shift: item.MaCa,
-        tableNum: item.SLBan + item.SLBanDuTru,
+        tableNum: item.SLBan,
         reservedTableNum: item.SLBanDuTru,
         billTotal: item.TongTienPhieuDatTC,
         deposit: item.TienCoc,
@@ -86,7 +86,6 @@ const Weddings = () => {
   }, []);
   return (
     <div className="wedding_page">
-      {console.log(reservationsData)}
       <div className="page_header">
         {!showNoHeader && <Header title="Weddings Management" />}
       </div>
@@ -106,6 +105,7 @@ const Weddings = () => {
           onEdit={(record) => console.log("Editing", record)}
           onEditClick={handleEditForm}
           // showEdit={showEditForm}
+          halls={halls}
           handlePayment={handlePayment}
         />
       </div>

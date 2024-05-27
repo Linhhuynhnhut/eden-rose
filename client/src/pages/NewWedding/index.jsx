@@ -15,7 +15,7 @@ import { FaExclamationTriangle } from 'react-icons/fa';
 import "./newWedding.scss";
 import Summary from "../../components/Summary/Summary";
 
-const NewWedding = ({ isWeddingEdit }) => {
+const NewWedding = ({ isWeddingEdit, rowData }) => {
   const navigate = useNavigate();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
@@ -147,6 +147,15 @@ const NewWedding = ({ isWeddingEdit }) => {
     // console.log("all services: ", newData);
 
     setServices(newData.filter((item) => !item?.isDeleted));
+    const rawFoodDetails = await api.getFoodDetails();
+    const FoodDetails = rawFoodDetails.filter((i) => {
+      return i?.MaPhieuDatTC === rowData.key;
+    });
+    const rawServiceDetails = await api.getServiceDetails();
+    const ServiceDetails = rawServiceDetails.filter((i) => {
+      return i?.MaPhieuDatTC === rowData.key;
+    });
+    console.log("foods: ", ServiceDetails);
   };
 
   const mapData = (data) => {
@@ -303,6 +312,35 @@ const NewWedding = ({ isWeddingEdit }) => {
     }
   };
 
+  const handleUpdateReservation = async (payload, key) => {
+    console.log("payloadUpdate: ", payload);
+    try {
+      const {
+        groomName,
+        brideName,
+        phoneNumber,
+        numberOfTables,
+        numberOfSpareTables,
+        deposit,
+      } = payload;
+      const data = {
+        TenChuRe: groomName,
+        TenCoDau: brideName,
+        SLBanDuTru: numberOfSpareTables,
+        SLBan: numberOfTables,
+        TienCoc: deposit,
+        DienThoai: phoneNumber,
+      };
+
+      const res = await api.putReservationForm(key, data);
+      if (res != null) {
+        getData();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const items = steps.map((item) => ({
     key: item.title,
   }));
@@ -323,6 +361,7 @@ const NewWedding = ({ isWeddingEdit }) => {
         currentStep={current}
         numberOfSteps={4}
         isReadOnly={false}
+        rowData={rowData}
         halls={halls}
         shifts={shifts}
       />
@@ -365,6 +404,9 @@ const NewWedding = ({ isWeddingEdit }) => {
         shifts={shifts}
         reservationForms={reservationForms}
         handleSubmitReservation={handleSubmitReservation}
+        handleUpdateReservation={handleUpdateReservation}
+        isWeddingEdit={isWeddingEdit}
+        rowData={rowData}
       />
     ),
   };

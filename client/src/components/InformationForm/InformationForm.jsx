@@ -24,6 +24,7 @@ const InformationForm = ({
   halls,
   shifts,
   isReadOnly = false,
+  rowData,
 }) => {
   const [form] = Form.useForm();
   // const [shifts, setShifts] = useState([]);
@@ -73,8 +74,32 @@ const InformationForm = ({
     getData();
   }, []);
   useEffect(() => {
+    form.setFieldsValue({
+          groomName: rowData?.groomName,
+          brideName: rowData?.brideName,
+          phoneNumber: rowData?.phone,
+          hall: rowData?.hall,
+          planningDate: dayjs(rowData?.weddingDate),
+          shift: rowData?.shift,
+          deposit: rowData?.deposit,
+          numberOfTables: rowData?.tableNum,
+          numberOfSpareTables: rowData?.reservedTableNum,
+        });
     form.setFieldsValue(formRef.current?.info);
   }, [form]);
+  // useEffect(() => {
+  //   form.setFieldsValue({
+  //     groomName: rowData?.groomName,
+  //     brideName: rowData?.brideName,
+  //     phoneNumber: rowData?.phone,
+  //     hall: rowData?.hall,
+  //     planningDate: dayjs(rowData?.weddingDate),
+  //     shift: rowData?.shift,
+  //     deposit: rowData?.deposit,
+  //     numberOfTables: rowData?.tableNum,
+  //     numberOfSpareTables: rowData?.reservedTableNum,
+  //   });
+  // }, [rowData]);
   return (
     <div className="information-form">
       <Form
