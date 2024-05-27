@@ -376,6 +376,7 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         MaSanh: Number(hall),
         TongTienBan: totalTablePrice,
         TongTienDichVu: servicePrice,
+        TongTienPhieuDatTC: totalTablePrice + servicePrice,
       };
 
       const newArrRemove = menuDetail.filter((item1) => {
