@@ -121,19 +121,25 @@ const Halls = () => {
         Anh: image,
         isDeleted: isDeleted,
       };
-      if (checkAlreadyExisted(halls, name)) {
-        openNotificationWithIcon(
-          "warning",
-          "Name Hall is not valid",
-          `This Hall has already existed`
-        );
-      } else {
-        const res = await API.putHall(key, data);
+      // if (checkAlreadyExisted(halls, name)) {
+      //   openNotificationWithIcon(
+      //     "warning",
+      //     "Name Hall is not valid",
+      //     `This Hall has already existed`
+      //   );
+      // } else {
+      //   const res = await API.putHall(key, data);
+      //   if (res != null) {
+      //     getData();
+      //     console.log("res hall update: ", res);
+      //   }
+        
+      // }
+      const res = await API.putHall(key, data);
         if (res != null) {
           getData();
           console.log("res hall update: ", res);
         }
-      }
     } catch (error) {
       console.log(error);
     }

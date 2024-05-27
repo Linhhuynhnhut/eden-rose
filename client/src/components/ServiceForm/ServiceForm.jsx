@@ -15,7 +15,10 @@ const ServiceForm = ({ form, statuses, rowData }) => {
   useEffect(() => {
     form.setFieldsValue({
       name: rowData?.name,
-      price: rowData?.price,
+      price: rowData?.price.slice(0, -3).replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        ","
+      ),
       status: rowData?.status,
       imageUrl: rowData?.imageUrl,
     });

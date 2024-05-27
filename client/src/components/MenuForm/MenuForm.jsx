@@ -15,7 +15,10 @@ const MenuForm = ({ form, dishTypes, statuses, rawData }) => {
   useEffect(() => {
     form.setFieldsValue({
       name: rawData?.name,
-      price: rawData?.price,
+      price: rawData?.price.slice(0, -3).replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        ","
+      ),
       dishType: rawData?.type,
       status: rawData?.status,
       imageUrl: rawData?.imageUrl,

@@ -2,6 +2,10 @@ import axiosClient from "./axiosClient";
 
 export const api = {
   //GET
+  getBill: (params) => {
+    const url = "bill";
+    return axiosClient.get(url, params);
+  },
   getMenu: (params) => {
     const url = "dish";
     return axiosClient.get(url, params);
@@ -33,6 +37,10 @@ export const api = {
   getReservations: (params) => {
     const url = "reservationForm";
     return axiosClient.get(url, params);
+  },
+  getReservationsById: (id, payload) => {
+    const url = "reservationForm/" + String(id);
+    return axiosClient.get(url, payload);
   },
   getParams: (params) => {
     const url = "param";
@@ -84,6 +92,10 @@ export const api = {
     const url = "reservationForm";
     return axiosClient.post(url, params);
   },
+  postBill: (payload) => {
+    const url = "bill";
+    return axiosClient.post(url, payload);
+  },
 
   //PUT***************************
   putHall: (id, payload) => {
@@ -114,7 +126,8 @@ export const api = {
     const url = "service/" + String(id);
     return axiosClient.put(url, payload);
   },
-  putReservationForm:(id, payload) => {
+
+  putReservationForm: (id, payload) => {
     const url = "reservationForm/" + String(id);
     return axiosClient.put(url, payload);
   },

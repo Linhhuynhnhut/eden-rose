@@ -1,0 +1,126 @@
+@use "../../scss/" as *;
+
+.new-payment {
+  margin: 0 30px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  .search-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    .ant-typography {
+      margin: 5px;
+    }
+    .search-standards {
+      display: flex;
+
+      .date-of-wedding,
+      .shift,
+      .hall {
+        min-width: 150px;
+        margin: 10px 20px;
+      }
+    }
+  }
+
+  .payment-detail {
+    margin: 20px 20px 0;
+
+    .payment-item {
+      width: 100%;
+    }
+
+    .amount-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: $third-color;
+      border: 20px solid #fff;
+      height: 75px;
+      line-height: 35px;
+      .ant-typography {
+        margin: 0;
+        color: $primary-color;
+        font-weight: 700;
+      }
+    }
+  }
+  .ant-input,
+  .ant-input-number-disabled {
+    color: black !important;
+  }
+  .ant-table-wrapper {
+    .ant-spin-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      .ant-table {
+        width: 80%;
+      }
+    }
+    .image_name_summary {
+      display: flex;
+      align-items: center;
+      .image_in_table {
+        height: 70px;
+        width: 70px;
+        border-radius: 5px;
+        margin-right: 20px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+      .ant-image-mask {
+        height: 70px;
+        width: 70px;
+        border-radius: 5px;
+      }
+    }
+  }
+
+  .image_name_menu {
+    display: flex;
+    align-items: center;
+    .image_in_table {
+      height: 70px;
+      width: 70px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    .ant-image-mask {
+      height: 70px;
+      width: 70px;
+    }
+  }
+  .save-bill {
+    display: flex;
+    justify-content: end;
+    margin: 20px 0;
+
+    .save-btn:hover {
+      color: #fff !important;
+    }
+  }
+}
+.PaymentNoData {
+  width: 100%;
+  align-items: center;
+  justify-items: center;
+  height: 100%;
+  margin-top: 10%;
+}
+.PaymentNoDataInfo {
+  text-align: center;
+  h2 {
+    font-size: 30px;
+    color: #3b564d !important;
+  }
+  .PaymentIconNoData {
+    font-size: 100px;
+    color: #3b564d !important;
+  }
+}

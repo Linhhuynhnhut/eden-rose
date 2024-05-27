@@ -78,7 +78,7 @@ const Weddings = () => {
 
   const handlePayment = (id) => {
     console.log("navigate");
-    navigate("/payment");
+    navigate(`/payment/newpayment/${id}`);
   };
 
   useEffect(() => {

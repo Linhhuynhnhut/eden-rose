@@ -41,7 +41,13 @@ const TableItem = ({
           <div className="card-info">
             <div className="card-name">{item?.name}</div>
             <div className="card-status">{item?.status}</div>
-            <div className="card-price">{item?.price} VND</div>
+            <div className="card-price">
+              {`${item.price?.slice(0, -3)}`.replace(
+                /\B(?=(\d{3})+(?!\d))/g,
+                ","
+              )}{" "}
+              VND
+            </div>
           </div>
 
           <Button
