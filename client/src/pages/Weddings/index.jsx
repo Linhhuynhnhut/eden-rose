@@ -84,17 +84,19 @@ const Weddings = () => {
       return {
         id: item?.MaSanh,
         name: item?.TenSanh,
+        isDeleted: item?.isDeleted,
       };
     });
-    setHalls(hallData);
+    setHalls(hallData.filter((item) => !item?.isDeleted));
     const rawShifts = await api.getShifts();
     const shiftData = rawShifts.map((item) => {
       return {
         id: item?.MaCa,
         name: item?.TenCa,
+        isDeleted: item?.isDeleted,
       };
     });
-    setShifts(shiftData);
+    setShifts(shiftData.filter((item) => !item?.isDeleted));
     const rawDataReservations = await api.getReservations();
     const dataReservations = rawDataReservations.map((item) => {
       return {
