@@ -107,7 +107,7 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
       };
     });
     setHalls(mapHalls.filter((item) => !item?.isDeleted));
-    console.log(mapHalls.filter((item) => !item?.isDeleted));
+    // console.log(mapHalls.filter((item) => !item?.isDeleted));
 
     // get menu
     const rawDataMenu = await api.getMenu();
@@ -344,8 +344,12 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
     }
   };
 
-  const handleUpdateReservation = async (payload, key) => {
-    console.log("payloadUpdate: ", payload);
+  const handleUpdateReservation = async (
+    payload,
+    key,
+    servicePrice,
+    tablePrice
+  ) => {
     try {
       const {
         groomName,
@@ -355,7 +359,11 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         numberOfSpareTables,
         deposit,
         planningDate,
+        hall,
+        shift,
       } = payload;
+      const totalTablePrice =
+        tablePrice * (Number(numberOfTables) + Number(numberOfSpareTables));
       const data = {
         TenChuRe: groomName,
         TenCoDau: brideName,
@@ -364,10 +372,12 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
         TienCoc: deposit,
         DienThoai: phoneNumber,
         NgayDaiTiec: planningDate.format("YYYY-MM-DD"),
+        MaCa: Number(shift),
+        MaSanh: Number(hall),
+        TongTienBan: totalTablePrice,
+        TongTienDichVu: servicePrice,
+        TongTienPhieuDatTC: totalTablePrice + servicePrice,
       };
-      // console.log("data update: ", data);
-      // console.log("menu detail : ", menuDetail);
-      // console.log("menu detail update: ", step2Ref.current.selectedItems);
 
       const newArrRemove = menuDetail.filter((item1) => {
         // Check if the 'x' property of item1 is not present in any item of arr2
@@ -454,6 +464,7 @@ const NewWedding = ({ isWeddingEdit, rowData }) => {
       });
 
       const res = await api.putReservationForm(key, data);
+      console.log("payloadUpdate: ", data);
       if (res != null) {
         // getData();
         newArrRemove.forEach(async (item) => {
