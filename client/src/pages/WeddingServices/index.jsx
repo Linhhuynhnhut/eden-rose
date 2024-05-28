@@ -26,6 +26,15 @@ const Services = () => {
 
   const getData = async () => {
     try {
+
+      const rawDataStatuses = await API.getStatuses();
+      const statuses = rawDataStatuses.map((item) => {
+        return {
+          id: item.MaTinhTrang,
+          name: item.TinhTrang,
+        };
+      });
+      setStatuses(statuses);
       const response = await API.getServices();
       const formattedData = response.map((item) => {
         return {
@@ -38,15 +47,7 @@ const Services = () => {
         };
       });
       setServices(formattedData.filter((item) => !item?.isDeleted));
-
-      const rawDataStatuses = await API.getStatuses();
-      const statuses = rawDataStatuses.map((item) => {
-        return {
-          id: item.MaTinhTrang,
-          name: item.TinhTrang,
-        };
-      });
-      setStatuses(statuses);
+      console.log("getservice");
     } catch (err) {
       console.error("Error fetching data: ", err);
     }
@@ -149,7 +150,7 @@ const Services = () => {
       payload.forEach(async (serviceId) => {
         await API.deleteService(serviceId);
       });
-      setTimeout(getData, 1000);
+       setTimeout(getData, 1000);
     } catch (error) {
       console.log(error);
     }
@@ -157,6 +158,7 @@ const Services = () => {
 
   return (
     <div className="services_page">
+      {console.log("render")}
       {contextHolder}
       <div className="page_header">
         <Header title="Services Management" />
