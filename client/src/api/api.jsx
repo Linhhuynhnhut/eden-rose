@@ -153,6 +153,10 @@ export const api = {
     const url = "dish/" + String(id);
     return axiosClient.delete(url);
   },
+  deleteService: (id) => {
+    const url = "service/" + String(id);
+    return axiosClient.delete(url);
+  },
   deleteDishType: (id) => {
     const url = "dish-type/" + String(id);
     return axiosClient.delete(url);

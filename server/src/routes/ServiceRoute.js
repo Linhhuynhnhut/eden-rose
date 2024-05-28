@@ -10,4 +10,6 @@ serviceRouter.post("/", serviceController.create);
 
 serviceRouter.put("/:MaDichVu", serviceController.update);
 
+serviceRouter.delete("/:MaDichVu", serviceController.remove);
+
 export default serviceRouter;

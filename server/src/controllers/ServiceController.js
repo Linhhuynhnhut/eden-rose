@@ -44,8 +44,7 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   const { MaDichVu } = req.params;
-  const { TenDichVu, DonGia, MaTinhTrang, Anh, isDeleted } =
-    req.body;
+  const { TenDichVu, DonGia, MaTinhTrang, Anh, isDeleted } = req.body;
 
   try {
     const dichVu = await DichVu.findByPk(MaDichVu);
@@ -60,9 +59,9 @@ const update = async (req, res) => {
     dichVu.Anh = Anh || dichVu.Anh;
     dichVu.isDeleted = isDeleted || dichVu.isDeleted;
 
-    console.log("....")
+    console.log("....");
     await dichVu.save();
-    console.log("success ")
+    console.log("success ");
     return res
       .status(200)
       .json({ message: "Service updated successfully", dichVu });
@@ -71,4 +70,21 @@ const update = async (req, res) => {
   }
 };
 
-export default { search, create, update };
+const remove = async (req, res) => {
+  const { MaDichVu } = req.params;
+  try {
+    const service = await DichVu.findByPk(MaDichVu);
+    if (service) {
+      await service.update({
+        isDeleted: true,
+      });
+      res.status(200).json({ message: "service soft deleted successfully" });
+    } else {
+      res.status(404).json({ error: "service not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default { search, create, update, remove };
