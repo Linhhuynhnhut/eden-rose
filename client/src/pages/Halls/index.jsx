@@ -27,9 +27,10 @@ const Halls = () => {
         key: item.MaLoaiSanh,
         name: item.TenLoaiSanh,
         MinimumPrice: item.DGBanToiThieu,
+        isDeleted: item?.isDeleted,
       };
     });
-    setHallTypes(data1);
+    setHallTypes(data1.filter((item) => !item?.isDeleted));
     // console.log("all hall types: ", data1);
 
     // get hall
@@ -133,13 +134,13 @@ const Halls = () => {
       //     getData();
       //     console.log("res hall update: ", res);
       //   }
-        
+
       // }
       const res = await API.putHall(key, data);
-        if (res != null) {
-          getData();
-          console.log("res hall update: ", res);
-        }
+      if (res != null) {
+        getData();
+        console.log("res hall update: ", res);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -151,7 +152,7 @@ const Halls = () => {
       payload.forEach(async (hallId) => {
         await API.deleteHall(hallId);
       });
-      setTimeout(getData, 500);
+      setTimeout(getData, 1000);
     } catch (error) {
       console.log(error);
     }
