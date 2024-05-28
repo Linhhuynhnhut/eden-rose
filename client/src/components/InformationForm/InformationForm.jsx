@@ -26,7 +26,9 @@ const InformationForm = ({
   isReadOnly = false,
   rowData,
 }) => {
+  console.log('halls',halls);
   const [form] = Form.useForm();
+  const [tyleHall, setTyleHall]=useState([]);
   // const [shifts, setShifts] = useState([]);
   // const [halls, setHalls] = useState([]);
   // eslint-disable-next-line arrow-body-style
@@ -50,6 +52,14 @@ const InformationForm = ({
   const onChange = (date, dateString) => {
     console.log(date, dateString);
   };
+  const getData = async () => {
+    // get reservationForms
+    const dataTyleHall = await api.getHallTypes();
+    console.log('dataTyleHall',dataTyleHall);
+    setTyleHall(dataTyleHall);
+    
+  }
+
   // const getData = async () => {
   //   // // shifts
   //   // const rawDataShifts = await api.getShifts();
@@ -70,9 +80,10 @@ const InformationForm = ({
   //   // });
   //   // setHalls(data);
   // };
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+  useEffect(() => {
+    getData();
+    console.log('tyleHall',tyleHall);
+  }, []);
   useEffect(() => {
     form.setFieldsValue({
       groomName: rowData?.groomName,
@@ -203,11 +214,12 @@ const InformationForm = ({
             rules={[{ required: true }]}
             style={{
               display: "inline-block",
-              width: 200,
-              marginRight: 80,
+              width: 300,
+              marginRight: 30,
               position: "relative",
               right: 90,
             }}
+            
           >
             <Select
               style={{
@@ -215,9 +227,16 @@ const InformationForm = ({
               }}
               onChange={handleChange}
               options={halls.map((item) => {
+                const matchingTyleHall = tyleHall.find(th => th.TenLoaiSanh === item.type);
                 return {
                   value: item?.key,
-                  label: item?.name,
+                  label: (
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                      <span style={{ minWidth: 70 }}>{item?.name}</span>
+                      <span style={{ color: 'gray' }}>Max: {item?.tables}</span>
+                      <span style={{ color: 'gray' }}>Min Price: {matchingTyleHall?.DGBanToiThieu.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
+                    </div>
+                  ),
                 };
               })}
             />
@@ -228,9 +247,9 @@ const InformationForm = ({
             rules={[{ required: true }]}
             style={{
               display: "inline-block",
-              width: 200,
+              width: 150,
               position: "relative",
-              right: 120,
+              right: 80,
             }}
           >
             <InputNumber
