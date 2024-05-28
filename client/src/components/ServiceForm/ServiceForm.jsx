@@ -15,10 +15,7 @@ const ServiceForm = ({ form, statuses, rowData }) => {
   useEffect(() => {
     form.setFieldsValue({
       name: rowData?.name,
-      price: rowData?.price.slice(0, -3).replace(
-        /\B(?=(\d{3})+(?!\d))/g,
-        ","
-      ),
+      price: formatPrice(rowData?.price),
       status: rowData?.status,
       imageUrl: rowData?.imageUrl,
     });
@@ -38,6 +35,8 @@ const ServiceForm = ({ form, statuses, rowData }) => {
         setFieldValue("imageUrl", res?.data?.secure_url);
       });
   };
+
+  const formatPrice = (value) => value?.replace(/\$\s?|(,*)/g, "");
 
   const handleChange = (info) => {
     uploadImage(info.file.originFileObj);

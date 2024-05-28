@@ -29,6 +29,7 @@ const NewPayment = () => {
   const navigate = useNavigate();
   const menuRef = useRef();
   const servicesRef = useRef();
+  const resRef = useRef();
 
   const [filteredReservations, setFilteredReservations] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -279,6 +280,9 @@ const NewPayment = () => {
       };
     });
     setParams(mapParams);
+    fillForm(mapParams);
+
+    console.log("check pa: ", mapParams);
   };
 
   const getDetail = async () => {
@@ -343,36 +347,28 @@ const NewPayment = () => {
     // filterPriceTable();
   };
 
-  const fillForm = () => {
+  const fillForm = (valueParams) => {
     const totalFee =
-      Number(filteredReservations[0].TongTienBan) +
-      Number(filteredReservations[0].TongTienDichVu);
+      Number(filteredReservations[0]?.TongTienBan) +
+      Number(filteredReservations[0]?.TongTienDichVu);
     setTotalBill(totalFee);
-    calculatePenaltyFee(totalFee);
+    calculatePenaltyFee(totalFee, valueParams);
   };
-  // const filterPriceTable = () => {
-  //   if (filteredReservations.length > 0) {
-  //     const filterHall = halls.find((item) => {
-  //       return item.key === filteredReservations[0].MaSanh;
-  //     });
-  //     if (filterHall) {
-  //       const filterHallType = hallTypes.find((item) => {
-  //         return item.name === filterHall.type;
-  //       });
-  //       console.log("filterHallType", filterHallType);
-  //       if (filterHallType) {
-  //         setPriceTable(filterHallType.minimumPrice);
-  //       }
-  //     }
-  //   }
-  // };
 
-  const calculatePenaltyFee = (totalFee) => {
-   
-    if (params[1]?.value === "Yes" && filteredReservations.length > 0) {
-      if (today > filteredReservations[0].NgayDaiTiec) {
-        const date1 = new Date(today);
-        const date2 = new Date(filteredReservations[0].NgayDaiTiec);
+  const parseDateObj = (date) => {
+    const offset = date.getTimezoneOffset();
+    date = new Date(date.getTime() - offset * 60 * 1000);
+    return date.toISOString().split("T")[0];
+  };
+
+  const calculatePenaltyFee = (totalFee, valueParams) => {
+    const date = new Date();
+
+    console.log("check if: ", parseDateObj(date));
+    if (valueParams[1]?.value === "Yes" && filteredReservations.length > 0) {
+      if (parseDateObj(date) > filteredReservations[0]?.NgayDaiTiec) {
+        const date1 = new Date(parseDateObj(date));
+        const date2 = new Date(filteredReservations[0]?.NgayDaiTiec);
 
         // Calculate the difference in time (milliseconds)
         const timeDifference = date1 - date2; // This gives the difference in milliseconds
@@ -384,9 +380,10 @@ const NewPayment = () => {
 
         console.log(dayDifference); // Outputs: 4
 
-        const penaltyCost = (totalFee * dayDifference * params[0]?.value) / 100;
-        console.log("tỉ lệ phạt: ", params[0]?.value);
-        console.log("áp dụng phạt: ", params[1]?.value);
+        const penaltyCost =
+          (totalFee * dayDifference * valueParams[0]?.value) / 100;
+        console.log("tỉ lệ phạt: ", valueParams[0]?.value);
+        console.log("áp dụng phạt: ", valueParams[1]?.value);
         setDelay(dayDifference);
         setPenaltyFee(penaltyCost);
       }
@@ -398,12 +395,12 @@ const NewPayment = () => {
 
   useEffect(() => {
     getData();
-
     console.log("id to render: ", id);
     async function fetchData() {
       const source = await api.getReservationsById(id);
       setFilteredReservations([source]);
       console.log("source: ", source);
+      resRef.current = source.NgayDaiTiec;
     }
     if (id) fetchData();
   }, [id]);
@@ -412,7 +409,6 @@ const NewPayment = () => {
     if (filteredReservations.length > 0) {
       setIsData(true);
       getData();
-      fillForm();
       getDetail();
     } else {
       setIsData(false);
