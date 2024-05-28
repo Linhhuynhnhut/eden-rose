@@ -158,7 +158,7 @@ const Menu = () => {
         TenMonAn: name,
         MaPhanLoai: typeId.id,
         MaTinhTrang: statusId.id,
-        DonGia: price,
+        DonGia: Number(price),
         Anh: imageUrl,
         isDeleted,
       };
