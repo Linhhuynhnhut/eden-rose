@@ -368,6 +368,7 @@ const NewPayment = () => {
   // };
 
   const calculatePenaltyFee = (totalFee) => {
+   
     if (params[1]?.value === "Yes" && filteredReservations.length > 0) {
       if (today > filteredReservations[0].NgayDaiTiec) {
         const date1 = new Date(today);

@@ -13,6 +13,7 @@ const onChange = (pagination, filters, sorter, extra) => {
 };
 const TableRevenue = ({ bills, month, year }) => {
   const [report, setReport] = useState([]);
+  const [revenue, setRevenue] = useState();
   const columns = [
     {
       title: "No.",
@@ -55,6 +56,7 @@ const TableRevenue = ({ bills, month, year }) => {
       (sum, item) => sum + Number(item.totalBill) + Number(item.penaltyFee),
       0
     );
+    setRevenue(revenueOfMonth);
 
     const reduceObj = filterByMonth.reduce(function (r, a) {
       r[a.paymentDate] = r[a.paymentDate] || [];
@@ -84,15 +86,21 @@ const TableRevenue = ({ bills, month, year }) => {
     setReport(result);
   }, [bills, month, year]);
   return (
-    <Table
-      pagination={false}
-      columns={columns}
-      expandable={{
-        rowExpandable: (record) => record.name !== "Not Expandable",
-      }}
-      dataSource={report}
-      onChange={onChange}
-    />
+    <div>
+      <h3>
+        Revenue of the month:{" "}
+        {(revenue || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} VND
+      </h3>
+      <Table
+        pagination={false}
+        columns={columns}
+        expandable={{
+          rowExpandable: (record) => record.name !== "Not Expandable",
+        }}
+        dataSource={report}
+        onChange={onChange}
+      />
+    </div>
   );
 };
 export default TableRevenue;

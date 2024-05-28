@@ -82,7 +82,7 @@ const HallForm = ({ form, hallTypes, rawData }) => {
     const type = hallTypes.find((i) => {
       return i?.key === value;
     });
-    form?.setFieldValue("minimumPrice", type.MinimumPrice);
+    form?.setFieldValue("minimumPrice", type.MinimumPrice.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
   };
 
   return (
