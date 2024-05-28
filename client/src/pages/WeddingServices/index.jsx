@@ -56,10 +56,10 @@ const Services = () => {
     getData();
   }, []);
 
-  const checkAlreadyExisted = (array, value) => {
+  const checkAlreadyExisted = (array, value, key = 0) => {
     const isExisted = array.find((i) => i?.name === value);
-
-    return !!isExisted;
+    if (key === 0) return !!isExisted;
+    else if (isExisted.key === key) return false;
   };
 
   const handleOk = async () => {
@@ -118,22 +118,23 @@ const Services = () => {
       const data = {
         TenDichVu: name,
         MaTinhTrang: statusId.id,
-        DonGia: price,
+        DonGia: Number(price),
         Anh: imageUrl,
         isDeleted,
       };
-      // if (checkAlreadyExisted(services, name)) {
-      //   openNotificationWithIcon(
-      //     "warning",
-      //     "Name Service is not valid",
-      //     `This Service has already existed`
-      //   );
-      // } else {
-      //   const res = await API.putService(key, data);
-      //   if (res != null) {
-      //     getData();
-      //   }
-      // }
+      console.log("data:", data);
+      if (checkAlreadyExisted(services, name, key)) {
+        openNotificationWithIcon(
+          "warning",
+          "Name Service is not valid",
+          `This Service has already existed`
+        );
+      } else {
+        const res = await API.putService(key, data);
+        if (res != null) {
+          getData();
+        }
+      }
       const res = await API.putService(key, data);
       if (res != null) {
         getData();
