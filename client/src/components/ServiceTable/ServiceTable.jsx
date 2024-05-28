@@ -17,7 +17,7 @@ import { Modal, Form, Image } from "antd";
 
 import "./ServiceTable.scss";
 
-const ServiceTable = ({ data, statuses, update }) => {
+const ServiceTable = ({ data, statuses, update, handleDelete }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -70,18 +70,12 @@ const ServiceTable = ({ data, statuses, update }) => {
     onChange: onSelectChange,
   };
   const hasSelected = selectedRowKeys.length > 0;
-  const handleDelete = (id) => {
-    message.success("You have deleted a service");
-    const newData = data.filter((item) => item.key !== id);
-    setTableData(newData);
+  const handleDeleteItem = (id) => {
+    handleDelete([id]);
+    setSelectedRowKeys([]);
   };
-  const handleDeleteSelectedItems = (selectedKeys) => {
-    message.success("You have deleted selected services");
-    const newData = data.filter((item) => !selectedKeys.includes(item.key));
-    // Update the state with the new data
-    setTableData(newData);
-
-    // Clear the selectedRowKeys state
+  const handleDeleteSelectedItems = () => {
+    handleDelete(selectedRowKeys);
     setSelectedRowKeys([]);
   };
   const getColumnSearchProps = (dataIndex) => ({
@@ -238,7 +232,7 @@ const ServiceTable = ({ data, statuses, update }) => {
           <Popconfirm
             title="Delete the service"
             description="Are you sure to delete this service?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDeleteItem(record.key)}
             onCancel={cancel}
             okText="Yes"
             cancelText="No"
@@ -260,7 +254,7 @@ const ServiceTable = ({ data, statuses, update }) => {
             <Popconfirm
               title="Delete the service"
               description="Are you sure to delete these services?"
-              onConfirm={() => handleDeleteSelectedItems(selectedRowKeys)}
+              onConfirm={() => handleDeleteSelectedItems()}
               onCancel={cancel}
               okText="Yes"
               cancelText="No"

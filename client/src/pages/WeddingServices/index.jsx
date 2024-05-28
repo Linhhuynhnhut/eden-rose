@@ -143,6 +143,18 @@ const Services = () => {
     }
   };
 
+  const handleDeleteService = async (payload) => {
+    try {
+      console.log(payload);
+      payload.forEach(async (serviceId) => {
+        await API.deleteService(serviceId);
+      });
+      setTimeout(getData, 1000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="services_page">
       {contextHolder}
@@ -170,6 +182,7 @@ const Services = () => {
           data={mapData(services)}
           statuses={statuses}
           update={handleUpdateService}
+          handleDelete={handleDeleteService}
         />
       </div>
     </div>
