@@ -26,7 +26,6 @@ const Services = () => {
 
   const getData = async () => {
     try {
-
       const rawDataStatuses = await API.getStatuses();
       const statuses = rawDataStatuses.map((item) => {
         return {
@@ -124,22 +123,18 @@ const Services = () => {
         isDeleted,
       };
       console.log("data:", data);
-      if (checkAlreadyExisted(services, name, key)) {
-        openNotificationWithIcon(
-          "warning",
-          "Name Service is not valid",
-          `This Service has already existed`
-        );
-      } else {
-        const res = await API.putService(key, data);
-        if (res != null) {
-          getData();
-        }
-      }
+      // if (checkAlreadyExisted(services, name, key)) {
+      //   openNotificationWithIcon(
+      //     "warning",
+      //     "Name Service is not valid",
+      //     `This Service has already existed`
+      //   );
+      // } else {
       const res = await API.putService(key, data);
       if (res != null) {
         getData();
       }
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -151,7 +146,7 @@ const Services = () => {
       payload.forEach(async (serviceId) => {
         await API.deleteService(serviceId);
       });
-       setTimeout(getData, 1000);
+      setTimeout(getData, 1000);
     } catch (error) {
       console.log(error);
     }
