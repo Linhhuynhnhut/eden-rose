@@ -99,9 +99,7 @@ function Setting() {
     getData();
   }, []);
   const checkAlreadyExisted = (array, value) => {
-    const isExisted = array.find((i) => i?.name === value);
-
-    return !!isExisted;
+    return false;
   };
 
   // SHIFT
